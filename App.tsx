@@ -704,7 +704,7 @@ function KotakApp() {
           />
         ) : (
           <>
-            {screen ? (
+            {screen || catalogPage || categoryBrowse || tab==="EPG" || (tab==="TV KANALI"&&directPlay) ? (
               <View style={{ height: insets.top }} />
             ) : (
               tab !== "DAHA FAZLA" && !catalogPage && !categoryBrowse && (
@@ -774,6 +774,8 @@ function KotakApp() {
                 </View>
               ) : tab === "EPG" ? (
                 <EpgScreen
+                  title={configs.length===1?configs[0].name:"Yayın Akışı"}
+                  onBack={()=>changeTab("ANASAYFA")}
                   channels={live}
                   guide={guides}
                   now={now}

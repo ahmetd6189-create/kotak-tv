@@ -1,12 +1,12 @@
 import React,{useMemo,useState,useRef} from 'react';
 import {FlatList,Modal,PanResponder,Pressable,ScrollView,Text,View,useWindowDimensions} from 'react-native';
-import {Bell,BellRing,ChevronLeft,ChevronRight,Play,X} from 'lucide-react-native';
+import {Bell,BellRing,ChevronLeft,ChevronRight,RefreshCw,Play,X} from 'lucide-react-native';
 import type {Entry,Guide,Program} from '../native/iptv';
 import {scheduleFor,programWindow} from '../native/catalog-tools';
 import {IconButton,Logo,Pill,clock,d} from './Design';
 import {colors as c} from '../theme';
 const key=(item:Entry,p:Program)=>`kotak-${item.id}-${p.start}`;const SCALE=2.1,ROW=106,LEFT=108;
-export function EpgScreen({channels,guide,now,notice,onPlay,reminders=[],onReminder,onRefresh,onEpgSettings}:{channels:Entry[];guide:Guide;now:number;notice:string;onPlay:(item:Entry)=>void;reminders?:string[];onReminder?:(item:Entry,p:Program)=>void;onRefresh?:()=>void;onEpgSettings?:()=>void}){
+export function EpgScreen({title="Yayın Akışı",onBack,channels,guide,now,notice,onPlay,reminders=[],onReminder,onRefresh,onEpgSettings}:{title?:string;onBack?:()=>void;channels:Entry[];guide:Guide;now:number;notice:string;onPlay:(item:Entry)=>void;reminders?:string[];onReminder?:(item:Entry,p:Program)=>void;onRefresh?:()=>void;onEpgSettings?:()=>void}){
  const header=useRef<ScrollView>(null);const drag=useRef(0);
  const [window,setWindow]=useState<'now'|'tonight'|'day'|'reminders'>('now');const [group,setGroup]=useState('Tümü');const [offset,setOffset]=useState(0);const [shift,setShift]=useState(0);const [selected,setSelected]=useState<{item:Entry;p:Program}|null>(null);const {width}=useWindowDimensions();
  const reminderSet=useMemo(()=>new Set(reminders),[reminders]);const groups=useMemo(()=>['Tümü',...new Set(channels.map(e=>e.group))],[channels]);
@@ -16,7 +16,7 @@ export function EpgScreen({channels,guide,now,notice,onPlay,reminders=[],onRemin
  const pan=PanResponder.create({onMoveShouldSetPanResponder:(_,g)=>Math.abs(g.dx)>12&&Math.abs(g.dx)>Math.abs(g.dy),onPanResponderGrant:()=>{drag.current=offset;},onPanResponderMove:(_,g)=>{const x=Math.max(0,Math.min(timelineWidth-Math.max(200,width-LEFT),drag.current-g.dx));setOffset(x);header.current?.scrollTo({x,animated:false});}});
  const selectWindow=(value:typeof window)=>{setWindow(value);setShift(0);setOffset(0);};
  return <View style={{flex:1,backgroundColor:'#000'}}>
- <View style={{paddingHorizontal:16,paddingVertical:10}}><View style={d.between}><Text style={d.h2}>Yayın Akışı</Text><IconButton small icon={ChevronRight} label="EPG kaynağını ayarla" onPress={()=>onEpgSettings?.()}/></View><Text numberOfLines={1} style={[d.micro,{marginTop:5}]}>{notice}</Text></View>
+ <View style={{paddingHorizontal:16,paddingVertical:10}}><View style={d.between}><IconButton small icon={ChevronLeft} label="EPG’den geri dön" onPress={()=>onBack?.()}/><Pressable accessibilityRole="button" accessibilityLabel="EPG kaynağını ayarla" onPress={()=>onEpgSettings?.()}><Text style={d.name}>{title}</Text></Pressable><IconButton small icon={RefreshCw} label="EPG’yi yenile" onPress={()=>onRefresh?.()}/></View><Text numberOfLines={1} style={[d.micro,{marginTop:5}]}>{notice}</Text></View>
  <View><ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{gap:6,paddingHorizontal:16,paddingBottom:8}}>{([['now','Şimdi'],['tonight','Bu Akşam'],['day','24 Saat'],['reminders',`Hatırlatıcılar (${reminders.length})`]] as const).map(([id,label])=><Pill key={id} label={label} active={window===id} onPress={()=>selectWindow(id)}/>)}</ScrollView></View>
  <View><FlatList horizontal data={groups} keyExtractor={v=>v} showsHorizontalScrollIndicator={false} contentContainerStyle={{gap:6,paddingHorizontal:16,paddingBottom:8}} initialNumToRender={5} renderItem={({item})=><Pill label={item} active={group===item} onPress={()=>setGroup(item)}/>}/></View>
  <View style={{height:40,flexDirection:'row',borderBottomWidth:1,borderColor:'#333'}}><View style={{width:LEFT,flexDirection:'row',justifyContent:'center',alignItems:'center'}}><IconButton small icon={ChevronLeft} label="EPG önceki saat" onPress={()=>setShift(v=>v-2)}/><IconButton small icon={ChevronRight} label="EPG sonraki saat" onPress={()=>setShift(v=>v+2)}/></View><ScrollView ref={header} key={window+shift} horizontal showsHorizontalScrollIndicator={false} scrollEventThrottle={32} onScroll={e=>setOffset(e.nativeEvent.contentOffset.x)}><View style={{width:timelineWidth,flexDirection:'row'}}>{Array.from({length:duration*2},(_,i)=><Text key={i} style={{width:30*SCALE,fontSize:11,color:c.blue,paddingTop:10}}>{clock(start+i*1800000)}</Text>)}</View></ScrollView></View>
