@@ -1,924 +1,1181 @@
-import React, { useState, useEffect } from 'react';
-import { TopBar } from './components/TopBar';
-import { TrendSection } from './components/TrendSection';
-import { RecentChannelCard } from './components/RecentChannelCard';
-import { CategoriesList } from './components/CategoriesList';
-import { CustomBottomNav } from './components/CustomBottomNav';
-import { PlayerModal } from './components/PlayerModal';
-import { SearchModal } from './components/SearchModal';
-import { EpgView } from './components/EpgView';
-import { TvChannelsView } from './components/TvChannelsView';
-import { MoreSettingsView } from './components/MoreSettingsView';
-import { FlutterCodeViewer } from './components/FlutterCodeViewer';
-import { NoPlaylistsView } from './components/NoPlaylistsView';
-import { AddPlaylistModal } from './components/AddPlaylistModal';
-import { MoreScreen } from './components/MoreScreen';
-import { SettingsScreen } from './components/SettingsScreen';
-import { ProPaywallModal } from './components/ProPaywallModal';
-import { AboutModal } from './components/AboutModal';
-import { AiVoiceSearchModal } from './components/AiVoiceSearchModal';
+import {SharePanel} from "./src/ui/SharePanel";
+import {serviceConfig,verifiedEntitlement,closeShareRoom,type ShareRoom} from "./src/native/shareplay";
+import {scheduleExpiryNotices,expiryMessage,type Entitlement} from "./src/native/entitlement";
+import {ReminderPicker} from "./src/ui/ReminderPicker";
+import {MediaDetails} from "./src/ui/MediaDetails";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import {
-  TREND_MOVIES,
-  TREND_SERIES,
-  RECENT_CHANNEL,
-  CATEGORIES_LIST,
-  CHANNELS_LIST,
-} from './data/mockData';
-import { MainTab, BottomNavTab, Channel, MediaItem, CategoryItem, Playlist, UserProfile } from './types/iptv';
-import { ProfileModal, PROFILES } from './components/ProfileModal';
-import { SubscriptionService, SubscriptionState } from './services/subscriptionService';
-import { OfflineManagerModal } from './components/OfflineManagerModal';
-import { RemoteScreenCastModal } from './components/RemoteScreenCastModal';
-import { offlineService, OfflineState } from './services/offlineService';
-import { FileCode, Smartphone, Info, X, Plus, RotateCcw, Mic, Sparkles, Users, Shield, Lock, ShieldCheck, Cast, WifiOff } from 'lucide-react';
-
+  ActivityIndicator,
+  AppState,
+  Alert,
+  BackHandler,
+  FlatList,
+  Image,
+  Linking,
+  Modal,
+  Pressable,
+  ScrollView,
+  RefreshControl,
+  Share,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
+import * as Notifications from "expo-notifications";
+import {AudioDiagnostics} from "./src/ui/AudioDiagnostics";
+import {HomeActions,CategoryPicker} from "./src/ui/HomeControls";
+import {VoiceSearch} from "./src/ui/VoiceSearch";
+import {ImdbPanel} from "./src/ui/ImdbPanel";
+import {EpgSettings} from "./src/ui/EpgSettings";
+import {rankedMedia,scheduleFor} from "./src/native/catalog-tools";
+import {metadataKey,type ImdbInfo} from "./src/native/imdb";
+import {scheduledReminders,toggleReminder} from "./src/native/reminders";
+import * as SecureStore from "expo-secure-store";
+import { cacheCatalog, cachedCatalog, removeCache } from "./src/native/cache";
+import { childEntries } from "./src/native/offline";
+import { ParentPanel, PROTECTION_KEY, type Protection } from "./src/ui/ParentPanel";
+import { FeaturesPanel, ProPanel, AboutPanel, FEATURE_NAMES } from "./src/ui/KotakFeatures";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import {
+  SafeAreaProvider,
+  useSafeAreaInsets,
+} from "react-native-safe-area-context";
+import { StatusBar } from "expo-status-bar";
+import {
+  Check,
+  ChevronRight,
+  Film,
+  FolderOpen,
+  Grid2X2,
+  Layers,
+  ListVideo,
+  Maximize2,
+  Mic,
+  Play,
+  Plus,
+  Search,
+  Settings,
+  Shield,
+  Sparkles,
+  Star,
+  Tv,
+  Users,
+  WifiOff,
+  X,
+} from "lucide-react-native";
+import { CustomBottomNav } from "./src/components/CustomBottomNav";
+import { TopBar } from "./src/components/TopBar";
+import { CategoriesList } from "./src/components/CategoriesList";
+import { NoPlaylistsView } from "./src/components/NoPlaylistsView";
+import { PlaylistForm } from "./src/native/PlaylistForm";
+import { PlaybackPanel } from "./src/native/Player";
+import {
+  ChannelCard,
+  EpgScreen,
+  FeatureCards,
+  IconButton,
+  LibraryScreen,
+  MediaRail,
+  MoreScreen,
+  PageHeader,
+  Pill,
+  ProgramBar,
+  RecentCard,
+  SearchPanel,
+  Sheet,
+  clock,
+  d,
+} from "./src/ui/Design";
+import { SettingsView, type Preferences } from "./src/ui/SettingsView";
+import {
+  loadCatalog,
+  loadEpisodes,
+  parseGuideAsync,
+  inferredEpgUrl,
+  requestText,
+  type Entry,
+  type Guide,
+  type PlaylistConfig,
+  type Program,
+} from "./src/native/iptv";
+import {
+  deletePlaylist,
+  savedPlaylists,
+  savePlaylist,
+} from "./src/native/storage";
+import { colors } from "./src/theme";
+import type { BottomNavTab, MainTab } from "./src/types/iptv";
 export default function App() {
-  const [playlists, setPlaylists] = useState<Playlist[]>(() => {
-    try {
-      const saved = localStorage.getItem('iptv_playlists');
-      return saved ? JSON.parse(saved) : [];
-    } catch {
-      return [];
-    }
-  });
-
-  const [topTab, setTopTab] = useState<MainTab>('ANASAYFA');
-  const [bottomTab, setBottomTab] = useState<BottomNavTab>('ANASAYFA');
-  const [activeChannel, setActiveChannel] = useState<Channel | null>(null);
-  const [activeMedia, setActiveMedia] = useState<MediaItem | null>(null);
-  const [showSearch, setShowSearch] = useState(false);
-  const [showFlutterCode, setShowFlutterCode] = useState(false);
-  const [showAddPlaylistModal, setShowAddPlaylistModal] = useState(false);
-  const [showProgramModal, setShowProgramModal] = useState<Channel | null>(null);
-  const [showOptionsMenu, setShowOptionsMenu] = useState(false);
-  const [isPhoneFrame, setIsPhoneFrame] = useState(false);
-  const [selectedCategoryName, setSelectedCategoryName] = useState<string | undefined>();
-
-  const [showSettingsScreen, setShowSettingsScreen] = useState(false);
-  const [showProModal, setShowProModal] = useState(false);
-  const [showAboutModal, setShowAboutModal] = useState(false);
-  const [showAiVoiceModal, setShowAiVoiceModal] = useState(false);
-  const [showM3uModal, setShowM3uModal] = useState(false);
-  const [showOfflineModal, setShowOfflineModal] = useState(false);
-  const [showScreenCastModal, setShowScreenCastModal] = useState(false);
-  const [offlineState, setOfflineState] = useState<OfflineState>(() => offlineService.getState());
-
-  useEffect(() => {
-    const unsub = offlineService.subscribe((s) => {
-      setOfflineState(s);
-    });
-    return unsub;
-  }, []);
-
-  const [shareSession, setShareSession] = useState<{
-    sessionId: string;
-    friendName: string;
-    isHost: boolean;
-  } | null>(null);
-
-  // ==========================================
-  // ABONELİK & 7 GÜNLÜK ÜCRETSİZ DENEME (TRIAL) DURUMU
-  // ==========================================
-  const [subState, setSubState] = useState<SubscriptionState>(() => SubscriptionService.getState());
-  const [isPaywallForced, setIsPaywallForced] = useState<boolean>(false);
-  const [paywallReason, setPaywallReason] = useState<string>('');
-
-  const refreshSubscription = () => {
-    const updated = SubscriptionService.getState();
-    setSubState(updated);
-    return updated;
-  };
-
-  /**
-   * KRİTİK FONKSİYON KORUMA (GUARD/MIDDLEWARE)
-   * Canlı TV, Birlikte İzle, AI Arama ve Film Detayları öncesinde çalışır.
-   * Deneme bittiyse ve PRO değilse zorunlu Paywall açar ve işlemi engeller.
-   */
-  const checkPremiumStatus = (actionDescription?: string): boolean => {
-    const current = SubscriptionService.getState();
-    setSubState(current);
-
-    if (current.isPremium) {
-      return true;
-    }
-
-    // Deneme süresi dolmuş ve PRO değil: KİLİTLE & PAYWALL AÇ
-    setPaywallReason(
-      actionDescription
-        ? `${actionDescription} için 7 günlük ücretsiz deneme süreniz sona ermiştir. Devam etmek için lütfen Kotak TV PRO aboneliğinizi başlatın.`
-        : '7 günlük ücretsiz deneme süreniz sona ermiştir. Kotak TV PRO özelliklerine erişmek için lütfen aboneliğinizi başlatın.'
-    );
-    setIsPaywallForced(true);
-    setShowProModal(true);
-    return false;
-  };
-
-  // Çocuk Profili & Ebeveyn Kilidi State'leri
-  const [currentProfile, setCurrentProfile] = useState<UserProfile>(() => {
-    try {
-      const saved = localStorage.getItem('kotak_user_profile');
-      if (saved) return JSON.parse(saved);
-    } catch {}
-    return PROFILES[0];
-  });
-  const [showProfileModal, setShowProfileModal] = useState(false);
-  const [parentalPin, setParentalPin] = useState('1234');
-
-  const isKidsMode = currentProfile.type === 'kids';
-
-  const displayedMovies = isKidsMode
-    ? TREND_MOVIES.filter((m) => m.genre.includes('Animasyon') || m.genre.includes('Macera') || m.id === 'm1' || m.id === 'm2')
-    : TREND_MOVIES;
-
-  const displayedSeries = isKidsMode
-    ? TREND_SERIES.filter((s) => s.genre.includes('Animasyon') || s.genre.includes('Macera'))
-    : TREND_SERIES;
-
-  const displayedRecentChannel = isKidsMode
-    ? CHANNELS_LIST.find((c) => c.isKidsFriendly) || RECENT_CHANNEL
-    : RECENT_CHANNEL;
-
-  const displayedCategories = isKidsMode
-    ? CATEGORIES_LIST.filter((c) => c.name.includes('Çocuk') || c.name.includes('Kinder') || c.name.includes('Belgesel') || c.name.includes('Ulusal'))
-    : CATEGORIES_LIST;
-
-  // Yerel hafızaya kaydet
-  useEffect(() => {
-    try {
-      localStorage.setItem('iptv_playlists', JSON.stringify(playlists));
-    } catch (e) {
-      console.error('Playlist kaydedilemedi:', e);
-    }
-  }, [playlists]);
-
-  const handleSavePlaylist = (newPlaylist: Playlist) => {
-    setPlaylists((prev) => [newPlaylist, ...prev]);
-    // Otomatik olarak Kotak TV Anasayfa sekmesine geçiş yap
-    setBottomTab('ANASAYFA');
-    setTopTab('ANASAYFA');
-  };
-
-  const handleQuickLoadDemo = () => {
-    const demoPlaylist: Playlist = {
-      id: 'demo-1',
-      name: 'Kotak TV Premium VIP List',
-      url: 'http://iptv.kotaktv.net:8080/get.php?username=vip&password=4k',
-      type: 'm3u',
-      addedAt: new Date().toLocaleDateString('tr-TR'),
-      channelCount: 655,
-    };
-    handleSavePlaylist(demoPlaylist);
-  };
-
-  const handleResetPlaylists = () => {
-    setPlaylists([]);
-    try {
-      localStorage.removeItem('iptv_playlists');
-    } catch {}
-  };
-
-  // Oynatıcıyı Başlat (Guard ile Korumalı)
-  const handlePlayChannel = (channel: Channel) => {
-    if (!checkPremiumStatus(`"${channel.name}" canlı yayınını izlemek`)) return;
-    setActiveMedia(null);
-    setActiveChannel(channel);
-  };
-
-  const handlePlayMedia = (item: MediaItem) => {
-    if (!checkPremiumStatus(`"${item.title}" içeriğini izlemek`)) return;
-    setActiveChannel(null);
-    setActiveMedia(item);
-  };
-
-  const handleOpenAiVoice = () => {
-    if (!checkPremiumStatus('Yapay Zeka Sesli Komut ve Arama motorunu kullanmak')) return;
-    setShowAiVoiceModal(true);
-  };
-
-  const handleOpenSharePlay = () => {
-    if (!checkPremiumStatus('Kotak SharePlay (Birlikte İzle) özelliğini başlatmak')) return;
-    setShareSession({
-      sessionId: 'ktk-' + Math.floor(100000 + Math.random() * 900000),
-      friendName: 'Emre',
-      isHost: true,
-    });
-    setActiveChannel(RECENT_CHANNEL);
-  };
-
-  const handleSelectCategory = (cat: CategoryItem) => {
-    setSelectedCategoryName(cat.name);
-    setBottomTab('TV KANALI');
-  };
-
-  const handleFilterCategory = (category: string) => {
-    setSelectedCategoryName(category);
-    setBottomTab('TV KANALI');
-  };
-
-  const isPlaylistEmpty = playlists.length === 0;
-
   return (
-    <div className="min-h-screen bg-[#000000] text-white flex flex-col items-center justify-start select-none">
-      {/* Üst Çerçeve & Durum Kontrol Çubuğu */}
-      <header className="w-full bg-[#121214] border-b border-white/[0.08] px-4 py-2 flex items-center justify-between text-xs z-20">
-        <div className="flex items-center gap-2">
-          <span className="w-2 h-2 rounded-full bg-[#007AFF] animate-pulse"></span>
-          <span className="font-bold tracking-wide text-zinc-200">
-            Kotak TV • Ultra 4K (OLED Mode)
-          </span>
-          <span className="hidden sm:inline-block text-[11px] px-2 py-0.5 rounded-full bg-zinc-800 text-zinc-300">
-            {isPlaylistEmpty ? '0 Liste (Boş Ekran)' : `${playlists.length} Liste Yüklü`}
-          </span>
-        </div>
+    <SafeAreaProvider>
+      <StatusBar style="light" />
+      <KotakApp />
+    </SafeAreaProvider>
+  );
+}
+function KotakApp() {
+  const insets = useSafeAreaInsets();
+  const [configs, setConfigs] = useState<PlaylistConfig[]>([]);
+  const [catalogs, setCatalogs] = useState<Record<string, Entry[]>>({});
+  const [guides, setGuides] = useState<Guide>({});
+  const [guideNotice, setGuideNotice] = useState(
+    "EPG bağlantısı bulunamadı. Liste ayarlarından XMLTV adresi ekleyebilirsiniz.",
+  );
+  const [top, setTop] = useState<MainTab>("ANASAYFA");
+  const [tab, setTab] = useState<BottomNavTab>("ANASAYFA");
+  const [filter, setFilter] = useState("Tümü");
+  const [query, setQuery] = useState("");
+  const [add, setAdd] = useState(false);
+  const [busy, setBusy] = useState(false);
+  const [boot, setBoot] = useState(true);
+  const [loadingLists, setLoadingLists] = useState(false);
+  const [message, setMessage] = useState("");
+  const [formError, setFormError] = useState("");
+  const [playing, setPlaying] = useState<Entry[]>([]);
+  const [mini, setMini] = useState(false);
+  const [favorites, setFavorites] = useState<string[]>([]);
+  const [recent, setRecent] = useState<string[]>([]);
+  const [selecting, setSelecting] = useState(false);
+  const [selected, setSelected] = useState<string[]>([]);
+  const [episodes, setEpisodes] = useState<Entry[] | null>(null);
+  const [episodeBusy, setEpisodeBusy] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [optionsOpen, setOptionsOpen] = useState(false);
+  const [screen, setScreen] = useState<null | "library" | "settings">(null);
+  const [info, setInfo] = useState<string | null>(null);
+  const [shareOpen,setShareOpen]=useState(false);
+  const [shareRoom,setShareRoom]=useState<ShareRoom|null>(null);
+  const [entitlement,setEntitlement]=useState<Entitlement|null>(null);
+  const [pendingReminder,setPendingReminder]=useState<{item:Entry;program:Program}|null>(null);
+  const [mediaDetails,setMediaDetails]=useState<Entry|null>(null);
+  const [details, setDetails] = useState<Entry | null>(null);
+  const [settings, setSettings] = useState<Preferences>({
+    layout: "Klasik",
+    saveHistory: true,
+  });
+  const [protection, setProtection] = useState<Protection | null>(null);
+  const [child, setChild] = useState(false);
+  const [securityReady, setSecurityReady] = useState(false);
+  const [securityError, setSecurityError] = useState(false);
+  const [parentOpen, setParentOpen] = useState(false);
+  const [cacheTime, setCacheTime] = useState<number | null>(null);
+  const [audioTestOpen,setAudioTestOpen]=useState(false);
+  const [voiceOpen,setVoiceOpen]=useState(false);
+  const [categoryOpen,setCategoryOpen]=useState(false);
+  const [homeCategories,setHomeCategories]=useState<string[]|null>(null);
+  const [imdbOpen,setImdbOpen]=useState(false);
+  const [imdb,setImdb]=useState<Record<string,ImdbInfo>>({});
+  const [epgSettingsOpen,setEpgSettingsOpen]=useState(false);
+  const [reminders,setReminders]=useState<string[]>([]);
+  const [now, setNow] = useState(Date.now());
+  const [onlyFavorites, setOnlyFavorites] = useState(false);
+  const job = useRef<AbortController | null>(null);
+  const episodeJob = useRef<AbortController | null>(null);
+  const guideFlights=useRef(new Map<string,{signal:AbortSignal;promise:Promise<Guide>}>());
+  const guideCache=useRef(new Map<string,{url:string;at:number;data:Guide}>());
+  const rawEntries = useMemo(() => Object.values(catalogs).flat(), [catalogs]);
+  const allEntries=useMemo(()=>rawEntries.map(item=>{const data=imdb[metadataKey(item)];return data&&item.kind!=="live"?{...item,imdbRating:data.rating,imdbId:data.id,logo:data.poster||item.logo}:item}),[rawEntries,imdb]);
+  const entries = useMemo(() => childEntries(allEntries, child, protection?.groups || []), [allEntries, child, protection]);
+  const byId = useMemo(() => new Map(entries.map((e) => [e.id, e])), [entries]);
+  const favoritesSet = useMemo(() => new Set(favorites), [favorites]);
+  const selectedSet = useMemo(() => new Set(selected), [selected]);
+  const live = useMemo(
+    () => entries.filter((e) => e.kind === "live"),
+    [entries],
+  );
+  const movies = useMemo(
+    () => entries.filter((e) => e.kind === "movie"),
+    [entries],
+  );
+  const series = useMemo(
+    () => entries.filter((e) => e.kind === "series" || e.kind === "episode"),
+    [entries],
+  );
+  const groups = useMemo(() => {
+    const counts = new Map<string, number>();
+    live.forEach((e) => counts.set(e.group, (counts.get(e.group) || 0) + 1));
+    return [...counts].map(([name, channelCount]) => ({
+      id: name,
+      name,
+      channelCount,
+    }));
+  }, [live]);
 
-        <div className="flex items-center gap-2">
-          {/* 7 Günlük Deneme & PRO Durum Rozeti */}
-          <button
-            onClick={() => {
-              setIsPaywallForced(!subState.isPremium);
-              setShowProModal(true);
-            }}
-            className={`flex items-center gap-1.5 px-2.5 sm:px-3 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer border ${
-              subState.isProUser
-                ? 'bg-amber-500/20 text-amber-300 border-amber-500/40 shadow-sm shadow-amber-500/20'
-                : subState.isTrialActive
-                ? 'bg-[#007AFF]/20 text-[#007AFF] border-[#007AFF]/40 hover:bg-[#007AFF]/30'
-                : 'bg-red-500/25 text-red-300 border-red-500/50 animate-pulse'
-            }`}
-            title="Abonelik ve 7 Günlük Deneme Durumu"
-          >
-            {subState.isProUser ? (
-              <>
-                <Sparkles className="w-3.5 h-3.5 text-amber-400 fill-current" />
-                <span className="hidden sm:inline">PRO ABONE</span>
-              </>
-            ) : subState.isTrialActive ? (
-              <>
-                <ShieldCheck className="w-3.5 h-3.5 text-[#007AFF]" />
-                <span>Deneme: {subState.trialDaysRemaining} Gün</span>
-              </>
-            ) : (
-              <>
-                <Lock className="w-3.5 h-3.5 text-red-400" />
-                <span>Deneme Bitti (PRO)</span>
-              </>
-            )}
-          </button>
+  const homeGroups=useMemo(()=>{const index=new Map(groups.map(g=>[g.name,g]));return homeCategories===null?groups:homeCategories.map(name=>index.get(name)).filter((g):g is typeof groups[number]=>!!g)},[groups,homeCategories]);
+  const topMovies=useMemo(()=>rankedMedia(movies,"movie"),[movies]);
+  const topSeries=useMemo(()=>rankedMedia(series,"series"),[series]);
 
-          {/* Profil Seçici Butonu (Yetişkin vs Çocuk) */}
-          <button
-            onClick={() => setShowProfileModal(true)}
-            className={`flex items-center gap-1.5 px-2.5 sm:px-3 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer border ${
-              isKidsMode
-                ? 'bg-amber-500/20 text-amber-300 border-amber-500/40 shadow-md shadow-amber-500/20'
-                : 'bg-zinc-800 hover:bg-zinc-700 text-zinc-200 border-white/10'
-            }`}
-            title="Profil Değiştir (Ebeveyn Kilidi)"
-          >
-            <span className="text-sm leading-none">{currentProfile.avatar}</span>
-            <span className="hidden sm:inline">{currentProfile.name}</span>
-            {isKidsMode && <span className="text-[9px] bg-amber-500 text-black px-1 rounded font-black">KIDS</span>}
-          </button>
+  async function readGuide(config:PlaylistConfig,url:string|undefined,signal:AbortSignal,cacheEntries:Entry[]=[]){
+    url=url||inferredEpgUrl(config);
+    if(!url){setGuideNotice("EPG adresi yok. XMLTV bağlantısı ekleyin.");return;}
+    const address=url;const key=config.id+":"+address;
+    try{
+      const previous=guideCache.current.get(config.id);
+      let scoped:Guide;
+      if(previous?.url===address&&Date.now()-previous.at<60000)scoped=previous.data;
+      else{
+        let request=guideFlights.current.get(key);
+        if(!request||request.signal.aborted){
+          setGuideNotice("EPG yükleniyor…");
+          const promise=(async()=>{
+            const data=await requestText(address,signal);const parsed=await parseGuideAsync(data.text,Date.now(),signal);
+            const result:Guide={};for(const [name,programs] of Object.entries(parsed))result[`${config.id}:${name}`]=programs;
+            if(!signal.aborted){guideCache.current.set(config.id,{url:address,at:Date.now(),data:result});setGuides(prev=>({...Object.fromEntries(Object.entries(prev).filter(([name])=>!name.startsWith(config.id+":"))),...result}));}
+            return result;
+          })();
+          request={signal,promise};guideFlights.current.set(key,request);
+          void promise.finally(()=>{if(guideFlights.current.get(key)?.promise===promise)guideFlights.current.delete(key)}).catch(()=>{});
+        }
+        scoped=await request.promise;
+      }
+      if(signal.aborted)return;
+      setGuideNotice(Object.keys(scoped).length?"Sağlayıcının 24 saatlik mevcut programları alındı.":"XMLTV’de güncel program yok veya kanal eşleştirmesi bulunamadı.");
+      if(cacheEntries.length)void cacheCatalog(config.id,cacheEntries,scoped).then(()=>setCacheTime(Date.now())).catch(()=>setMessage("EPG önbelleği kaydedilemedi."));
+    }catch{if(!signal.aborted)setGuideNotice("EPG alınamadı. EPG Kaynağı bölümünden geçerli XMLTV adresini kontrol edin.");}
+  }
+  useEffect(() => {
+    const controller = new AbortController();
+    job.current = controller;
+    void (async () => {
+      try {
+        // Fail closed if protected profile storage cannot be read.
+        try {
+          const stored = await SecureStore.getItemAsync(PROTECTION_KEY);
+          if (stored) {
+            const value = JSON.parse(stored) as Protection;
+            if (!/^\d{4,6}$/.test(value.pin) || !Array.isArray(value.groups)) throw new Error("Invalid profile");
+            setProtection(value); setChild(true);
+          }
+          setSecurityReady(true);
+        } catch { setSecurityError(true); return; }
+        const [saved, fav, history] = await Promise.all([
+          savedPlaylists(),
+          AsyncStorage.getItem("kotak.favorites"),
+          AsyncStorage.getItem("kotak.recent"),
+        ]);
+        if (controller.signal.aborted) return;
+        const preferences = await AsyncStorage.getItem("kotak.preferences");
+        if (preferences && !controller.signal.aborted)
+          setSettings((prev) => ({ ...prev, ...JSON.parse(preferences) }));
+        const [homeRaw,imdbRaw]=await Promise.all([AsyncStorage.getItem("kotak.homeCategories"),AsyncStorage.getItem("kotak.imdb")]);
+        try{if(homeRaw){const data=JSON.parse(homeRaw);if(Array.isArray(data))setHomeCategories(data.filter((v):v is string=>typeof v==="string"));}}catch{}
+        try{if(imdbRaw)setImdb(JSON.parse(imdbRaw));}catch{}
+        void scheduledReminders().then(setReminders).catch(()=>{});
+        setConfigs(saved);
+        setFavorites(JSON.parse(fav || "[]"));
+        setRecent(JSON.parse(history || "[]"));
+        setBoot(false);
+        setLoadingLists(saved.length > 0);
+        // Show available metadata immediately while refreshing actual playback addresses.
+        for (const config of saved) {
+          const cache = await cachedCatalog(config.id).catch(() => null);
+          if (controller.signal.aborted) return;
+          if (cache) {
+            setCatalogs(prev => ({...prev, [config.id]: cache.entries}));
+            setGuides(prev => ({...prev, ...cache.guide}));
+            setCacheTime(cache.savedAt);
+            setGuideNotice("Kayıtlı 24 saatlik EPG gösteriliyor; güncellik bağlantıya bağlıdır.");
+          }
+        }
+        if (controller.signal.aborted) return;
+        setBoot(false);
+        setLoadingLists(saved.length > 0);
+        for (const config of saved) {
+          void readGuide(config,inferredEpgUrl(config),controller.signal);
+          try {
+            const catalog = await loadCatalog(config, controller.signal, partial => {
+              if (!controller.signal.aborted) setCatalogs(prev => ({...prev, [config.id]: partial.entries}));
+            });
+            if (controller.signal.aborted) return;
+            setCatalogs((prev) => ({ ...prev, [config.id]: catalog.entries }));
+            if (catalog.warnings.length) setMessage(catalog.warnings.join(" "));
+            void cacheCatalog(config.id, catalog.entries).then(() => setCacheTime(Date.now())).catch(() => setMessage("Kanal önbelleği kaydedilemedi."));
+            void readGuide(config, catalog.epgUrl, controller.signal, catalog.entries);
+          } catch (e) {
+            if (!controller.signal.aborted) setMessage((e as Error).message);
+          }
+        }
+      } catch {
+        if (!controller.signal.aborted)
+          setMessage(
+            "Kayıtlı listeler okunamadı. Listeyi yeniden ekleyebilirsiniz.",
+          );
+      } finally {
+        if (!controller.signal.aborted) { setBoot(false); setLoadingLists(false); }
+      }
+    })();
+    return () => {
+      controller.abort();
+      episodeJob.current?.abort();
+    };
+  }, []);
+  useEffect(() => {
+    if (!protection || child) return;
+    const listener = AppState.addEventListener("change", state => {
+      if (state === "background") {
+        episodeJob.current?.abort();
+        setChild(true); setPlaying([]); setScreen(null); setEpisodes(null);
+        setDetails(null); setSearchOpen(false); setInfo(null); setOptionsOpen(false); setAdd(false);setShareOpen(false);setPendingReminder(null);setMediaDetails(null);setVoiceOpen(false);setImdbOpen(false);setCategoryOpen(false);setEpgSettingsOpen(false);
+      }
+    });
+    return () => listener.remove();
+  }, [protection, child]);
+  useEffect(() => {
+    const timer = setInterval(() => setNow(Date.now()), 30000);
+    return () => clearInterval(timer);
+  }, []);
+  useEffect(() => {
+    const sub = BackHandler.addEventListener("hardwareBackPress", () => {
+      if (playing.length && !mini) {
+        setMini(true);
+        return true;
+      }
+      if (screen) {
+        setScreen(null);
+        return true;
+      }
+      if (tab !== "ANASAYFA") {
+        setTab("ANASAYFA");
+        return true;
+      }
+      return false;
+    });
+    return () => sub.remove();
+  }, [playing.length, mini, tab, screen]);
 
-          {/* Yapay Zeka Sesli Komut Kısayolu */}
-          <button
-            onClick={handleOpenAiVoice}
-            className="flex items-center gap-1.5 px-3 py-1 rounded-lg bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-500 hover:to-cyan-400 text-white font-bold transition-all shadow-md shadow-[#007AFF]/25 cursor-pointer"
-          >
-            <Mic className="w-3.5 h-3.5" />
-            <span className="hidden sm:inline">AI Sesli Komut</span>
-          </button>
-
-          {/* Kotak SharePlay Birlikte İzle Kısayolu */}
-          <button
-            onClick={handleOpenSharePlay}
-            className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1 rounded-lg bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold transition-all shadow-md shadow-emerald-500/25 cursor-pointer"
-            title="Arkadaşınla Birlikte İzle (SharePlay)"
-          >
-            <Users className="w-3.5 h-3.5" />
-            <span className="hidden md:inline">Birlikte İzle</span>
-          </button>
-
-          {/* Boş Durum / Dolu Durum Hızlı Test Geçiş Butonları */}
-          {isPlaylistEmpty ? (
-            <button
-              onClick={handleQuickLoadDemo}
-              className="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-400 text-xs font-semibold border border-emerald-500/30 cursor-pointer transition-colors"
-            >
-              <span>Örnek Listeyi Yükle</span>
-            </button>
-          ) : (
-            <button
-              onClick={handleResetPlaylists}
-              className="hidden sm:flex items-center gap-1 px-2.5 py-1 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-zinc-400 hover:text-red-400 text-xs cursor-pointer transition-colors"
-              title="Oynatma listelerini sıfırla ve No Playlists ekranına dön"
-            >
-              <RotateCcw className="w-3 h-3" />
-              <span>Listeleri Sıfırla (Boş Ekran)</span>
-            </button>
-          )}
-
-          <button
-            onClick={() => setShowAddPlaylistModal(true)}
-            className="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-zinc-200 text-xs cursor-pointer"
-          >
-            <Plus className="w-3.5 h-3.5 text-[#007AFF]" />
-            <span className="hidden sm:inline">Liste Ekle</span>
-          </button>
-
-          <button
-            onClick={() => setIsPhoneFrame(!isPhoneFrame)}
-            className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-zinc-300 hover:text-white transition-colors cursor-pointer"
-            title="Telefon / Tam Ekran Görünümünü Değiştir"
-          >
-            <Smartphone className="w-3.5 h-3.5 text-[#007AFF]" />
-            <span className="hidden sm:inline">
-              {isPhoneFrame ? 'Tam Ekran' : 'Telefon Kasası'}
-            </span>
-          </button>
-
-          <button
-            onClick={() => setShowFlutterCode(true)}
-            className="flex items-center gap-1.5 px-3 py-1 rounded-lg bg-[#007AFF] hover:bg-blue-600 text-white font-bold transition-all shadow-md shadow-[#007AFF]/25 cursor-pointer"
-          >
-            <FileCode className="w-3.5 h-3.5" />
-            <span>Flutter Kodları</span>
-          </button>
-        </div>
-      </header>
-
-      {/* Ana Uygulama Konteyneri */}
-      <main
-        className={`w-full flex-1 flex flex-col bg-[#000000] relative transition-all duration-300 ${
-          isPhoneFrame
-            ? 'max-w-[414px] my-4 rounded-[40px] border-[6px] border-zinc-800 shadow-[0_0_50px_rgba(0,122,255,0.15)] overflow-hidden min-h-[840px]'
-            : 'max-w-2xl'
-        }`}
-      >
-        {/* Eğer henüz oynatma listesi eklenmemişse ve ANASAYFA sekmesindeyse: Screenshot 1 (NoPlaylistsView) */}
-        {isPlaylistEmpty && bottomTab === 'ANASAYFA' ? (
+  async function importList(config: PlaylistConfig, refreshing = false) {
+    if (busy || boot) return;
+    job.current?.abort();
+    const controller = new AbortController();
+    job.current = controller;
+    setBusy(true); setLoadingLists(true); setFormError(""); setMessage("");
+    let published = false;
+    const publish = async (catalog: {entries: Entry[];epgUrl?:string}) => {
+      if (controller.signal.aborted) return;
+      if (!published) {
+        await savePlaylist(config);
+        if (controller.signal.aborted) return;
+        published = true;
+        void readGuide(config,catalog.epgUrl,controller.signal);
+        setConfigs(prev => [...prev.filter(p => p.id !== config.id), config]);
+        setAdd(false); setBusy(false); setFilter("Tümü"); setQuery("");
+        if (!refreshing) {setTab("ANASAYFA"); setTop("ANASAYFA");}
+      }
+      setCatalogs(prev => ({...prev, [config.id]: catalog.entries}));
+    };
+    try {
+      const catalog = await loadCatalog(config, controller.signal, publish);
+      if (controller.signal.aborted) return;
+      await publish(catalog);
+      setMessage(`${catalog.entries.length} içerik alındı.${catalog.warnings.length ? ` ${catalog.warnings.join(" ")}` : ""}`);
+      // Persistence and EPG are independent background work, never an import gate.
+      void cacheCatalog(config.id, catalog.entries).then(() => setCacheTime(Date.now())).catch(() => setMessage("Kanal önbelleği kaydedilemedi. Yayın izlemeye devam edebilirsiniz."));
+      void readGuide(config, catalog.epgUrl, controller.signal, catalog.entries);
+    } catch (e) {
+      if (!controller.signal.aborted) {
+        const error = (e as Error).message;
+        if (refreshing || published) setMessage(error); else setFormError(error);
+      }
+    } finally {
+      if (!controller.signal.aborted) {setBusy(false); setLoadingLists(false);}
+    }
+  }
+  async function refreshAll(){
+    if(!configs.length){addList();return;}
+    job.current?.abort();const controller=new AbortController();job.current=controller;setBusy(false);setBoot(false);setLoadingLists(true);setMessage("");
+    try{for(const config of configs){
+      if(controller.signal.aborted)return;
+      void readGuide(config,inferredEpgUrl(config),controller.signal);
+      try{const result=await loadCatalog(config,controller.signal,partial=>{if(!controller.signal.aborted)setCatalogs(prev=>({...prev,[config.id]:partial.entries}));});
+       if(controller.signal.aborted)return;setCatalogs(prev=>({...prev,[config.id]:result.entries}));
+       void cacheCatalog(config.id,result.entries).catch(()=>{});void readGuide(config,result.epgUrl,controller.signal,result.entries);
+      }catch(e){if(!controller.signal.aborted)setMessage((e as Error).message);}
+    }}finally{if(!controller.signal.aborted)setLoadingLists(false);}
+  }
+  async function refreshEntitlement(){try{const config=await serviceConfig();if(!config)return;const verified=await verifiedEntitlement(config);setEntitlement(verified);await scheduleExpiryNotices(verified);}catch{ /* No verified store result: do not fabricate dates or billing entitlement. */ }}
+  useEffect(()=>{void refreshEntitlement();const sub=AppState.addEventListener("change",state=>{if(state==="active")void refreshEntitlement();});return()=>sub.remove();},[]);
+  useEffect(()=>{if(shareRoom&&(playing.length!==1||playing[0].id!==shareRoom.itemId)){void closeShareRoom(shareRoom).catch(()=>{});setShareRoom(null);}},[playing,shareRoom]);
+  async function reminder(item:Entry,p:Program){
+    if(!reminders.includes(`kotak-${item.id}-${p.start}`)){setPendingReminder({item,program:p});return;}
+    try{await toggleReminder(item,p);setReminders(await scheduledReminders());}catch(e){Alert.alert("Hatırlatıcı",(e as Error).message);}
+  }
+  const latestEntries=useRef(entries);latestEntries.current=entries;
+  const latestPlay=useRef(play);latestPlay.current=play;
+  const handledNotification=useRef("");
+  useEffect(()=>{
+    const handle=(response:Notifications.NotificationResponse|null)=>{
+      if(!response || handledNotification.current===response.notification.request.identifier)return;
+      if(response.notification.request.content.data.screen==="subscription"){setInfo("Kotak TV PRO");return;}
+      const id=response.notification.request.content.data.channelId;
+      const entry=latestEntries.current.find(e=>e.id===id);
+      if(entry){handledNotification.current=response.notification.request.identifier;void Notifications.clearLastNotificationResponseAsync().catch(()=>{});latestPlay.current(entry);}
+    };
+    const sub=Notifications.addNotificationResponseReceivedListener(handle);
+    void Notifications.getLastNotificationResponseAsync().then(handle).catch(()=>{});
+    return()=>sub.remove();
+  },[entries]);
+  function closeForm() {
+    job.current?.abort();
+    setBusy(false);
+    setLoadingLists(false);
+    setAdd(false);
+    setFormError("");
+  }
+  function play(item: Entry) {
+    if (item.kind === "series") {
+      const config = configs.find((c) => c.id === item.playlistId);
+      if (!config) return;
+      episodeJob.current?.abort();
+      const controller = new AbortController();
+      episodeJob.current = controller;
+      setEpisodes([]);
+      setEpisodeBusy(true);
+      void loadEpisodes(config, item, controller.signal)
+        .then((data) => {
+          if (!controller.signal.aborted) setEpisodes(data);
+        })
+        .catch((e) => {
+          if (!controller.signal.aborted) {
+            setEpisodes(null);
+            Alert.alert("Bölümler", (e as Error).message);
+          }
+        })
+        .finally(() => {
+          if (!controller.signal.aborted) setEpisodeBusy(false);
+        });
+      return;
+    }
+    if (!item.uri) {
+      Alert.alert("Yayın bağlantısı", "Kayıtlı kanal bilgisi gösteriliyor. İnternet bağlantısını kontrol edip Kütüphaneniz ekranından listeyi yenileyin.");
+      return;
+    }
+    setPlaying([item]);
+    setMini(false);
+    setEpisodes(null);
+    if (settings.saveHistory)
+      setRecent((prev) => {
+        const next = [item.id, ...prev.filter((id) => id !== item.id)].slice(
+          0,
+          20,
+        );
+        void AsyncStorage.setItem("kotak.recent", JSON.stringify(next)).catch(
+          () => setMessage("İzleme geçmişi kaydedilemedi."),
+        );
+        return next;
+      });
+  }
+  function changeTab(value: BottomNavTab) {
+    if (playing.length) setMini(true);
+    setScreen(null);
+    setTab(value);
+    setQuery("");
+    setFilter("Tümü");
+    setOnlyFavorites(false);
+  }
+  function toggleFavorite(id: string) {
+    setFavorites((prev) => {
+      const next = prev.includes(id)
+        ? prev.filter((x) => x !== id)
+        : [...prev, id];
+      void AsyncStorage.setItem("kotak.favorites", JSON.stringify(next)).catch(
+        () => setMessage("Favoriler kaydedilemedi."),
+      );
+      return next;
+    });
+  }
+  function select(item: Entry) {
+    setSelected((prev) => {
+      if (prev.includes(item.id)) return prev.filter((id) => id !== item.id);
+      if (prev.length === 4) {
+        Alert.alert("Çoklu ekran", "En fazla dört kanal seçebilirsiniz.");
+        return prev;
+      }
+      return [...prev, item.id];
+    });
+  }
+  function program(item: Entry): Program | undefined {
+    return scheduleFor(item,guides).find(
+      (p) => p.start <= now && p.end > now,
+    );
+  }
+  const listing = useMemo(() => {
+    const source = onlyFavorites
+      ? entries
+      : tab === "EPG" || tab === "TV KANALI" || top === "CANLI"
+        ? live
+        : top === "FILM"
+          ? [...movies, ...series]
+          : entries;
+    const q = query.trim().toLocaleLowerCase("tr-TR");
+    return source.filter(
+      (e) =>
+        (filter === "Tümü" || e.group === filter) &&
+        (!q || e.name.toLocaleLowerCase("tr-TR").includes(q)) &&
+        (!onlyFavorites || favoritesSet.has(e.id)),
+    );
+  }, [
+    entries,
+    live,
+    movies,
+    series,
+    query,
+    filter,
+    onlyFavorites,
+    favoritesSet,
+    tab,
+    top,
+  ]);
+  function addList() {
+    setOptionsOpen(false);
+    if (child) { setParentOpen(true); return; }
+    setFormError("");
+    setAdd(true);
+  }
+  function removeList(config: PlaylistConfig) {
+    if (child) { setParentOpen(true); return; }
+    Alert.alert("Listeyi kaldır", `${config.name} kaldırılsın mı?`, [
+      { text: "Vazgeç" },
+      {
+        text: "Kaldır",
+        style: "destructive",
+        onPress: () => {
+          job.current?.abort(); setBusy(false); setLoadingLists(false);
+          void deletePlaylist(config.id)
+            .then(() => {
+              void removeCache(config.id).catch(() => {});
+              setConfigs((prev) => prev.filter((c) => c.id !== config.id));
+              setCatalogs((prev) => {
+                const next = { ...prev };
+                delete next[config.id];
+                return next;
+              });
+              setPlaying((prev) =>
+                prev.filter((e) => e.playlistId !== config.id),
+              );
+            })
+            .catch(() => setMessage("Liste kaldırılamadı."));
+        },
+      },
+    ]);
+  }
+  function open(name: string) {
+    setOptionsOpen(false);
+    if (playing.length) setMini(true);
+    if(name==="Ses Testi"){setPlaying([]);setAudioTestOpen(true);return;}
+    if(name==="Yapay Zeka Sesli Komut"){setInfo(null);setPlaying([]);setVoiceOpen(true);return;}
+    if(name==="Birlikte İzle (SharePlay)"){if(child){setParentOpen(true);return;}setShareOpen(true);return;}
+    if(name==="IMDb Sıralaması"){setImdbOpen(true);return;}
+    if(name==="EPG Kaynağı"){if(child){setParentOpen(true);return;}setEpgSettingsOpen(true);return;}
+    if (name === "Profil Seçin" || name === "Güvenli Çocuk Profili" || (child && name === "Kütüphaneniz")) { setParentOpen(true); return; }
+    if (name === "Çoklu Ekran & PiP") { changeTab("TV KANALI"); setSelecting(true); setSelected([]); return; }
+    if (name === "Kütüphaneniz") {
+      setScreen("library");
+      return;
+    }
+    if (name === "Ayarlar") {
+      setScreen("settings");
+      return;
+    }
+    if (name === "Kaydedilmiş videolar") {
+      setInfo("Kaydedilmiş videolar");
+      return;
+    }
+    if (name === "Bizimle iletişime geçin") {
+      void Linking.openURL("mailto:kotaktv@gmail.com").catch(() =>
+        setInfo("İletişim"),
+      );
+      return;
+    }
+    if (name === "Arkadaşınıza önerin") {
+      void Share.share({
+        title: "Kotak TV",
+        message:
+          "Kotak TV — Kendi IPTV listenizle canlı TV, film ve dizi deneyimi.",
+      }).catch(() => {});
+      return;
+    }
+    setInfo(name);
+  }
+  function changeSettings(value: Preferences) {
+    setSettings(value);
+    void AsyncStorage.setItem("kotak.preferences", JSON.stringify(value)).catch(
+      () => setMessage("Ayarlar kaydedilemedi."),
+    );
+  }
+  const recentEntry =
+    recent
+      .map((id) => byId.get(id))
+      .find((e): e is Entry => !!e && e.kind === "live") || live[0];
+  const recentProgram = details ? program(details) : undefined;
+  const showHome =
+    !screen && tab === "ANASAYFA" && top === "ANASAYFA" && !onlyFavorites;
+  const videoCatalog = top === "FILM" && tab === "ANASAYFA" && !onlyFavorites;
+  const channelView =
+    !showHome &&
+    !videoCatalog &&
+    tab !== "EPG" &&
+    tab !== "DAHA FAZLA" &&
+    !screen;
+  function channelRow(item: Entry) {
+    return (
+      <ChannelCard
+        item={item}
+        guide={guides}
+        now={now}
+        favorite={favoritesSet.has(item.id)}
+        selecting={selecting}
+        selected={selectedSet.has(item.id)}
+        onFavorite={() => toggleFavorite(item.id)}
+        onGuide={item.kind==="live"?()=>setDetails(item):undefined}
+        onPlay={() =>
+          selecting && item.kind === "live" ? select(item) : play(item)
+        }
+      />
+    );
+  }
+  if (!securityReady) return <View style={[s.root, {alignItems:"center",justifyContent:"center",padding:24}]}>{securityError ? <Text style={d.secondary}>Koruma bilgileri okunamadı. Güvenliğiniz için içerik gizlendi. Uygulamayı yeniden açın.</Text> : <ActivityIndicator color={colors.blue}/>}</View>;
+  return (
+    <View style={s.root}>
+      <View style={s.canvas}>
+        {configs.length === 0 && !boot && tab === "ANASAYFA" && !screen ? (
           <NoPlaylistsView
-            onAddPlaylistClick={() => setShowAddPlaylistModal(true)}
-            onOptionsClick={() => setShowOptionsMenu(true)}
-            bottomTab={bottomTab}
-            onBottomTabChange={(tab) => setBottomTab(tab)}
-            showStatusBar={isPhoneFrame}
-            onQuickLoadDemo={handleQuickLoadDemo}
+            onAddPlaylistClick={addList}
+            onAiVoiceClick={()=>open("Yapay Zeka Sesli Komut")}
+            onOptionsClick={() => setOptionsOpen(true)}
+            bottomTab={tab}
+            onBottomTabChange={changeTab}
           />
         ) : (
           <>
-            {/* Üst Bar (iOS Durum Çubuğu + Sekmeler + AI Ses + Arama) */}
-            {bottomTab !== 'DAHA FAZLA' && (
-              <TopBar
-                currentTab={topTab}
-                onTabChange={(tab) => {
-                  setTopTab(tab);
-                  if (bottomTab !== 'ANASAYFA') setBottomTab('ANASAYFA');
-                }}
-                onSearchClick={() => setShowSearch(true)}
-                onOptionsClick={() => setShowOptionsMenu(true)}
-                onAiVoiceClick={handleOpenAiVoice}
-                onBackClick={() => {
-                  if (bottomTab !== 'ANASAYFA') setBottomTab('ANASAYFA');
-                  else setTopTab('ANASAYFA');
-                }}
-                showStatusBar={isPhoneFrame}
-                isEffectiveOffline={offlineState.isEffectiveOffline}
-                onOpenOfflineModal={() => setShowOfflineModal(true)}
-                onOpenScreenCast={() => setShowScreenCastModal(true)}
-              />
+            {screen ? (
+              <View style={{ height: insets.top }} />
+            ) : (
+              tab !== "DAHA FAZLA" && (
+                <TopBar
+                  currentTab={top}
+                  onTabChange={(value) => {
+                    changeTab("ANASAYFA");
+                    setTop(value);
+                  }}
+                  onSearchClick={() => setSearchOpen(true)}
+                  onOptionsClick={() => setOptionsOpen(true)}
+                  onAiVoiceClick={() => open("Yapay Zeka Sesli Komut")}
+                  onOpenScreenCast={() => open("Ekran Paylaşımı")}
+                  onBackClick={() => changeTab("ANASAYFA")}
+                />
+              )
             )}
-
-            {/* Sekmelere Göre İçerik Alanı */}
-            <div className="flex-1 overflow-y-auto">
-              {bottomTab === 'ANASAYFA' && (
-                <>
-                  {topTab === 'ANASAYFA' && (
-                    <div className="pb-28">
-                      {/* 1. Trend Filmler Bölümü (Netflix Numaralı) */}
-                      <TrendSection
-                        title={isKidsMode ? "Çocuk ve Aile Filmleri" : "Trend Filmler"}
-                        items={displayedMovies}
-                        onItemClick={handlePlayMedia}
-                      />
-
-                      {/* 2. Trend Diziler Bölümü (Netflix Numaralı) */}
-                      <TrendSection
-                        title={isKidsMode ? "Çocuk ve Animasyon Dizileri" : "Trend Diziler"}
-                        items={displayedSeries}
-                        onItemClick={handlePlayMedia}
-                      />
-
-                      {/* 3. Son Kanallar Bölümü (beIN SPORTS 1 HQ & Progress Bar) */}
-                      <RecentChannelCard
-                        channel={displayedRecentChannel}
-                        onPlayChannel={handlePlayChannel}
-                        onMoreDetails={(ch) => setShowProgramModal(ch)}
-                      />
-
-                      {/* 4. Kategoriler Listesi */}
-                      <CategoriesList
-                        categories={displayedCategories}
-                        onSelectCategory={handleSelectCategory}
-                        totalCategoriesCount={displayedCategories.length}
-                      />
-                    </div>
+            {child && <Pressable onPress={() => setParentOpen(true)} style={s.notice}><Shield size={17} color={colors.blue}/><Text style={d.secondary}>Çocuk Profili · Ebeveyn PIN’i ile aç</Text></Pressable>}
+            {!!message && (
+              <Pressable onPress={() => setMessage("")} style={s.notice}>
+                <Text style={d.secondary}>{message}</Text>
+                <X size={13} color={colors.zinc500} />
+              </Pressable>
+            )}
+            {(boot || busy || loadingLists) && (
+              <View style={s.loading}>
+                <ActivityIndicator color={colors.blue} />
+                <Text style={d.secondary}>
+                  {boot ? "Kayıtlı bilgiler açılıyor…" : entries.length ? "İçerikler arka planda güncelleniyor…" : "Sağlayıcıdan liste alınıyor…"}
+                </Text>
+              </View>
+            )}
+            <View style={{ flex: 1 }}>
+              {screen === "library" ? (
+                <LibraryScreen
+                  configs={configs}
+                  counts={Object.fromEntries(
+                    Object.entries(catalogs).map(([key, value]) => [
+                      key,
+                      value.length,
+                    ]),
                   )}
-
-                  {topTab === 'CANLI' && (
-                    <TvChannelsView
-                      onPlayChannel={handlePlayChannel}
-                      initialCategory={isKidsMode ? 'Çocuk Dünyası' : 'Tümü'}
-                      isKidsMode={isKidsMode}
-                      onOpenSubwooferDemo={() => setActiveChannel(RECENT_CHANNEL)}
-                      onOpenOfflineModal={() => setShowOfflineModal(true)}
-                      onOpenScreenCast={() => setShowScreenCastModal(true)}
+                  busy={busy || boot}
+                  onAdd={addList}
+                  onRefresh={(config) => void importList(config, true)}
+                  onRemove={removeList}
+                  onBack={() => setScreen(null)}
+                />
+              ) : screen === "settings" ? (
+                <SettingsView
+                  settings={settings}
+                  onChange={changeSettings}
+                  onBack={() => setScreen(null)}
+                  onInfo={open}
+                  onClearHistory={() => {
+                    setRecent([]);
+                    void AsyncStorage.removeItem("kotak.recent");
+                  }}
+                />
+              ) : tab === "DAHA FAZLA" ? (
+                <View style={{ flex: 1, paddingTop: insets.top }}>
+                  <MoreScreen
+                    streamCount={entries.length}
+                    playlistCount={configs.length}
+                    onOpen={open}
+                  />
+                </View>
+              ) : tab === "EPG" ? (
+                <EpgScreen
+                  channels={live}
+                  guide={guides}
+                  now={now}
+                  notice={guideNotice}
+                  onPlay={play}
+                  reminders={reminders}
+                  onReminder={(item,p)=>void reminder(item,p)}
+                  onRefresh={()=>void refreshAll()}
+                  onEpgSettings={()=>open("EPG Kaynağı")}
+                />
+              ) : showHome ? (
+                <ScrollView
+                  showsVerticalScrollIndicator={false}
+                  contentContainerStyle={{ paddingBottom: 160 }}
+                  refreshControl={<RefreshControl refreshing={loadingLists} onRefresh={()=>void refreshAll()} tintColor={colors.blue}/>}
+                >
+                  {entitlement&&!!expiryMessage(entitlement,now)&&<View style={{padding:16}}><Text style={[d.secondary,{color:colors.blue}]}>{expiryMessage(entitlement,now)}</Text></View>}
+                  <HomeActions onVoice={()=>open("Yapay Zeka Sesli Komut")} onRefresh={()=>void refreshAll()} loading={loadingLists}/>
+                  <View style={{paddingHorizontal:16,marginBottom:12}}><Pill label="IMDb’ye göre sırala" onPress={()=>setImdbOpen(true)}/></View>
+                  {settings.layout === "Modern" && (
+                    <View style={{ paddingHorizontal: 16 }}>
+                      <FeatureCards onOpen={open} />
+                    </View>
+                  )}
+                  <MediaRail
+                    title="Trend Filmler"
+                    items={topMovies}
+                    onPlay={setMediaDetails}
+                    onMore={() => setTop("FILM")}
+                  />
+                  <MediaRail
+                    title="Trend Diziler"
+                    items={topSeries}
+                    onPlay={setMediaDetails}
+                    onMore={() => setTop("FILM")}
+                  />
+                  {recentEntry && (
+                    <RecentCard
+                      item={recentEntry}
+                      guide={guides}
+                      now={now}
+                      onPlay={() => play(recentEntry)}
+                      onDetails={() => setDetails(recentEntry)}
                     />
                   )}
-
-                  {topTab === 'FILM' && (
-                    <div className="px-4 py-4 pb-28 space-y-6">
-                      <div>
-                        <h3 className="text-white font-bold text-base mb-3">Tüm Trend Filmler</h3>
-                        <div className="grid grid-cols-2 gap-3">
-                          {TREND_MOVIES.map((m) => (
-                            <div
-                              key={m.id}
-                              onClick={() => handlePlayMedia(m)}
-                              className="bg-zinc-900 rounded-xl overflow-hidden border border-white/5 cursor-pointer group hover:border-[#007AFF]/50 transition-all"
-                            >
-                              <img
-                                src={m.posterUrl}
-                                alt={m.title}
-                                className="w-full h-32 object-cover group-hover:scale-105 transition-transform"
-                              />
-                              <div className="p-2.5">
-                                <h4 className="text-white font-bold text-xs truncate">{m.title}</h4>
-                                <div className="text-zinc-400 text-[10px] mt-0.5">
-                                  %{m.rating} • {m.releaseDate}
-                                </div>
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-
-                      <div>
-                        <h3 className="text-white font-bold text-base mb-3">Tüm Trend Diziler</h3>
-                        <div className="grid grid-cols-2 gap-3">
-                          {TREND_SERIES.map((s) => (
-                            <div
-                              key={s.id}
-                              onClick={() => handlePlayMedia(s)}
-                              className="bg-zinc-900 rounded-xl overflow-hidden border border-white/5 cursor-pointer group hover:border-[#007AFF]/50 transition-all"
-                            >
-                              <img
-                                src={s.posterUrl}
-                                alt={s.title}
-                                className="w-full h-32 object-cover group-hover:scale-105 transition-transform"
-                              />
-                              <div className="p-2.5">
-                                <h4 className="text-white font-bold text-xs truncate">{s.title}</h4>
-                                <div className="text-zinc-400 text-[10px] mt-0.5">
-                                  %{s.rating} • {s.releaseDate}
-                                </div>
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-                  )}
-                </>
-              )}
-
-              {bottomTab === 'EPG' && (
-                <EpgView
-                  onPlayChannel={handlePlayChannel}
-                  isKidsMode={isKidsMode}
-                  onOpenOfflineModal={() => setShowOfflineModal(true)}
-                />
-              )}
-
-              {bottomTab === 'TV KANALI' && (
-                <TvChannelsView
-                  onPlayChannel={handlePlayChannel}
-                  initialCategory={selectedCategoryName || (isKidsMode ? 'Çocuk Dünyası' : 'Tümü')}
-                  isKidsMode={isKidsMode}
-                  onOpenSubwooferDemo={() => setActiveChannel(RECENT_CHANNEL)}
-                  onOpenOfflineModal={() => setShowOfflineModal(true)}
-                  onOpenScreenCast={() => setShowScreenCastModal(true)}
-                />
-              )}
-
-              {/* DAHA FAZLA (More Screen & Settings) */}
-              {bottomTab === 'DAHA FAZLA' && (
-                showSettingsScreen ? (
-                  <SettingsScreen onBack={() => setShowSettingsScreen(false)} />
-                ) : (
-                  <MoreScreen
-                    streamCount={playlists.length || 1}
-                    onOpenSettings={() => setShowSettingsScreen(true)}
-                    onOpenProPaywall={() => setShowProModal(true)}
-                    onOpenAbout={() => setShowAboutModal(true)}
-                    onOpenContact={() => {
-                      window.location.href = 'mailto:kotaktv@gmail.com?subject=Kotak%20TV%20Destek%20Talebi';
+                  <CategoriesList
+                    categories={homeGroups}
+                    totalCategoriesCount={homeGroups.length}
+                    onEdit={()=>setCategoryOpen(true)}
+                    onSelectCategory={(category) => {
+                      setFilter(category.name);
+                      setTab("TV KANALI");
+                      setTop("CANLI");
                     }}
-                    onOpenFlutterCode={() => setShowFlutterCode(true)}
-                    onOpenM3uManager={() => setShowM3uModal(true)}
-                    onTestPrefetch={() => setBottomTab('TV KANALI')}
-                    onOpenSubwoofer={() => setActiveChannel(RECENT_CHANNEL)}
-                    onOpenOfflineManager={() => setShowOfflineModal(true)}
-                    onOpenScreenCast={() => setShowScreenCastModal(true)}
-                    isProUser={subState.isProUser}
-                    trialDaysRemaining={subState.trialDaysRemaining}
-                    isEffectiveOffline={offlineState.isEffectiveOffline}
                   />
-                )
-              )}
-            </div>
+                </ScrollView>
+              ) : videoCatalog ? (
+                <FlatList
+                  key="media"
+                  numColumns={2}
+                  data={listing}
+                  keyExtractor={(e) => e.id}
+                  contentContainerStyle={d.screenList}
+                  columnWrapperStyle={{ gap: 12 }}
+                  ListHeaderComponent={
+                    <View style={{ marginBottom: 16 }}>
+                      <Text style={d.h2}>Filmler & Diziler</Text>
+                      <Text style={d.secondary}>
+                        {movies.length} film · {series.length} dizi / bölüm
+                      </Text>
+                    </View>
+                  }
+                  renderItem={({ item }) => (
+                    <Pressable onPress={() => setMediaDetails(item)} style={s.movieCard}>
+                      {item.logo ? (
+                        <Image
+                          source={{ uri: item.logo }}
+                          style={s.moviePoster}
+                          resizeMode="cover"
+                        />
+                      ) : (
+                        <View
+                          style={[
+                            s.moviePoster,
+                            { alignItems: "center", justifyContent: "center" },
+                          ]}
+                        >
+                          <Film size={32} color={colors.zinc500} />
+                        </View>
+                      )}
+                      <View style={{ padding: 10 }}>
+                        <Text numberOfLines={1} style={d.name}>
+                          {item.name}
+                        </Text>
+                        <Text numberOfLines={1} style={d.micro}>
+                          {item.group}
+                        </Text>
+                      </View>
+                    </Pressable>
+                  )}
+                  ListEmptyComponent={
+                    <Text style={d.emptyRail}>
+                      Bu listede film veya dizi bulunmuyor.
+                    </Text>
+                  }
+                />
+              ) : channelView ? (
+                <FlatList
+                  key="channels"
+                  data={listing}
+                  keyExtractor={(e) => e.id}
+                  initialNumToRender={12}
+                  maxToRenderPerBatch={12}
+                  windowSize={7}
+                  contentContainerStyle={d.screenList}
+                  ListHeaderComponent={
+                    <>
 
-            {/* Sabit Oval Alt Menü (Bottom Navigation Bar) */}
-            <CustomBottomNav
-              currentTab={bottomTab}
-              onTabChange={(tab) => {
-                setBottomTab(tab);
-                if (tab !== 'DAHA FAZLA') {
-                  setShowSettingsScreen(false);
-                }
-              }}
-            />
+                      <View
+                        style={[d.between, { marginTop: 18, marginBottom: 10 }]}
+                      >
+                        <View style={d.inline}>
+                          <Text style={d.h2}>
+                            {onlyFavorites ? "Favorileriniz" : "TV Kanalları"}
+                          </Text>
+                          <Text style={d.count}>{listing.length}</Text>
+                        </View>
+                        <View style={d.inline}>
+                          <IconButton
+                            small
+                            icon={Star}
+                            label="Favoriler"
+                            color={
+                              onlyFavorites ? colors.amber : colors.zinc400
+                            }
+                            onPress={() => setOnlyFavorites((v) => !v)}
+                          />
+                          <IconButton
+                            small
+                            icon={Search}
+                            label="Ara"
+                            onPress={() => setSearchOpen(true)}
+                          />
+                          <IconButton
+                            small
+                            icon={Grid2X2}
+                            label="Çoklu ekran"
+                            onPress={() => {
+                              setSelecting((v) => !v);
+                              setSelected([]);
+                            }}
+                          />
+                        </View>
+                      </View>
+                      <ScrollView
+                        horizontal
+                        showsHorizontalScrollIndicator={false}
+                        contentContainerStyle={{ gap: 6, paddingBottom: 16 }}
+                      >
+                        {["Tümü", ...groups.map((g) => g.name)].map((group) => (
+                          <Pill
+                            key={group}
+                            label={group}
+                            active={group === filter}
+                            onPress={() => setFilter(group)}
+                          />
+                        ))}
+                      </ScrollView>
+                      {selecting && (
+                        <View style={[d.between, { marginBottom: 14 }]}>
+                          <Text style={d.secondary}>
+                            2 veya 4 kanal seçin ({selected.length})
+                          </Text>
+                          <Pill
+                            active
+                            label="Çoklu Ekranı Aç"
+                            disabled={
+                              selected.length !== 2 && selected.length !== 4
+                            }
+                            onPress={() => {
+                              setPlaying(
+                                selected
+                                  .map((id) => byId.get(id))
+                                  .filter((e): e is Entry => !!e),
+                              );
+                              setMini(false);
+                              setSelecting(false);
+                              setSelected([]);
+                            }}
+                          />
+                        </View>
+                      )}
+                    </>
+                  }
+                  renderItem={({ item }) => channelRow(item)}
+                  ListEmptyComponent={
+                    <Text style={d.emptyRail}>
+                      Bu görünümde kanal bulunamadı.
+                    </Text>
+                  }
+                />
+              ) : null}
+            </View>
+            <CustomBottomNav currentTab={tab} onTabChange={changeTab} />
           </>
         )}
-      </main>
-
-      {/* Yapay Zeka Sesli Komut Modalı */}
-      <AiVoiceSearchModal
-        isOpen={showAiVoiceModal}
-        onClose={() => setShowAiVoiceModal(false)}
-        onSelectChannel={handlePlayChannel}
-        onSelectMedia={handlePlayMedia}
-        onFilterCategory={handleFilterCategory}
-      />
-
-      {/* Pro Sürümüne Geç Modalı (Screenshot 2 & 7 Günlük Deneme / RevenueCat Kilidi) */}
-      <ProPaywallModal
-        isOpen={showProModal}
-        onClose={() => {
-          if (!isPaywallForced || subState.isPremium) {
-            setIsPaywallForced(false);
-            setShowProModal(false);
+      </View>
+      {playing.length > 0 && (
+        <View
+          pointerEvents="box-none"
+          style={
+            mini
+              ? [StyleSheet.absoluteFill, { zIndex: 100 }]
+              : [
+                  s.fullPlayer,
+                  { paddingTop: insets.top, paddingBottom: insets.bottom },
+                ]
           }
+        >
+          <PlaybackPanel
+            items={playing}
+            room={shareRoom}
+            mini={mini}
+            onMini={() => setMini((v) => !v)}
+            onClose={() => setPlaying([])}
+            onFeature={open}
+            seekSeconds={settings.seekSeconds || 15}
+            bufferSeconds={settings.bufferSeconds || 15}
+            onMulti={() => {
+              setMini(true);
+              changeTab("TV KANALI");
+              setSelecting(true);
+            }}
+          />
+        </View>
+      )}
+      {shareOpen&&<SharePanel item={playing.length===1?playing[0]:undefined} room={shareRoom} onRoom={setShareRoom} onClose={()=>setShareOpen(false)} onConfigured={()=>void refreshEntitlement()}/>}
+      {pendingReminder&&<ReminderPicker item={pendingReminder.item} program={pendingReminder.program} onClose={()=>setPendingReminder(null)} onSave={async minutes=>{await toggleReminder(pendingReminder.item,pendingReminder.program,minutes);setReminders(await scheduledReminders());setPendingReminder(null);Alert.alert("Hatırlatıcı kuruldu",`${minutes} dakika önce bildirim gönderilecek.`);}}/>}
+      {mediaDetails&&<MediaDetails item={mediaDetails} info={imdb[metadataKey(mediaDetails)]} onClose={()=>setMediaDetails(null)} onPlay={()=>{const item=mediaDetails;setMediaDetails(null);play(item);}}/>}
+      {audioTestOpen&&<AudioDiagnostics onClose={()=>setAudioTestOpen(false)}/>}
+      {categoryOpen&&<CategoryPicker groups={groups} selected={homeCategories} onClose={()=>setCategoryOpen(false)} onSave={values=>{setHomeCategories(values);setCategoryOpen(false);void AsyncStorage.setItem("kotak.homeCategories",JSON.stringify(values)).catch(()=>setMessage("Kategori seçimi kaydedilemedi."));}}/>}
+      {voiceOpen&&<VoiceSearch entries={entries} guide={guides} metadata={imdb} onDetails={setMediaDetails} onReminder={(item,p)=>void reminder(item,p)} onClose={()=>setVoiceOpen(false)} onPlay={item=>{
+        if(item.kind!=="series"){play(item);return;}
+        const config=configs.find(c=>c.id===item.playlistId);if(!config)return;
+        const controller=new AbortController();episodeJob.current?.abort();episodeJob.current=controller;
+        void loadEpisodes(config,item,controller.signal).then(values=>{if(!controller.signal.aborted&&values[0])play(values[0]);}).catch(()=>Alert.alert("Dizi","Bölüm bilgileri alınamadı."));
+      }}/>}
+      {imdbOpen&&<ImdbPanel entries={entries} cache={imdb} onUpdate={setImdb} onClose={()=>setImdbOpen(false)}/>}
+      {epgSettingsOpen&&<EpgSettings configs={configs} onClose={()=>setEpgSettingsOpen(false)} onSave={async config=>{await savePlaylist(config);setConfigs(prev=>prev.map(c=>c.id===config.id?config:c));const controller=new AbortController();void readGuide(config,config.epgUrl,controller.signal,catalogs[config.id]||[]);}}/>}
+      <PlaylistForm
+        visible={add}
+        busy={busy}
+        error={formError}
+        onClose={closeForm}
+        onSave={(config) => void importList(config)}
+      />
+      <SearchPanel
+        visible={searchOpen}
+        entries={entries}
+        onClose={() => setSearchOpen(false)}
+        onPlay={play}
+      />
+      <Sheet
+        visible={optionsOpen}
+        title="Hızlı Seçenekler"
+        compact
+        onClose={() => setOptionsOpen(false)}
+      >
+        {[
+          ["Yapay Zeka Sesli Komut", Mic],
+          ["AI Canlı Maç Analizi", Sparkles],
+          ["Kişisel AI TV Asistanı", Sparkles],
+          ["AI Canlı Ses Çevirisi", Mic],
+          ["Birlikte İzle (SharePlay)", Users],
+          ["Çoklu Ekran & PiP", Grid2X2],
+          ["Yeni Oynatma Listesi Ekle", Plus],
+          ["Çevrimdışı Mod & 24s EPG", WifiOff],
+          ["Ekran Paylaşımı", Tv],
+          ["Kotak TV PRO", Sparkles],
+          ["Profil Seçin", Shield],
+          ["Kütüphaneniz", ListVideo],
+          ["Ayarlar", Settings],
+        ].map(([title, icon]) => {
+          const Icon = icon as typeof Mic;
+          return (
+            <Pressable
+              key={String(title)}
+              style={s.optionRow}
+              onPress={() =>
+                title === "Yeni Oynatma Listesi Ekle"
+                  ? addList()
+                  : open(String(title))
+              }
+            >
+              <Text style={d.name}>{String(title)}</Text>
+              <Icon size={18} color={colors.blue} />
+            </Pressable>
+          );
+        })}
+      </Sheet>
+      <Sheet
+        visible={episodes !== null}
+        title="Bölümler"
+        onClose={() => {
+          episodeJob.current?.abort();
+          setEpisodes(null);
         }}
-        isForced={isPaywallForced && !subState.isPremium}
-        reason={paywallReason}
-        onSuccess={() => {
-          setIsPaywallForced(false);
-          refreshSubscription();
-        }}
-        onStateChange={refreshSubscription}
-      />
-
-      {/* Hakkında Modalı (Screenshot 7) */}
-      <AboutModal
-        isOpen={showAboutModal}
-        onClose={() => setShowAboutModal(false)}
-      />
-
-      {/* M3U & Sunucu Yönetim Modalı */}
-      {showM3uModal && (
-        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="w-full max-w-lg bg-[#141416] rounded-3xl border border-white/10 p-5 shadow-2xl relative max-h-[90vh] overflow-y-auto">
-            <div className="flex items-center justify-between pb-3 border-b border-zinc-800">
-              <span className="text-white font-bold text-sm">IPTV Sunucu & M3U Yöneticisi</span>
-              <button
-                onClick={() => setShowM3uModal(false)}
-                className="w-8 h-8 rounded-full bg-zinc-800 hover:bg-zinc-700 flex items-center justify-center text-white"
-              >
-                <X className="w-4 h-4" />
-              </button>
-            </div>
-            <div className="py-2">
-              <MoreSettingsView
-                onOpenFlutterCode={() => {
-                  setShowM3uModal(false);
-                  setShowFlutterCode(true);
-                }}
-                isDeviceMode={isPhoneFrame}
-                onToggleDeviceMode={() => setIsPhoneFrame(!isPhoneFrame)}
-              />
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Oynatma Listesi Ekle Modalı */}
-      <AddPlaylistModal
-        isOpen={showAddPlaylistModal}
-        onClose={() => setShowAddPlaylistModal(false)}
-        onSavePlaylist={handleSavePlaylist}
-      />
-
-      {/* Video Oynatıcı Modalı */}
-      {(activeChannel || activeMedia) && (
-        <PlayerModal
-          channel={activeChannel}
-          mediaItem={activeMedia}
-          initialShareSession={shareSession}
-          onClose={() => {
-            setActiveChannel(null);
-            setActiveMedia(null);
-            setShareSession(null);
-          }}
-          onSelectChannel={(ch) => setActiveChannel(ch)}
-        />
-      )}
-
-      {/* Arama Modalı */}
-      {showSearch && (
-        <SearchModal
-          onClose={() => setShowSearch(false)}
-          onSelectChannel={handlePlayChannel}
-          onSelectMedia={handlePlayMedia}
-        />
-      )}
-
-      {/* Program "DAHA FAZLA" Bilgi Modalı */}
-      {showProgramModal && (
-        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-end sm:items-center justify-center p-4">
-          <div className="w-full max-w-md bg-[#161618] rounded-3xl p-5 border border-white/10 shadow-2xl animate-in slide-in-from-bottom duration-200">
-            <div className="flex items-center justify-between pb-3 border-b border-zinc-800">
-              <div className="flex items-center gap-2">
-                <span className="text-xs bg-[#007AFF] text-white px-2 py-0.5 rounded font-black">
-                  CANLI
-                </span>
-                <h3 className="font-bold text-white text-base">
-                  {showProgramModal.currentProgram.title}
-                </h3>
-              </div>
-              <button
-                onClick={() => setShowProgramModal(null)}
-                className="text-zinc-400 hover:text-white p-1"
-              >
-                <X className="w-5 h-5" />
-              </button>
-            </div>
-
-            <div className="py-4 space-y-3 text-xs text-zinc-300">
-              <div className="flex items-center justify-between text-zinc-400">
-                <span>Kanal:</span>
-                <span className="font-bold text-white">{showProgramModal.name}</span>
-              </div>
-              <div className="flex items-center justify-between text-zinc-400">
-                <span>Yayın Saati:</span>
-                <span className="font-mono text-[#007AFF] font-bold">
-                  {showProgramModal.currentProgram.startTime} - {showProgramModal.currentProgram.endTime}
-                </span>
-              </div>
-              <p className="text-zinc-400 leading-relaxed pt-1">
-                {showProgramModal.currentProgram.description}
-              </p>
-            </div>
-
-            <div className="flex gap-2.5 pt-2">
-              <button
-                onClick={() => {
-                  handlePlayChannel(showProgramModal);
-                  setShowProgramModal(null);
-                }}
-                className="flex-1 py-2.5 rounded-xl bg-[#007AFF] hover:bg-blue-600 text-white font-bold text-xs cursor-pointer transition-colors"
-              >
-                Canlı Yayını İzle
-              </button>
-              <button
-                onClick={() => setShowProgramModal(null)}
-                className="px-4 py-2.5 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-zinc-300 text-xs font-semibold cursor-pointer"
-              >
-                Kapat
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Üç Nokta Seçenekler Menüsü */}
-      {showOptionsMenu && (
-        <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="w-full max-w-xs bg-[#1a1a1d] rounded-2xl p-4 border border-white/10 shadow-2xl space-y-2">
-            <div className="flex items-center justify-between pb-2 border-b border-zinc-800">
-              <span className="text-white font-bold text-sm">Hızlı Seçenekler</span>
-              <button
-                onClick={() => setShowOptionsMenu(false)}
-                className="text-zinc-400 hover:text-white"
-              >
-                <X className="w-4 h-4" />
-              </button>
-            </div>
-
-            <button
-              onClick={() => {
-                setShowOptionsMenu(false);
-                handleOpenAiVoice();
-              }}
-              className="w-full text-left py-2 px-3 rounded-lg hover:bg-zinc-800 text-xs text-white font-semibold flex items-center justify-between text-[#007AFF]"
+      >
+        {episodeBusy && <ActivityIndicator color={colors.blue} />}
+        {(episodes || []).map((item) => (
+          <View key={item.id}>{channelRow(item)}</View>
+        ))}
+      </Sheet>
+      <Sheet
+        visible={details !== null}
+        title={details?.name || "Program Bilgisi"}
+        onClose={() => setDetails(null)}
+      >
+        <Text style={d.h2}>{recentProgram?.title || "Canlı Yayın"}</Text>
+        <Text style={[d.secondary, { marginVertical: 14 }]}>
+          {details?.group}
+        </Text>
+        <ProgramBar program={recentProgram} now={now} />
+        {details&&scheduleFor(details,guides).filter(p=>p.end>now).map(p=><View key={p.start} style={{flexDirection:'row',alignItems:'center',gap:12,paddingVertical:12}}><Text style={d.micro}>{clock(p.start)}</Text><Text style={[d.secondary,{flex:1}]}>{p.title}</Text>{p.start>now&&<Pill label={reminders.includes(`kotak-${details.id}-${p.start}`)?"Hatırlatmayı kaldır":"Hatırlat"} onPress={()=>{const channel=details;setDetails(null);void reminder(channel,p);}}/>}</View>)}
+        <View style={{ marginTop: 24 }}>
+          <Pill
+            active
+            icon={Play}
+            label="Canlı Yayını İzle"
+            onPress={() => {
+              if (details) play(details);
+              setDetails(null);
+            }}
+          />
+        </View>
+      </Sheet>
+      {parentOpen && <ParentPanel protection={protection} child={child} groups={[...new Set(allEntries.filter(e => e.kind === "live").map(e => e.group))]} onClose={() => setParentOpen(false)} onChange={(value, isChild) => {episodeJob.current?.abort(); setProtection(value); setChild(isChild); setPlaying([]); setScreen(null); setSearchOpen(false); setInfo(null); setOptionsOpen(false); setEpisodes(null); setDetails(null); setSelected([]);setShareOpen(false);setPendingReminder(null);setMediaDetails(null);setVoiceOpen(false);setImdbOpen(false);setCategoryOpen(false);setEpgSettingsOpen(false);}} />}
+      {(info === "Kotak AI & Birlikte İzle" || FEATURE_NAMES.includes(info || "")) && <FeaturesPanel key={info} active={info!} entries={entries} cacheTime={cacheTime} onOpen={open} onClose={() => setInfo(null)} onPlay={play}/>}
+      {(info === "Kotak TV PRO" || info === "Pro Sürümüne Geç") && <ProPanel onClose={() => setInfo(null)}/>}
+      {info === "Hakkında" && <AboutPanel onClose={() => setInfo(null)}/>}
+      <Sheet
+        visible={info !== null && !FEATURE_NAMES.includes(info) && !["Kotak AI & Birlikte İzle","Kotak TV PRO","Pro Sürümüne Geç","Hakkında"].includes(info)}
+        title={info || ""}
+        onClose={() => setInfo(null)}
+      >
+        <View style={{ alignItems: "center", paddingVertical: 24, gap: 18 }}>
+          {info?.includes("Sesli") ? (
+            <View style={s.voiceOrb}>
+              <Mic size={38} color={colors.blue} />
+            </View>
+          ) : (
+            <Sparkles size={32} color={colors.blue} />
+          )}
+          <Text style={[d.h2, { textAlign: "center" }]}>{info}</Text>
+          {info === "Kotak TV PRO" || info === "Pro Sürümüne Geç" ? (
+            <>
+              <View style={s.priceCards}>
+                <View style={s.price}>
+                  <Text style={d.secondary}>Aylık Kotak Pro</Text>
+                  <Text style={s.priceText}>₺249</Text>
+                </View>
+                <View style={[s.price, { borderColor: colors.blue }]}>
+                  <Text style={d.linkSmall}>YILLIK PAKET</Text>
+                  <Text style={s.priceText}>₺999</Text>
+                </View>
+              </View>
+              <Text style={d.secondary}>
+                Mağaza üzerinden abonelik satın alma henüz etkin değil.
+              </Text>
+            </>
+          ) : (
+            <Text
+              style={[d.secondary, { textAlign: "center", lineHeight: 22 }]}
             >
-              <span>Yapay Zeka Sesli Komut</span>
-              <Mic className="w-4 h-4 text-[#007AFF]" />
-            </button>
-
-            <button
-              onClick={() => {
-                setShowOptionsMenu(false);
-                handleOpenSharePlay();
-              }}
-              className="w-full text-left py-2 px-3 rounded-lg hover:bg-zinc-800 text-xs text-emerald-400 font-semibold flex items-center justify-between"
-            >
-              <span>Birlikte İzle (SharePlay)</span>
-              <Users className="w-4 h-4 text-emerald-400" />
-            </button>
-
-            <button
-              onClick={() => {
-                setShowOptionsMenu(false);
-                setShowAddPlaylistModal(true);
-              }}
-              className="w-full text-left py-2 px-3 rounded-lg hover:bg-zinc-800 text-xs text-white font-semibold flex items-center justify-between"
-            >
-              <span>Yeni Oynatma Listesi Ekle</span>
-              <Plus className="w-4 h-4 text-[#007AFF]" />
-            </button>
-
-            <button
-              onClick={() => {
-                setShowOptionsMenu(false);
-                setShowOfflineModal(true);
-              }}
-              className="w-full text-left py-2 px-3 rounded-lg hover:bg-zinc-800 text-xs text-amber-300 font-semibold flex items-center justify-between"
-            >
-              <div className="flex items-center gap-1.5">
-                <span>Çevrimdışı Mod & 24s EPG</span>
-                {offlineState.isEffectiveOffline && (
-                  <span className="text-[9px] bg-amber-500/30 text-amber-300 px-1.5 rounded font-black">AKTİF</span>
-                )}
-              </div>
-              <WifiOff className="w-4 h-4 text-amber-400" />
-            </button>
-
-            <button
-              onClick={() => {
-                setShowOptionsMenu(false);
-                setShowScreenCastModal(true);
-              }}
-              className="w-full text-left py-2 px-3 rounded-lg hover:bg-zinc-800 text-xs text-[#007AFF] font-semibold flex items-center justify-between"
-            >
-              <span>Ekran Paylaşımı & İkinci Cihaz</span>
-              <Cast className="w-4 h-4 text-[#007AFF]" />
-            </button>
-
-            <button
-              onClick={() => {
-                setShowOptionsMenu(false);
-                setIsPaywallForced(!subState.isPremium);
-                setShowProModal(true);
-              }}
-              className="w-full text-left py-2 px-3 rounded-lg hover:bg-zinc-800 text-xs text-amber-400 font-semibold flex items-center justify-between"
-            >
-              <div className="flex items-center gap-1.5">
-                <span>Kotak TV PRO</span>
-                {subState.isProUser ? (
-                  <span className="text-[9px] bg-amber-500/30 text-amber-300 px-1.5 rounded font-black">AKTİF</span>
-                ) : (
-                  <span className="text-[9px] bg-blue-500/30 text-blue-300 px-1.5 rounded font-black">{subState.trialDaysRemaining} GÜN</span>
-                )}
-              </div>
-              <Sparkles className="w-4 h-4 text-amber-400" />
-            </button>
-
-            {/* Test Modu Deneme Butonları */}
-            <div className="pt-2 border-t border-zinc-800/80 space-y-1">
-              <button
-                onClick={() => {
-                  setShowOptionsMenu(false);
-                  SubscriptionService.expireTrial();
-                  refreshSubscription();
-                  setIsPaywallForced(true);
-                  setShowProModal(true);
-                }}
-                className="w-full text-left py-1.5 px-3 rounded-lg hover:bg-red-950/40 text-[11px] text-red-400 font-semibold flex items-center justify-between cursor-pointer"
-                title="Denemeyi bitirip kilitli ekranı test edin"
-              >
-                <span>🔒 Denemeyi Bitir (Kilit Testi)</span>
-                <Lock className="w-3.5 h-3.5 text-red-400" />
-              </button>
-
-              <button
-                onClick={() => {
-                  setShowOptionsMenu(false);
-                  SubscriptionService.resetTrial();
-                  refreshSubscription();
-                  setIsPaywallForced(false);
-                }}
-                className="w-full text-left py-1.5 px-3 rounded-lg hover:bg-cyan-950/40 text-[11px] text-cyan-400 font-semibold flex items-center justify-between cursor-pointer"
-                title="7 Günlük denemeyi yeniden başlatın"
-              >
-                <span>🔄 7 Günlük Denemeyi Yenile</span>
-                <RotateCcw className="w-3.5 h-3.5 text-cyan-400" />
-              </button>
-            </div>
-
-            {playlists.length > 0 && (
-              <button
-                onClick={() => {
-                  setShowOptionsMenu(false);
-                  handleResetPlaylists();
-                }}
-                className="w-full text-left py-2 px-3 rounded-lg hover:bg-zinc-800 text-xs text-red-400 font-semibold flex items-center justify-between"
-              >
-                <span>Listeleri Sıfırla (Boş Ekran)</span>
-                <RotateCcw className="w-4 h-4" />
-              </button>
-            )}
-
-            <button
-              onClick={() => {
-                setShowOptionsMenu(false);
-                setShowFlutterCode(true);
-              }}
-              className="w-full text-left py-2 px-3 rounded-lg hover:bg-zinc-800 text-xs text-white font-semibold flex items-center justify-between"
-            >
-              <span>Flutter Proje Kodları</span>
-              <FileCode className="w-4 h-4 text-[#007AFF]" />
-            </button>
-
-            <button
-              onClick={() => {
-                setShowOptionsMenu(false);
-                setIsPhoneFrame(!isPhoneFrame);
-              }}
-              className="w-full text-left py-2 px-3 rounded-lg hover:bg-zinc-800 text-xs text-white font-semibold flex items-center justify-between"
-            >
-              <span>Görünüm Modunu Değiştir</span>
-              <Smartphone className="w-4 h-4 text-[#007AFF]" />
-            </button>
-
-            <button
-              onClick={() => {
-                setShowOptionsMenu(false);
-                setShowProfileModal(true);
-              }}
-              className="w-full text-left py-2 px-3 rounded-lg hover:bg-zinc-800 text-xs text-amber-400 font-semibold flex items-center justify-between"
-            >
-              <span>Profil Değiştir (Ebeveyn Kilidi)</span>
-              <Shield className="w-4 h-4 text-amber-400" />
-            </button>
-
-            <button
-              onClick={() => {
-                setShowOptionsMenu(false);
-                setBottomTab('DAHA FAZLA');
-              }}
-              className="w-full text-left py-2 px-3 rounded-lg hover:bg-zinc-800 text-xs text-white font-semibold flex items-center justify-between"
-            >
-              <span>Ayarlar & Menü</span>
-              <Info className="w-4 h-4 text-[#007AFF]" />
-            </button>
-          </div>
-        </div>
-      )}
-
-      {/* Profil Seçimi & Ebeveyn Kilidi Modalı */}
-      <ProfileModal
-        isOpen={showProfileModal}
-        onClose={() => setShowProfileModal(false)}
-        currentProfile={currentProfile}
-        onSelectProfile={(p) => {
-          setCurrentProfile(p);
-          try {
-            localStorage.setItem('kotak_user_profile', JSON.stringify(p));
-          } catch {}
-        }}
-        parentalPin={parentalPin}
-      />
-
-      {/* Flutter Kod Görüntüleyici Tam Ekran Modalı */}
-      {showFlutterCode && (
-        <FlutterCodeViewer onClose={() => setShowFlutterCode(false)} />
-      )}
-
-      {/* 24 Saatlik Çevrimdışı Mod & EPG Yöneticisi Modalı */}
-      <OfflineManagerModal
-        isOpen={showOfflineModal}
-        onClose={() => setShowOfflineModal(false)}
-        onPlayOfflineChannel={handlePlayChannel}
-      />
-
-      {/* Ekran Paylaşımı & İkinci Cihaz (Cast / Smart TV) Modalı */}
-      <RemoteScreenCastModal
-        isOpen={showScreenCastModal}
-        onClose={() => setShowScreenCastModal(false)}
-        channel={activeChannel || RECENT_CHANNEL}
-        mediaItem={activeMedia}
-      />
-    </div>
+              {info === "Hakkında"
+                ? "Kotak TV\nKendi IPTV listenizle canlı TV, film ve dizi deneyimi.\nSürüm 1.0.2 · kotaktv@gmail.com"
+                : info === "İletişim"
+                  ? "kotaktv@gmail.com"
+                  : info?.includes("EPG")
+                    ? guideNotice
+                    : info === "Ses ve Altyazı" || info?.includes("Subwoofer")
+                      ? "Yayının sunduğu ses ve altyazı parçalarını oynatıcı kontrollerinden seçebilirsiniz. Sanal subwoofer işlemesi henüz etkin değil."
+                      : "Bu özellik henüz etkin değil. IPTV listelerinizden canlı yayın, film ve dizi izlemeye devam edebilirsiniz."}
+            </Text>
+          )}
+        </View>
+      </Sheet>
+    </View>
   );
 }
+const s = StyleSheet.create({
+  root: { flex: 1, backgroundColor: colors.bg },
+  canvas: {
+    flex: 1,
+    width: "100%",
+    maxWidth: 672,
+    alignSelf: "center",
+    backgroundColor: colors.bg,
+  },
+  notice: {
+    marginHorizontal: 16,
+    padding: 10,
+    borderRadius: 12,
+    backgroundColor: "#1c1c1e",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    gap: 6,
+  },
+  loading: {
+    flexDirection: "row",
+    gap: 8,
+    alignItems: "center",
+    padding: 12,
+    justifyContent: "center",
+  },
+  fullPlayer: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: colors.bg,
+    justifyContent: "center",
+    zIndex: 100,
+  },
+  movieCard: {
+    flex: 1,
+    maxWidth: "49%",
+    marginBottom: 14,
+    borderRadius: 14,
+    overflow: "hidden",
+    backgroundColor: "#18181b",
+  },
+  moviePoster: { height: 180, width: "100%", backgroundColor: "#202024" },
+  optionRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    paddingVertical: 14,
+    paddingHorizontal: 4,
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    borderBottomColor: "#ffffff0a",
+  },
+  voiceOrb: {
+    width: 90,
+    height: 90,
+    borderRadius: 45,
+    backgroundColor: "#007AFF22",
+    borderWidth: 1,
+    borderColor: "#007AFF55",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  priceCards: { flexDirection: "row", gap: 10, width: "100%" },
+  price: {
+    flex: 1,
+    padding: 18,
+    borderRadius: 16,
+    borderWidth: 1,
+    borderColor: "#ffffff1a",
+    backgroundColor: "#202024",
+    gap: 10,
+  },
+  priceText: { fontSize: 27, fontWeight: "900", color: colors.white },
+});

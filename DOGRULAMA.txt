@@ -1,0 +1,26 @@
+Kotak TV 1.0.5 — 19 Ekim 2026
+
+GEÇEN KONTROLLER
+- TypeScript: tsc --noEmit
+- SDK54 bağımlılık uyumu: expo install --check
+- Android native prebuild
+- Android Metro export: 2537 modül / 3.13 MB + 32 KB yerel test sesi
+- 17 IPTV/ağ/EPG testi
+- 3 önbellek testi (30.000 kayıt, atomik yazma, eski kayıt geçişi)
+- 8 katalog/asistan/ses parçası/kurtarma/IMDb testi
+- 22 bileşen etkileşim ve bildirim planlama testi (cihaz API'leri taklit)
+- 3 gerçek yerel HTTP sunucusu / tarayıcı senkronizasyon mantığı testi
+TOPLAM: 53
+
+YAPILMAYAN DOĞRULAMALAR
+- Kullanıcının IPTV hesabıyla gerçek video/ses oynatma
+- Fiziksel Android/iPhone üzerinde bildirim zamanı, PiP ve mikrofon
+- Safari/Chrome'da gerçek codec/akış oynatma ve uzak senkronizasyon
+- Referans ana ekranla piksel düzeyinde görsel eşleşme
+- 4K/60FPS ve cihazın bütün UX performansı
+
+HİZMET DURUMU
+Birlikte izleme servisi kaynakta var; internete yayımlanmadı.
+Mağaza makbuz doğrulaması/ödeme/gerçek deneme kilidi bağlı değil.
+Son süre bildirimleri doğrulanmış servis yanıtı olmadan kurulmaz.
+Canlı maç analizi, canlı ses çevirisi ve AI özet servisi bağlı değil.

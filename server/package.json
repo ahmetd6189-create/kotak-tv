@@ -1,0 +1,1 @@
+{"name":"kotak-share-service","private":true,"type":"module","scripts":{"start":"node server.mjs","test":"node --test server.test.mjs"},"dependencies":{"hls.js":"1.7.3"}}

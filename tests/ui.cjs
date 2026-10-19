@@ -1,0 +1,167 @@
+// Bellek içi DOM testi; tarayıcı açmaz ve ağ isteği yapmaz.
+const { JSDOM } = require('jsdom');
+const dom = new JSDOM('<!doctype html><html><head></head><body></body></html>', { url: 'https://test.invalid' });
+Object.assign(global, { window: dom.window, document: dom.window.document, HTMLElement: dom.window.HTMLElement, ShadowRoot: dom.window.ShadowRoot, SVGElement: dom.window.SVGElement, Element: dom.window.Element, MutationObserver: dom.window.MutationObserver, getComputedStyle: dom.window.getComputedStyle, requestAnimationFrame: fn => setTimeout(fn, 0), cancelAnimationFrame: clearTimeout });
+Object.defineProperty(global, 'navigator', { value: dom.window.navigator, configurable: true });
+window.requestAnimationFrame = global.requestAnimationFrame;
+window.matchMedia = () => ({ matches: false, addListener() {}, removeListener() {}, addEventListener() {}, removeEventListener() {} });
+global.IS_REACT_ACT_ENVIRONMENT = true;
+require('esbuild').buildSync({ stdin: { contents: `export { ReminderPicker } from './src/ui/ReminderPicker'; export { MediaDetails } from './src/ui/MediaDetails'; export { parseEntitlement, expiryNotices, expiryMessage, scheduleExpiryNotices } from './src/native/entitlement'; export { PlaylistForm } from './src/native/PlaylistForm'; export { SearchPanel, MoreScreen, ChannelCard } from './src/ui/Design'; export { SettingsView } from './src/ui/SettingsView'; export { ProPanel, AboutPanel, FeaturesPanel } from './src/ui/KotakFeatures'; export { ParentPanel } from './src/ui/ParentPanel'; export { HomeActions, CategoryPicker } from './src/ui/HomeControls'; export { EpgScreen } from './src/ui/EpgView'; export { VoiceSearch } from './src/ui/VoiceSearch'; export { toggleReminder, scheduledReminders } from './src/native/reminders'; export { speechMock, notificationMock } from './tests/device-services.cjs'; export { TopBar } from './src/components/TopBar'; export { SafeAreaProvider } from 'react-native-safe-area-context';`, resolveDir: process.cwd(), loader: 'tsx' }, outfile: 'tests/.ui-bundle.cjs', bundle: true, platform: 'node', format: 'cjs', jsx: 'automatic', loader: { '.js': 'jsx' }, alias: { 'react-native': 'react-native-web', 'expo-secure-store': './tests/secure-store.cjs', 'expo-audio':'./tests/device-services.cjs', 'expo-speech-recognition':'./tests/device-services.cjs', 'expo-notifications':'./tests/device-services.cjs' }, resolveExtensions: ['.web.tsx', '.web.ts', '.web.js', '.tsx', '.ts', '.js'], mainFields: ['browser', 'module', 'main'], conditions: ['browser'], external: ['react', 'react-dom', 'react-native-web'], define: { __DEV__: 'false', 'process.env.EXPO_OS': '"web"' }, logLevel: 'error' });
+const React = require('react');
+const { render, fireEvent, screen, cleanup, act } = require('@testing-library/react');
+const assert = require('node:assert/strict');
+const UI = require('./.ui-bundle.cjs');
+const h = React.createElement;
+const wrap = child => h(UI.SafeAreaProvider, { initialMetrics: { frame: { x: 0, y: 0, width: 393, height: 852 }, insets: { top: 24, bottom: 12, left: 0, right: 0 } } }, child);
+let passes = 0;
+async function check(name, fn) { try { await fn(); passes++; console.log(`PASS ${name}`); } finally { cleanup(); } }
+(async () => {
+ await check('M3U paneli: gruplanmış alanlar ve onay simgesi gerçek bağlantı bilgisini gönderir', async () => {
+   let saved;
+   render(wrap(h(UI.PlaylistForm, { visible: true, busy: false, error: '', onClose() {}, onSave: value => { saved = value; } })));
+   fireEvent.change(screen.getByPlaceholderText('Ad (isteğe bağlı)'), { target: { value: 'Listem' } });
+   fireEvent.change(screen.getByPlaceholderText('URL: https://sunucu/playlist.m3u'), { target: { value: 'https://provider.example/playlist.m3u' } });
+   fireEvent.click(screen.getByLabelText('Kaydet ve Onayla'));
+   assert.equal(saved.type, 'm3u'); assert.equal(saved.name, 'Listem'); assert.equal(saved.url, 'https://provider.example/playlist.m3u');
+   assert.equal(screen.queryByPlaceholderText('Kullanıcı Adı'), null);
+ });
+ await check('Xtream geçişi: orijinal alttaki okla sunucu/kullanıcı/şifre ekranına geçilir', async () => {
+   let saved;
+   render(wrap(h(UI.PlaylistForm, { visible: true, busy: false, error: '', onClose() {}, onSave: value => { saved = value; } })));
+   fireEvent.click(screen.getByLabelText('Xtream Codes hesabına geç'));
+   fireEvent.change(screen.getByPlaceholderText('Sunucu URL: http://domain.com:8080'), { target: { value: 'https://provider.example' } });
+   fireEvent.change(screen.getByPlaceholderText('Kullanıcı Adı'), { target: { value: 'test-user' } });
+   fireEvent.change(screen.getByPlaceholderText('Şifre'), { target: { value: 'test-password' } });
+   fireEvent.click(screen.getByLabelText('Kaydet ve Onayla'));
+   assert.equal(saved.type, 'xtream'); assert.equal(saved.username, 'test-user');
+ });
+ const channel = { id: 'tv', name: 'TRT 1', group: 'Ulusal', kind: 'live', logo: '', playlistId: 'p', uri: 'https://provider.example/live.m3u8' };
+ const movie = { ...channel, id: 'film', name: 'Film A', kind: 'movie' };
+ await check('Ayrı arama penceresinde film filtresi kanalı gizler ve seçimi oynatıcıya iletir', async () => {
+   let played; let closed = false;
+   render(wrap(h(UI.SearchPanel, { visible: true, entries: [channel, movie], onClose: () => { closed = true; }, onPlay: item => { played = item; } })));
+   fireEvent.click(screen.getByRole('button', { name: 'Filmler', exact: true })); assert.equal(screen.queryByText('TRT 1'), null);
+   fireEvent.click(screen.getByText('Film A')); assert.equal(played.id, 'film'); assert.equal(closed, true);
+ });
+ await check('Kanal kartında favori düğmesi yayını yanlışlıkla başlatmaz', async () => {
+   let plays = 0; let favorites = 0;
+   render(wrap(h(UI.ChannelCard, { item: channel, guide: {}, now: Date.now(), favorite: false, onPlay: () => plays++, onFavorite: () => favorites++ })));
+   fireEvent.click(screen.getByLabelText('TRT 1 favori')); assert.equal(favorites, 1); assert.equal(plays, 0);
+   fireEvent.click(screen.getByLabelText('İzle')); assert.equal(plays, 1);
+ });
+ await check('Daha Fazla: Kütüphaneniz ve Ayarlar, orijinal menüden ayrı sayfalara yönlenir', async () => {
+   let target;
+   render(wrap(h(UI.MoreScreen, { streamCount: 42, playlistCount: 1, onOpen: name => { target = name; } })));
+   fireEvent.click(screen.getByText('Kütüphaneniz')); assert.equal(target, 'Kütüphaneniz');
+   fireEvent.click(screen.getByText('Ayarlar')); assert.equal(target, 'Ayarlar');
+ });
+ await check('Ayarlar: Modern düzen seçimi görünüm tercihini değiştirir', async () => {
+   let value;
+   render(wrap(h(UI.SettingsView, { settings: { layout: 'Klasik', saveHistory: true }, onChange: v => { value = v; }, onBack() {}, onInfo() {}, onClearHistory() {} })));
+   fireEvent.click(screen.getByText('Modern')); assert.equal(value.layout, 'Modern');
+ });
+ await check('Telefon üst menüsü beş ek simgeyle taşmaz; sekmeler ve yuvarlak arama/seçenek düğmeleri çalışır', async () => {
+   let target;
+   render(wrap(h(UI.TopBar, { currentTab:'ANASAYFA', onTabChange: v => target=v, onSearchClick:()=>target='search',onOptionsClick:()=>target='options' })));
+   fireEvent.click(screen.getByText('CANLI')); assert.equal(target,'CANLI');
+   fireEvent.click(screen.getByLabelText('Hızlı seçenekler')); assert.equal(target,'options');
+   fireEvent.click(screen.getByLabelText('Ara')); assert.equal(target,'search');
+ });
+ await check('Kotak Pro: yalnız aylık/yıllık plan ve hizmet bağlanana kadar kapalı ödeme', async () => {
+   render(wrap(h(UI.ProPanel, {onClose(){}})));
+   assert.ok(screen.getByText('Aylık ₺249')); assert.ok(screen.getByText('Yıllık ₺999'));
+   const button=screen.getByRole('button', {name:'Mağaza bağlantısı bekleniyor'});
+   assert.equal(button.getAttribute('aria-disabled'),'true');
+ });
+ await check('Maç analizi servisi bağlı değilken sahte gol yüzdesi gösterilmez', async () => {
+   render(wrap(h(UI.FeaturesPanel, {active:'AI Canlı Maç Analizi',entries:[],cacheTime:null,onOpen(){},onPlay(){},onClose(){}})));
+   assert.ok(screen.getByText('Canlı maç ve oyuncu verisi sağlayıcısı bağlı değil.'));
+   assert.equal(screen.queryByText(/%[0-9]/),null);
+ });
+ await check('Akıllı komut yerel listeden spor kanallarını filtreler ve seçimi oynatır', async () => {
+   let played;
+   render(wrap(h(UI.FeaturesPanel, {active:'Yapay Zeka Sesli Komut',entries:[{...channel,name:'beIN SPORTS',group:'Spor'},movie],cacheTime:null,onOpen(){},onPlay:e=>played=e,onClose(){}})));
+   fireEvent.click(screen.getByText('Bana spor kanallarını bul'));
+   assert.ok(screen.getByText('beIN SPORTS')); assert.equal(screen.queryByText('Film A'),null);
+   fireEvent.click(screen.getByText('beIN SPORTS')); assert.equal(played.id,'tv');
+ });
+ await check('Çocuk profili yanlış PIN ile açılmaz, doğru PIN ile yetişkin profilini açar', async () => {
+   let changed;
+   render(wrap(h(UI.ParentPanel, {protection:{pin:'2468',groups:['Çocuk']},child:true,groups:['Çocuk','Spor'],onChange:(value,child)=>changed={value,child},onClose(){}})));
+   fireEvent.change(screen.getByLabelText('Ebeveyn PIN'),{target:{value:'1111'}});
+   await act(async()=>fireEvent.click(screen.getByText('PIN ile aç')));
+   assert.ok(screen.getByText('PIN yanlış.')); assert.equal(changed.child,true);
+   fireEvent.change(screen.getByLabelText('Ebeveyn PIN'),{target:{value:'2468'}});
+   await act(async()=>fireEvent.click(screen.getByText('PIN ile aç')));
+   assert.equal(changed.child,false);
+ });
+ await check('Ana ekrandaki asistan ve yenile düğmeleri doğru işlemi açar', async()=>{
+   let target;
+   render(wrap(h(UI.HomeActions,{onVoice:()=>target='voice',onRefresh:()=>target='refresh',loading:false})));
+   fireEvent.click(screen.getByLabelText('Sesli TV asistanını aç'));assert.equal(target,'voice');
+   fireEvent.click(screen.getByLabelText('Listeleri yenile'));assert.equal(target,'refresh');
+ });
+ await check('Kategori seçimi yalnız kullanıcının işaretlediği kategorileri kaydeder', async()=>{
+   let saved;
+   render(wrap(h(UI.CategoryPicker,{groups:[{id:'spor',name:'Spor',channelCount:10},{id:'haber',name:'Haber',channelCount:8}],selected:['Spor'],onClose(){},onSave:v=>saved=v})));
+   fireEvent.click(screen.getByRole('checkbox',{name:'Haber'}));fireEvent.click(screen.getByRole('checkbox',{name:'Spor'}));
+   fireEvent.click(screen.getByRole('button',{name:'Kaydet (1)'}));assert.deepEqual(saved,['Haber']);
+ });
+ await check('EPG Bu Akşam programı ve hatırlatma zili doğru kanal/programı iletir',async()=>{
+   let selected;
+   const now=Date.UTC(2026,9,19,13);const program={title:'Akşam Maçı',start:Date.UTC(2026,9,19,15,30),end:Date.UTC(2026,9,19,17)};
+   render(wrap(h(UI.EpgScreen,{channels:[channel],guide:{'p:undefined':[program]},now,notice:'EPG hazır',onPlay(){},onReminder:(item,p)=>selected={item,p}})));
+   fireEvent.click(screen.getByRole('button',{name:'Bu Akşam'}));fireEvent.click(screen.getByLabelText('Akşam Maçı hatırlat'));
+   assert.equal(selected.item.id,'tv');assert.equal(selected.p.title,'Akşam Maçı');
+ });
+ await check('Gerçek konuşma tanıma olayı tek eşleşen kanalı otomatik açar',async()=>{
+   let played;let closed=false;
+   render(wrap(h(UI.VoiceSearch,{entries:[channel,movie],onClose:()=>closed=true,onPlay:item=>played=item})));
+   await act(async()=>fireEvent.click(screen.getByRole('button',{name:'Konuşmaya başla'})));
+   assert.equal(UI.speechMock.options.lang,'tr-TR');
+   await act(async()=>UI.speechMock.emit('result',{isFinal:true,results:[{transcript:'TRT 1 kanalını aç'}]}));
+   assert.equal(played.id,'tv');assert.equal(closed,true);
+ });
+ await check('Mikrofon izni reddedilince dinliyormuş gibi davranılmaz',async()=>{
+   UI.speechMock.granted=false;
+   try{render(wrap(h(UI.VoiceSearch,{entries:[channel],onClose(){},onPlay(){}})));
+    await act(async()=>fireEvent.click(screen.getByRole('button',{name:'Konuşmaya başla'})));
+    assert.ok(screen.getByText('Sesli arama için mikrofon ve konuşma tanıma izni gerekiyor.'));assert.equal(screen.queryByText('Dinliyorum…'),null);
+   }finally{UI.speechMock.granted=true;}
+ });
+ await check('Hatırlatıcı OS bildirimine gerçek tarih ile yazılır; ikinci basış iptal eder',async()=>{
+   UI.notificationMock.reset();const now=Date.now();const p={title:'Maç',start:now+3600000,end:now+7200000};
+   assert.equal(await UI.toggleReminder(channel,p),true);
+   const request=[...UI.notificationMock.scheduled.values()][0];
+   assert.equal(request.trigger.date.getTime(),p.start-300000);assert.equal(request.content.data.channelId,'tv');
+   assert.equal(await UI.toggleReminder(channel,p),false);assert.equal(UI.notificationMock.scheduled.size,0);
+ });
+ await check('Bildirim izni yoksa hatırlatıcı başarılı sayılmaz',async()=>{
+   UI.notificationMock.reset();UI.notificationMock.granted=false;
+   try{await assert.rejects(UI.toggleReminder(channel,{title:'Maç',start:Date.now()+3600000,end:Date.now()+7200000}),/bildirim izni/);assert.equal(UI.notificationMock.scheduled.size,0);}
+   finally{UI.notificationMock.reset();}
+ });
+
+ await check('Hatırlatıcı penceresi 5/10/30/60 ve özel dakika seçimini kaydeder',async()=>{
+  let minutes;render(wrap(h(UI.ReminderPicker,{item:channel,program:{title:'Maç',start:Date.now()+7200000,end:Date.now()+10800000},onClose(){},onSave:async n=>minutes=n})));
+  fireEvent.click(screen.getByRole('button',{name:'1 saat kala'}));await act(async()=>fireEvent.click(screen.getByRole('button',{name:'Hatırlat',exact:true})));assert.equal(minutes,60);
+  fireEvent.change(screen.getByLabelText('Hatırlatma süresi dakika'),{target:{value:'17'}});await act(async()=>fireEvent.click(screen.getByRole('button',{name:'Hatırlat',exact:true})));assert.equal(minutes,17);
+ });
+ await check('Film penceresi afiş, tarih, gerçek puan, özet ve İzle eylemini gösterir',async()=>{
+  let played=false;render(wrap(h(UI.MediaDetails,{item:movie,info:{title:'Film A',rating:8.8,id:'tt123',poster:'https://example.test/poster.jpg',released:'19 Oct 2026',plot:'Film özeti',updatedAt:Date.now()},onClose(){},onPlay:()=>played=true})));
+  assert.ok(screen.getByText('Ekim 2026'));assert.ok(screen.getByText('IMDb 8.8'));assert.ok(screen.getByText('Film özeti'));fireEvent.click(screen.getByRole('button',{name:'İzle',exact:true}));assert.equal(played,true);
+ });
+ await check('Abonelik bildirimleri 48/24/16/8 saat önce; yenileme eski tarihleri iptal eder',async()=>{
+  UI.notificationMock.reset();const now=Date.now();const entitlement=UI.parseEntitlement({verified:true,id:'sub',kind:'subscription',expiresAt:now+7*86400000,verifiedAt:now});
+  assert.deepEqual(UI.expiryNotices(entitlement,now).map(x=>x.hours),[48,24,16,8]);assert.throws(()=>UI.parseEntitlement({verified:false}),/Doğrulanmış/);
+  await UI.scheduleExpiryNotices(entitlement);assert.equal(UI.notificationMock.scheduled.size,4);assert.equal((await UI.scheduledReminders()).length,0);
+  await UI.scheduleExpiryNotices({...entitlement,id:'renewed',expiresAt:now+30*86400000});assert.equal(UI.notificationMock.scheduled.size,4);assert.ok([...UI.notificationMock.scheduled.keys()].every(id=>id.includes('renewed')));
+  await UI.scheduleExpiryNotices(null);assert.equal(UI.notificationMock.scheduled.size,0);
+ });
+ await check('Özel hatırlatma gerçek planlanan zamana yansır; geçmiş zaman sessizce şimdiye çevrilmez',async()=>{
+  UI.notificationMock.reset();const p={title:'Program',start:Date.now()+7200000,end:Date.now()+10800000};await UI.toggleReminder(channel,p,30);const scheduled=[...UI.notificationMock.scheduled.values()][0];assert.equal(scheduled.trigger.date.getTime(),p.start-1800000);
+  await assert.rejects(UI.toggleReminder({...channel,id:'other'}, {...p,start:Date.now()+60000},60),/saati geçmiş/);
+ });
+ console.log(`${passes} UI interaction tests passed`);
+ require('node:fs').unlinkSync('tests/.ui-bundle.cjs'); dom.window.close();
+})().catch(error => { console.error(error); process.exitCode = 1; dom.window.close(); });
