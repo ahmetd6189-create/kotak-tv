@@ -69,8 +69,8 @@ Yerel Ses Testi internet/sağlayıcı olmadan bu ayrımı yapmaya yardımcı olu
 Kanal/EPG metadata önbelleği küçük kayıtlara ayrılır. Oynatma URL'leri ve başlıkları
 bu önbelleğe yazılmaz; hesaplar SecureStore'dadır. İnternetsiz canlı video devam etmez.
 
-AI maç tahmini, otomatik 1 dakikalık özet, ses çevirisi, gerçek SharePlay odaları,
-mağaza satın alımı ve 7 günlük sunucu kilidi henüz bağlanmadı. Bunlar başarılı
+AI maç tahmini, otomatik 1 dakikalık özet, ses çevirisi, mağaza satın alımı ve
+7 günlük sunucu kilidi henüz bağlanmadı. SharePlay servisi henüz yayımlanmadı. Bunlar başarılı
 çalışıyormuş gibi gösterilmez. Pro tasarımında aylık ₺249 / yıllık ₺999 seçenekleri vardır.
 
 ## Doğrulama
@@ -82,11 +82,10 @@ npm.cmd test
 npm.cmd run test:ui
 ```
 
-17 veri/ağ testi + 3 önbellek testi + 6 medya/kurtarma testi + 18 bileşen/cihaz
-API akışı testi: **44 test**. Mikrofon ve bildirim API'leri testlerde taklit edilir.
+17 veri/ağ + 3 önbellek + 8 medya/asistan/kurtarma + 22 bileşen/cihaz
+API akışı + 3 servis/senkronizasyon testi: **53 test**. Mikrofon ve bildirim API'leri testlerde taklit edilir.
 Android native prebuild/izinler ve Android JS paketlemesi denetlenir; bu APK'nın
 cihazda gerçek yayın sesi, gerçek konuşma, gerçek alarm ve piksel eşitliği bu
 ortamda doğrulanmamıştır. Hazır APK veya mağaza yayını tamamlanmış ürün değildir.
 
-`src/legacy-web` ilk referans kaynaklardır ve üretim girişinde kullanılmaz.
 Üretim girişi `index.ts` → `App.tsx`. Destek: kotaktv@gmail.com
