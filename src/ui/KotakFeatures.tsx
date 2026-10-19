@@ -5,18 +5,18 @@ import type { Entry } from '../native/iptv';
 import { smartMatches } from '../native/offline';
 import { Pill, Sheet, d } from './Design';
 import { colors as c } from '../theme';
-export const FEATURE_NAMES = ['Yapay Zeka Sesli Komut','AI Canlı Maç Analizi','Kişisel AI TV Asistanı','AI Canlı Ses Çevirisi','Birlikte İzle (SharePlay)','Çevrimdışı Mod & 24s EPG'];
+export const FEATURE_NAMES = ['Yapay Zeka Sesli Komut','AI Canlı Maç Analizi','Kişisel AI TV Asistanı','AI Canlı Ses Çevirisi','Yayını paylaş','Çevrimdışı Mod & 24s EPG'];
 const icons=[Mic,BarChart3,Sparkles,Languages,Users,WifiOff];
 export function FeaturesPanel({active,entries,cacheTime,onOpen,onPlay,onClose}: {active:string;entries:Entry[];cacheTime:number|null;onOpen:(name:string)=>void;onPlay:(item:Entry)=>void;onClose:()=>void}) {
  const [query,setQuery]=useState('');
  const matches=useMemo(()=>query.trim()?smartMatches(entries,query).slice(0,30):[],[entries,query]);
  const voice=active===FEATURE_NAMES[0]; const match=active===FEATURE_NAMES[1]; const recap=active===FEATURE_NAMES[2]; const translation=active===FEATURE_NAMES[3]; const share=active===FEATURE_NAMES[4]; const offline=active===FEATURE_NAMES[5];
  const hub=![voice,match,recap,translation,share,offline].some(Boolean);
- return <Sheet visible full={hub} title={hub?'Kotak AI & Birlikte İzle':active} onClose={onClose}>
+ return <Sheet visible full={hub} title={hub?'Kotak TV Özellikleri':active} onClose={onClose}>
   {hub? <>{FEATURE_NAMES.map((name,i)=>{const Icon=icons[i];return <Pressable key={name} style={s.row} onPress={()=>onOpen(name)}><Icon color={c.blue} size={24}/><View style={{flex:1}}><Text style={d.name}>{name}</Text><Text style={d.micro}>{i===5?'Kayıtlı kanal bilgileri ve program rehberi':i===0?'Türkçe ses tanıma ile içerik aç':'Servis bağlantısı bekleniyor'}</Text></View></Pressable>})}</>:
   <>
    <View style={s.orb}>{React.createElement(icons[FEATURE_NAMES.indexOf(active)] || Sparkles,{size:38,color:c.blue})}</View>
-   <Text style={d.h2}>{voice?'Ne izlemek istersin?':match?'Maçın nabzı':recap?'Senin TV asistanın':translation?'Türkçe canlı altyazı':share?'Aynı anı birlikte izle':'24 saatlik program rehberi'}</Text>
+   <Text style={d.h2}>{voice?'Ne izlemek istersin?':match?'Maçın nabzı':recap?'Senin TV asistanın':translation?'Türkçe canlı altyazı':share?'Yayını paylaş':'24 saatlik program rehberi'}</Text>
    {voice&&<>
     <Text style={s.copy}>Ses tanıma servisi henüz bağlı değil. Komutunu yazarak mevcut listende yerel filtreleme yapabilirsin.</Text>
     <TextInput accessibilityLabel="Akıllı arama komutu" value={query} onChangeText={setQuery} placeholder="Bana spor kanallarını bul" placeholderTextColor={c.zinc500} style={s.input}/>
@@ -31,7 +31,7 @@ export function FeaturesPanel({active,entries,cacheTime,onOpen,onPlay,onClose}: 
    </>}
    {recap&&<><Text style={s.copy}>Kaçırdığın yayınların 1 dakikalık özetleri burada yer alacak.</Text><View style={s.box}><Text style={d.name}>Henüz özet yok</Text><Text style={s.copy}>Özet servisi ve işlenecek yayın kaydı bağlandığında kullanılabilir.</Text></View></>}
    {translation&&<><Text style={s.copy}>Türkçe • Canlı çeviri</Text><View style={s.box}><Text style={d.name}>Altyazı bekleniyor…</Text><Text style={s.copy}>Canlı sesi işleyen çeviri servisi henüz bağlı değil. Yayının kendi altyazıları oynatıcıdaki Ses ve Altyazı menüsünden seçilebilir.</Text></View></>}
-   {share&&<><Text style={s.copy}>Arkadaşınla aynı yayını senkronize izle.</Text><View style={s.box}><Text style={d.name}>Oda oluştur veya davete katıl</Text><Text style={s.copy}>Şifreli davet ve senkronizasyon sunucusu henüz bağlı değil. Bağlantı oluşana kadar oda açılamaz.</Text><Pill disabled label="Oda oluştur" onPress={()=>{}}/></View></>}
+   {share&&<Text style={s.copy}>Oynatıcıdaki Yayını paylaş düğmesi bağlantıyı telefonunun paylaşım menüsüne iletir. Oda, eş zamanlı oynatma veya paylaşım sunucusu kullanılmaz.</Text>}
    {offline&&<><Text style={s.copy}>Kanal adları, kategoriler ve sağlayıcının gönderdiği 24 saatlik EPG cihazda saklanır.</Text><View style={s.box}><Text style={d.name}>{cacheTime?'Önbellek hazır':'Henüz önbellek yok'}</Text><Text style={s.copy}>{cacheTime?`Son kayıt: ${new Date(cacheTime).toLocaleString('tr-TR')}`:'Bir IPTV listesi yüklediğinde önbellek oluşturulur.'}</Text><Text style={d.secondary}>İnternet olmadan canlı video oynatılamaz. EPG yalnızca sağlayıcının gönderdiği programları içerir.</Text></View></>}
   </>}
  </Sheet>;
@@ -51,7 +51,7 @@ export function ProPanel({onClose}:{onClose:()=>void}) {
 export function AboutPanel({onClose}:{onClose:()=>void}) {
  return <Sheet visible title="Hakkında" onClose={onClose}>
   <View style={[s.orb,{backgroundColor:c.blue,width:112,height:112,borderRadius:30}]}><Play color="white" size={52}/></View>
-  <Text style={[d.h2,{textAlign:'center',letterSpacing:4}]}>KOTAK TV</Text><Text style={[s.copy,{textAlign:'center'}]}>Sürüm 1.0.6</Text>
+  <Text style={[d.h2,{textAlign:'center',letterSpacing:4}]}>KOTAK TV</Text><Text style={[s.copy,{textAlign:'center'}]}>Sürüm 1.0.7</Text>
   <View style={s.box}><Text style={s.copy}>Kotak TV, kendi IPTV listenizle canlı yayın, film ve dizi izlemek için tasarlanmış bir oynatıcıdır. İçerik sağlayıcınızın M3U veya Xtream Codes bilgileriyle kullanılır.</Text><Text style={d.secondary}>Desteklenen yayınlarda tam ekran, ses/altyazı seçimi, 2/4 ekran ve PiP sunar. Görüntü kalitesi kaynak yayına ve cihaz desteğine bağlıdır.</Text></View>
   <Pressable onPress={()=>void Linking.openURL('mailto:kotaktv@gmail.com').catch(()=>{})}><Text style={[d.name,{color:c.blue,marginVertical:24}]}>kotaktv@gmail.com</Text></Pressable>
  </Sheet>;

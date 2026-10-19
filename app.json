@@ -2,7 +2,7 @@
   "expo": {
     "name": "Kotak TV",
     "slug": "kotak-tv",
-    "version": "1.0.6",
+    "version": "1.0.7",
     "orientation": "default",
     "userInterfaceStyle": "dark",
     "newArchEnabled": true,

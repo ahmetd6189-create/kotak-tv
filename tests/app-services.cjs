@@ -1,0 +1,13 @@
+Object.assign(exports,require('./device-services.cjs'));
+const React=require('react');
+exports.StatusBar=()=>null;
+exports.getInitialURL=async()=>null;
+exports.addEventListener=()=>({remove(){}});
+exports.addNotificationResponseReceivedListener=()=>({remove(){}});
+exports.getLastNotificationResponseAsync=async()=>null;
+exports.clearLastNotificationResponseAsync=async()=>{};
+exports.CastButton=()=>null;exports.useRemoteMediaClient=()=>null;exports.MediaStreamType={LIVE:'live',BUFFERED:'buffered'};
+exports.isPictureInPictureSupported=()=>false;
+exports.useEvent=(_player,_event,initial)=>initial;
+exports.VideoView=React.forwardRef(()=>null);exports.VideoAirPlayButton=()=>null;
+exports.useVideoPlayer=()=>React.useRef({status:'readyToPlay',playing:false,currentTime:0,duration:100,availableAudioTracks:[],availableSubtitleTracks:[],addListener:()=>({remove(){}}),replaceAsync:async()=>{},play(){},pause(){},seekBy(){}}).current;

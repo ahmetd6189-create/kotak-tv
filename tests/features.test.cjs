@@ -1,6 +1,6 @@
 const {test}=require('node:test');const assert=require('node:assert/strict');const {mkdtempSync,rmSync}=require('node:fs');const {join}=require('node:path');const {tmpdir}=require('node:os');
 const dir=mkdtempSync(join(tmpdir(),'kotak-features-'));
-require('esbuild').buildSync({stdin:{contents:`export * from './src/native/invites'; export * from './src/native/follow-core'; export * from './src/native/cast'; export * from './src/native/assistant'; export * from './src/native/catalog-tools'; export * from './src/native/recovery'; export * from './src/native/imdb'; export * from './src/native/iptv';`,resolveDir:process.cwd()},bundle:true,platform:'node',format:'cjs',outfile:join(dir,'core.cjs'),logLevel:'error'});
+require('esbuild').buildSync({stdin:{contents:`export * from './src/native/loading'; export * from './src/native/json-array'; export * from './src/native/invites'; export * from './src/native/follow-core'; export * from './src/native/cast'; export * from './src/native/assistant'; export * from './src/native/catalog-tools'; export * from './src/native/recovery'; export * from './src/native/imdb'; export * from './src/native/iptv';`,resolveDir:process.cwd()},bundle:true,platform:'node',format:'cjs',outfile:join(dir,'core.cjs'),logLevel:'error'});
 const core=require(join(dir,'core.cjs'));rmSync(dir,{recursive:true});
 const base={id:'1',playlistId:'p',name:'Film',group:'Film',logo:'',kind:'movie',uri:'https://host/user/secret/movie.mp4'};
 test('IMDb rails exclude live TV, unknown scores and low scores; series episodes deduplicate',()=>{
@@ -72,3 +72,32 @@ test('App invitation parsing accepts only valid scoped HTTPS/custom links and ne
 test('TV media keeps original HLS type when using an opaque authorized proxy URL',()=>{
  assert.equal(core.castInfo({...base,uri:'https://provider.example/live.m3u8',kind:'live'},'https://service.example/media/opaque').contentType,'application/x-mpegURL');assert.throws(()=>core.castInfo({...base,uri:'https://provider.example/file.mkv'}),/MKV/);
 });
+
+test('Quick startup requests live channels only; VOD and full XMLTV cannot gate first playback',async()=>{
+ const previous=global.fetch,calls=[];const cfg={id:'fast',name:'List',type:'xtream',url:'https://provider.example',username:'u',password:'p'};
+ try{global.fetch=async(input)=>{const u=new URL(String(input));const action=u.searchParams.get('action');calls.push(action||'auth');return new Response(JSON.stringify(!action?{user_info:{auth:1,status:'Active',allowed_output_formats:['m3u8']}}:action==='get_live_streams'?[{stream_id:1,name:'TRT 1',category_id:'1'}]:[{category_id:'1',category_name:'Ulusal'}]));};
+  let partial;const result=await core.quickCatalog(cfg,new AbortController().signal,c=>partial=c);assert.ok(partial.entries[0].uri);assert.equal(result.entries[0].group,'Ulusal');assert.deepEqual(calls.sort(),['auth','get_live_categories','get_live_streams'].sort());
+ }finally{global.fetch=previous;}
+});
+test('Hard catalog deadline rejects even if a loader has not returned; it cannot leave the UI spinning forever',async()=>{
+ const previous=global.fetch;try{global.fetch=async()=>new Promise(()=>{});await assert.rejects(core.quickCatalog({id:'p',name:'p',type:'m3u',url:'https://host/list.m3u'},new AbortController().signal,()=>{},['live'],15),/zamanında/);}finally{global.fetch=previous;}
+});
+test('Partial live refresh retains already loaded films and restores secure account addresses without a second list fetch',()=>{
+ const movie={...base,id:'m'};const old={...base,id:'live',kind:'live'};const incoming={...old,id:'new-live'};assert.deepEqual(core.mergeCatalog([movie,old],[incoming],['live']).map(e=>e.id),['m','new-live']);
+ const config={id:'p',name:'List',type:'m3u',url:'https://provider.example/get.php?username=user&password=secret&type=m3u_plus'};const entry={...base,id:'p-live-123',kind:'live',uri:undefined,streamFormat:'m3u8'};assert.equal(core.restoreAddress(entry,config).uri,'https://provider.example/live/user/secret/123.m3u8');assert.equal(core.restoreAddress({...entry,id:'unknown-hash'},config).uri,undefined);
+});
+test('Large JSON catalog parsing yields UI turns and preserves escaped/nested records',async()=>{
+ const values=Array.from({length:10000},(_,i)=>({id:i,name:'Quoted \" item, ] [ \\',nested:{a:[i,'x,y']}}));const text=JSON.stringify(values);let ticks=0;const timer=setInterval(()=>ticks++,0);try{const result=await core.parseJsonArray(text);assert.deepEqual(result,values);assert.ok(ticks>3);}finally{clearInterval(timer);}await assert.rejects(core.parseJsonArray('[1,]'));await assert.rejects(core.parseJsonArray('[1'));const abort=new AbortController();abort.abort();await assert.rejects(core.parseJsonArray(text,abort.signal),/iptal/);
+});
+
+test('Delayed categories do not gate usable live streams; final category names replace placeholders',async()=>{
+ const previous=global.fetch;let release,first=false;const gate=new Promise(resolve=>release=resolve);
+ global.fetch=async input=>{const action=new URL(String(input)).searchParams.get('action');if(action==='get_live_categories'){await gate;return new Response(JSON.stringify([{category_id:'7',category_name:'Spor'}]));}return new Response(JSON.stringify(!action?{user_info:{auth:1}}:[{stream_id:1,name:'Sports',category_id:'7'}]));};
+ try{const work=core.loadCatalog({id:'p',type:'xtream',name:'Test',url:'https://provider.test',username:'u',password:'p'},undefined,partial=>{first=true;assert.equal(partial.entries[0].uri,'https://provider.test/live/u/p/1.ts');release();},{kinds:['live'],categoryTimeoutMs:1000});const result=await work;assert.equal(first,true);assert.equal(result.entries[0].group,'Spor');}finally{global.fetch=previous;release();}
+});
+test('Selected title metadata comes from existing provider; cast, plot and provider score are kept distinct from IMDb',async()=>{
+ const previous=global.fetch;let seen;global.fetch=async input=>{seen=new URL(String(input));return new Response(JSON.stringify({info:{name:'Film',movie_image:'https://images.test/poster.jpg',plot:'Özet',rating:'8.7',cast:'Actor',director:'Director',releasedate:'2026-10-01',backdrop_path:['javascript:bad','https://images.test/backdrop.jpg']}}));};
+ try{const result=await core.loadMediaInfo({id:'p',name:'Test',type:'xtream',url:'https://provider.test',username:'u',password:'secret'},{...base,id:'p-movie-42'});assert.equal(seen.hostname,'provider.test');assert.equal(seen.searchParams.get('action'),'get_vod_info');assert.equal(seen.searchParams.get('vod_id'),'42');assert.equal(result.rating,8.7);assert.equal(result.imdbRating,undefined);assert.deepEqual(result.backdrops,['https://images.test/backdrop.jpg']);assert.equal(result.plot,'Özet');}finally{global.fetch=previous;}
+});
+test('XMLTV program descriptions survive parsing and timeline selection',()=>{const now=Date.UTC(2026,9,20,12);const guide=core.parseGuide('<tv><programme channel="trt" start="20261020153000 +0300" stop="20261020163000 +0300"><title>Dizi</title><desc>Yeni &amp; güzel bölüm</desc></programme></tv>',now);assert.equal(guide.trt[0].description,'Yeni & güzel bölüm');});
+test('Provider fallback trends never invent an IMDb score or include live channels',()=>{const result=core.displayRanked([{...base,id:'a',rating:9},{...base,id:'b',kind:'live',rating:10}],'movie');assert.equal(result.length,1);assert.equal(result[0].imdbRating,undefined);assert.equal(result[0].rating,9);});

@@ -36,7 +36,6 @@ import {
   VolumeX,
   X,
 } from "lucide-react-native";
-import {serviceRequest,type ShareRoom} from "./shareplay";
 import { RecoveryStar } from "../ui/RecoveryStar";
 import { StreamRecovery, preferredAudio } from "./recovery";
 import type { Entry } from "./iptv";
@@ -57,15 +56,17 @@ const Tile = memo(function Tile({
   onAudio,
   seekSeconds,
   bufferSeconds,
-  room,
+  initialPosition=0,
+  onProgress,
 }: {
   item: Entry;
+  initialPosition?:number;
+  onProgress?:(id:string,position:number,duration:number)=>void;
   multi: boolean;
   audible: boolean;
   onAudio: () => void;
   seekSeconds: number;
   bufferSeconds: number;
-  room?:ShareRoom|null;
 }) {
   const view = useRef<VideoView>(null);
   const resume = useRef(false);
@@ -76,7 +77,7 @@ const Tile = memo(function Tile({
   const [userMuted, setUserMuted] = useState(false);
   const audioIntent=useRef({audible,userMuted});audioIntent.current={audible,userMuted};
   const sourceFailure=useRef(false);
-  const resumePosition=useRef(0);
+  const resumePosition=useRef(initialPosition);
   const [tracksOpen, setTracksOpen] = useState(false);
   const [recovery, setRecovery] = useState("");
   const watchdog = useRef(new StreamRecovery());
@@ -111,20 +112,8 @@ const Tile = memo(function Tile({
     currentOffsetFromLive: null,
     bufferedPosition: 0,
   });
+  useEffect(()=>{if(item.kind!=="live"&&currentTime>0)onProgress?.(item.id,currentTime,player.duration);},[currentTime,item.id,item.kind,onProgress,player]);
   useEffect(()=>{if(status==="readyToPlay" && currentTime>0){setRecovery("");setLoadError(false);}},[currentTime,status]);
-  useEffect(()=>{
-    if(!room||room.itemId!==item.id||multi)return;
-    let stopped=false,busy=false,sequence=0;
-    const tick=async()=>{if(stopped||busy)return;busy=true;try{
-      const result=await serviceRequest(room.config,`/v1/rooms/${room.id}`);
-      if(stopped)return;
-      if(room.config.guestToken){const state=result.state;const desired=state.position+(state.playing?(result.serverNow-state.updatedAt)/1000:0);if(item.kind!=="live"&&Math.abs(player.currentTime-desired)>2)player.currentTime=desired;if(state.playing&&!player.playing){watchdog.current.paused=false;player.play();}else if(!state.playing&&player.playing){watchdog.current.paused=true;player.pause();}return;}
-      const command=result.command;
-      if(command&&command.sequence>sequence){sequence=command.sequence;if(command.action==="pause"){watchdog.current.paused=true;player.pause();}else if(command.action==="play"){watchdog.current.paused=false;watchdog.current.advancedAt=Date.now();player.play();}else if(command.action==="seek"&&item.kind!=="live")player.currentTime=command.position;}
-      await serviceRequest(room.config,`/v1/rooms/${room.id}/state`,"POST",{position:player.currentTime,playing:player.playing});
-    }catch{ /* Playback continues independently if the room service is unavailable. */ }finally{busy=false;}};
-    void tick();const timer=setInterval(()=>void tick(),1500);return()=>{stopped=true;clearInterval(timer);};
-  },[player,room,item.id,multi,item.kind]);
   useEffect(() => {
     const updateAudio = () => {
       const tracks=[...player.availableAudioTracks];setAudioTracks(tracks);
@@ -197,7 +186,7 @@ const Tile = memo(function Tile({
     });
     return () => sub.remove();
   }, [player, multi]);
-  const guestCommand=(action:string,position?:number)=>{if(room?.config.guestToken)void serviceRequest(room.config,`/v1/rooms/${room.id}/command`,"POST",{action,position}).catch(()=>{});};
+  const guestCommand=(_action:string,_position?:number)=>{};
   const failed = loadError || status === "error";
   const duration = player.duration;
   const live = item.kind === "live";
@@ -235,7 +224,7 @@ const Tile = memo(function Tile({
         )}
       </View>
       {!!recovery && <Text style={[d.micro,{color:c.blue,padding:8}]}>{recovery}</Text>}
-      {!multi&&!room?.config.guestToken&&<View style={{paddingHorizontal:8,paddingTop:8,flexDirection:"row",justifyContent:"space-between"}}><CastControls item={item} position={currentTime} onTransferred={()=>{watchdog.current.paused=true;player.pause();}}/>{Platform.OS==="ios"&&<VideoAirPlayButton style={{width:36,height:36}} tint={c.blue}/>}</View>}
+      {!multi&&true&&<View style={{paddingHorizontal:8,paddingTop:8,flexDirection:"row",justifyContent:"space-between"}}><CastControls item={item} position={currentTime} onTransferred={()=>{watchdog.current.paused=true;player.pause();}}/>{Platform.OS==="ios"&&<VideoAirPlayButton style={{width:36,height:36}} tint={c.blue}/>}</View>}
       <View style={s.transport}>
         {!multi && (
           <View style={s.progressLine}>
@@ -415,9 +404,12 @@ export function PlaybackPanel({
   onFeature,
   seekSeconds = 15,
   bufferSeconds = 15,
-  room,
+  positions={},
+  onProgress,
 }: {
   items: Entry[];
+  positions?:Record<string,{position:number;duration:number}>;
+  onProgress?:(id:string,position:number,duration:number)=>void;
   mini: boolean;
   onMini?: () => void;
   onClose: () => void;
@@ -425,7 +417,6 @@ export function PlaybackPanel({
   onFeature?: (name: string) => void;
   seekSeconds?: number;
   bufferSeconds?: number;
-  room?:ShareRoom|null;
 }) {
   const [audio, setAudio] = useState(0);
   const [analysis, setAnalysis] = useState(false);
@@ -469,9 +460,9 @@ export function PlaybackPanel({
           onPress={onMini}
         />}
       </View>
-      {!mini && !room?.config.guestToken && <View style={{paddingHorizontal:12,paddingBottom:8}}><ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{gap:8}}>
+      {!mini && true && <View style={{paddingHorizontal:12,paddingBottom:8}}><ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{gap:8}}>
         {items[0]?.kind === "live" && <Pill icon={Sparkles} label="AI Maç Analizi" active={analysis} onPress={() => setAnalysis(v => !v)}/>}
-        <Pill label="Birlikte İzle" onPress={() => onFeature?.("Birlikte İzle (SharePlay)")}/>
+        <Pill label="Yayını paylaş" onPress={() => onFeature?.("Yayını paylaş")}/>
         <Pill label="AI Türkçe Altyazı" onPress={() => onFeature?.("AI Canlı Ses Çevirisi")}/>
       </ScrollView></View>}
       <View style={s.grid}>
@@ -485,7 +476,8 @@ export function PlaybackPanel({
           >
             <Tile
               item={item}
-              room={room}
+              initialPosition={positions[item.id]?.position||0}
+              onProgress={onProgress}
               multi={multi}
               audible={index === audio}
               onAudio={() => setAudio(index)}

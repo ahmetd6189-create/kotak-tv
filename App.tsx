@@ -1,14 +1,14 @@
-import * as AppLinking from "expo-linking";
-import {parseInvite,type Invite} from "./src/native/invites";
-import {GuestPlayback} from "./src/ui/GuestPlayback";
+import {DirectPlay} from "./src/ui/DirectPlay";
+import {CatalogView,PosterRail} from "./src/ui/CatalogView";
+import {CategoriesPage} from "./src/ui/CategoriesPage";
+import {quickCatalog,mergeCatalog,restoreAddress} from "./src/native/loading";
 import {FollowPanel,type FollowDraft} from "./src/ui/FollowPanel";
 import {savedFollows,saveFollows,seedFollows,followPermission,observeFollowCatalog,syncTeamReminders,cancelFollowNotifications,type FollowRule} from "./src/native/follows";
 import {SharePanel} from "./src/ui/SharePanel";
-import {serviceConfig,verifiedEntitlement,closeShareRoom,type ShareRoom} from "./src/native/shareplay";
-import {scheduleExpiryNotices,expiryMessage,type Entitlement} from "./src/native/entitlement";
+import {expiryMessage,type Entitlement} from "./src/native/entitlement";
 import {ReminderPicker} from "./src/ui/ReminderPicker";
 import {MediaDetails} from "./src/ui/MediaDetails";
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState, useCallback } from "react";
 import {
   ActivityIndicator,
   AppState,
@@ -32,11 +32,11 @@ import {HomeActions,CategoryPicker} from "./src/ui/HomeControls";
 import {VoiceSearch} from "./src/ui/VoiceSearch";
 import {ImdbPanel} from "./src/ui/ImdbPanel";
 import {EpgSettings} from "./src/ui/EpgSettings";
-import {mediaTitle,rankedMedia,scheduleFor} from "./src/native/catalog-tools";
+import {mediaTitle,rankedMedia,displayRanked,scheduleFor} from "./src/native/catalog-tools";
 import {metadataKey,type ImdbInfo} from "./src/native/imdb";
 import {scheduledReminders,toggleReminder} from "./src/native/reminders";
 import * as SecureStore from "expo-secure-store";
-import { cacheCatalog, cachedCatalog, removeCache } from "./src/native/cache";
+import { cacheCatalog, cachedCatalog, cacheGuide, cachedGuide, removeCache } from "./src/native/cache";
 import { childEntries } from "./src/native/offline";
 import { ParentPanel, PROTECTION_KEY, type Protection } from "./src/ui/ParentPanel";
 import { FeaturesPanel, ProPanel, AboutPanel, FEATURE_NAMES } from "./src/ui/KotakFeatures";
@@ -77,7 +77,6 @@ import { PlaybackPanel } from "./src/native/Player";
 import {
   ChannelCard,
   EpgScreen,
-  FeatureCards,
   IconButton,
   LibraryScreen,
   MediaRail,
@@ -93,8 +92,9 @@ import {
 } from "./src/ui/Design";
 import { SettingsView, type Preferences } from "./src/ui/SettingsView";
 import {
-  loadCatalog,
   loadEpisodes,
+  loadMediaInfo,
+  type ProviderInfo,
   parseGuideAsync,
   inferredEpgUrl,
   requestText,
@@ -133,12 +133,21 @@ function KotakApp() {
   const [add, setAdd] = useState(false);
   const [busy, setBusy] = useState(false);
   const [boot, setBoot] = useState(true);
+  const [loadingVod,setLoadingVod]=useState(false);
+  const vodJob=useRef<AbortController|null>(null);
+  const guideJob=useRef<AbortController|null>(null);
+  const vodReady=useRef(new Set<string>());
+  const liveFresh=useRef(new Set<string>());
   const [loadingLists, setLoadingLists] = useState(false);
   const [message, setMessage] = useState("");
   const [formError, setFormError] = useState("");
   const [playing, setPlaying] = useState<Entry[]>([]);
+  const playingRef=useRef(playing);playingRef.current=playing;
   const [mini, setMini] = useState(false);
   const [favorites, setFavorites] = useState<string[]>([]);
+  const positions=useRef<Record<string,{position:number;duration:number}>>({});
+  const progressSavedAt=useRef(0);
+  const recordProgress=useCallback((id:string,position:number,duration:number)=>{if(!Number.isFinite(position)||position<0)return;positions.current[id]={position:duration>0&&duration-position<30?0:position,duration:Number.isFinite(duration)?duration:0};if(Date.now()-progressSavedAt.current<10000)return;progressSavedAt.current=Date.now();const recentPositions=Object.fromEntries(Object.entries(positions.current).slice(-50));void AsyncStorage.setItem("kotak.positions",JSON.stringify(recentPositions)).catch(()=>{});},[]);
   const [recent, setRecent] = useState<string[]>([]);
   const [selecting, setSelecting] = useState(false);
   const [selected, setSelected] = useState<string[]>([]);
@@ -148,14 +157,17 @@ function KotakApp() {
   const [optionsOpen, setOptionsOpen] = useState(false);
   const [screen, setScreen] = useState<null | "library" | "settings">(null);
   const [info, setInfo] = useState<string | null>(null);
-  const [incomingInvite,setIncomingInvite]=useState<Invite|null>(null);
   const [followOpen,setFollowOpen]=useState(false);
   const [followDraft,setFollowDraft]=useState<FollowDraft|undefined>();
   const [followRules,setFollowRules]=useState<FollowRule[]>([]);
   const [shareOpen,setShareOpen]=useState(false);
-  const [shareRoom,setShareRoom]=useState<ShareRoom|null>(null);
   const [entitlement,setEntitlement]=useState<Entitlement|null>(null);
   const [pendingReminder,setPendingReminder]=useState<{item:Entry;program:Program}|null>(null);
+  const [catalogPage,setCatalogPage]=useState<null|"trend-movies"|"trend-series"|"new-movies"|"updated-series">(null);
+  const [directPlay,setDirectPlay]=useState(false);
+  const [categoryBrowse,setCategoryBrowse]=useState(false);
+  const [providerDetails,setProviderDetails]=useState<Record<string,ProviderInfo>>({});
+  const [detailsBusy,setDetailsBusy]=useState(false);
   const [mediaDetails,setMediaDetails]=useState<Entry|null>(null);
   const [details, setDetails] = useState<Entry | null>(null);
   const [settings, setSettings] = useState<Preferences>({
@@ -184,7 +196,7 @@ function KotakApp() {
   const guideFlights=useRef(new Map<string,{signal:AbortSignal;promise:Promise<Guide>}>());
   const guideCache=useRef(new Map<string,{url:string;at:number;data:Guide}>());
   const rawEntries = useMemo(() => Object.values(catalogs).flat(), [catalogs]);
-  const allEntries=useMemo(()=>rawEntries.map(item=>{const data=imdb[metadataKey(item)];return data&&item.kind!=="live"?{...item,imdbRating:data.rating,imdbId:data.id,logo:data.poster||item.logo}:item}),[rawEntries,imdb]);
+  const allEntries=useMemo(()=>Object.keys(imdb).length?rawEntries.map(item=>{if(item.kind==="live")return item;const data=imdb[metadataKey(item)];return data?{...item,imdbRating:data.rating,imdbId:data.id,logo:data.poster||item.logo}:item}):rawEntries,[rawEntries,imdb]);
   const entries = useMemo(() => childEntries(allEntries, child, protection?.groups || []), [allEntries, child, protection]);
   const byId = useMemo(() => new Map(entries.map((e) => [e.id, e])), [entries]);
   const favoritesSet = useMemo(() => new Set(favorites), [favorites]);
@@ -212,8 +224,12 @@ function KotakApp() {
   }, [live]);
 
   const homeGroups=useMemo(()=>{const index=new Map(groups.map(g=>[g.name,g]));return homeCategories===null?groups:homeCategories.map(name=>index.get(name)).filter((g):g is typeof groups[number]=>!!g)},[groups,homeCategories]);
-  const topMovies=useMemo(()=>rankedMedia(movies,"movie"),[movies]);
-  const topSeries=useMemo(()=>rankedMedia(series,"series"),[series]);
+  const topMovies=useMemo(()=>displayRanked(movies,"movie"),[movies]);
+  const topSeries=useMemo(()=>displayRanked(series,"series"),[series]);
+  const newMovies=useMemo(()=>[...movies].sort((a,b)=>(b.added||0)-(a.added||0)).slice(0,50),[movies]);
+  const updatedSeries=useMemo(()=>[...series].sort((a,b)=>(b.added||0)-(a.added||0)).slice(0,60),[series]);
+  const continueWatching=useMemo(()=>recent.map(id=>byId.get(id)).filter((e):e is Entry=>!!e&&e.kind!=="live").slice(0,10),[recent,byId]);
+  useEffect(()=>{setDetailsBusy(false);if(!mediaDetails)return;const config=configs.find(c=>c.id===mediaDetails.playlistId);if(!config||providerDetails[mediaDetails.id])return;const controller=new AbortController();setDetailsBusy(true);void loadMediaInfo(config,mediaDetails,controller.signal).then(value=>{if(value&&!controller.signal.aborted)setProviderDetails(prev=>({...prev,[mediaDetails.id]:value}));}).catch(()=>{}).finally(()=>{if(!controller.signal.aborted)setDetailsBusy(false);});return()=>controller.abort();},[mediaDetails?.id]);
 
   async function readGuide(config:PlaylistConfig,url:string|undefined,signal:AbortSignal,cacheEntries:Entry[]=[]){
     url=url||inferredEpgUrl(config);
@@ -240,7 +256,7 @@ function KotakApp() {
       }
       if(signal.aborted)return;
       setGuideNotice(Object.keys(scoped).length?"Sağlayıcının 24 saatlik mevcut programları alındı.":"XMLTV’de güncel program yok veya kanal eşleştirmesi bulunamadı.");
-      if(cacheEntries.length)void cacheCatalog(config.id,cacheEntries,scoped).then(()=>setCacheTime(Date.now())).catch(()=>setMessage("EPG önbelleği kaydedilemedi."));
+      void cacheGuide(config.id,scoped).then(()=>setCacheTime(Date.now())).catch(()=>setMessage("EPG önbelleği kaydedilemedi."));
     }catch{if(!signal.aborted)setGuideNotice("EPG alınamadı. EPG Kaynağı bölümünden geçerli XMLTV adresini kontrol edin.");}
   }
   useEffect(() => {
@@ -271,38 +287,24 @@ function KotakApp() {
         try{if(homeRaw){const data=JSON.parse(homeRaw);if(Array.isArray(data))setHomeCategories(data.filter((v):v is string=>typeof v==="string"));}}catch{}
         try{if(imdbRaw)setImdb(JSON.parse(imdbRaw));}catch{}
         void scheduledReminders().then(setReminders).catch(()=>{});
+        try{const stored=JSON.parse(await AsyncStorage.getItem("kotak.positions")||"{}");positions.current=Object.fromEntries(Object.entries(stored).filter(([_,v])=>v&&typeof v==="object"&&Number.isFinite((v as any).position)&&(v as any).position>=0)) as typeof positions.current;}catch{}
         setFollowRules(await savedFollows());
         setConfigs(saved);
         setFavorites(JSON.parse(fav || "[]"));
         setRecent(JSON.parse(history || "[]"));
         setBoot(false);
         setLoadingLists(saved.length > 0);
-        // Show available metadata immediately while refreshing actual playback addresses.
+        void (async()=>{for(const config of saved){const cache=await cachedCatalog(config.id).catch(()=>null);if(controller.signal.aborted)return;if(cache&&!liveFresh.current.has(config.id)){setCatalogs(prev=>({...prev,[config.id]:cache.entries.map(e=>restoreAddress(e,config))}));setCacheTime(cache.savedAt);}const storedGuide=await cachedGuide(config.id).catch(()=>null);if(storedGuide&&!controller.signal.aborted){setGuides(prev=>({...prev,...storedGuide.guide}));setGuideNotice("Kayıtlı program rehberi gösteriliyor.");}}})().catch(()=>{});
         for (const config of saved) {
-          const cache = await cachedCatalog(config.id).catch(() => null);
-          if (controller.signal.aborted) return;
-          if (cache) {
-            setCatalogs(prev => ({...prev, [config.id]: cache.entries}));
-            setGuides(prev => ({...prev, ...cache.guide}));
-            setCacheTime(cache.savedAt);
-            setGuideNotice("Kayıtlı 24 saatlik EPG gösteriliyor; güncellik bağlantıya bağlıdır.");
-          }
-        }
-        if (controller.signal.aborted) return;
-        setBoot(false);
-        setLoadingLists(saved.length > 0);
-        for (const config of saved) {
-          void readGuide(config,inferredEpgUrl(config),controller.signal);
           try {
-            const catalog = await loadCatalog(config, controller.signal, partial => {
-              if (!controller.signal.aborted) setCatalogs(prev => ({...prev, [config.id]: partial.entries}));
-            });
+            const catalog = await quickCatalog(config,controller.signal,partial=>{if(!controller.signal.aborted){liveFresh.current.add(config.id);setLoadingLists(false);setCatalogs(prev=>({...prev,[config.id]:mergeCatalog(prev[config.id]||[],partial.entries,["live"])}));}});
             if (controller.signal.aborted) return;
             void observeNewContent(config,catalog.entries,controller.signal);
-      setCatalogs((prev) => ({ ...prev, [config.id]: catalog.entries }));
+      liveFresh.current.add(config.id);
+            if(catalog.entries.some(e=>e.kind!=="live"))vodReady.current.add(config.id);
+            setCatalogs(prev=>({...prev,[config.id]:mergeCatalog(prev[config.id]||[],catalog.entries,["live"])}));
             if (catalog.warnings.length) setMessage(catalog.warnings.join(" "));
             void cacheCatalog(config.id, catalog.entries).then(() => setCacheTime(Date.now())).catch(() => setMessage("Kanal önbelleği kaydedilemedi."));
-            void readGuide(config, catalog.epgUrl, controller.signal, catalog.entries);
           } catch (e) {
             if (!controller.signal.aborted) setMessage((e as Error).message);
           }
@@ -318,7 +320,7 @@ function KotakApp() {
     })();
     return () => {
       controller.abort();
-      episodeJob.current?.abort();
+      episodeJob.current?.abort();vodJob.current?.abort();guideJob.current?.abort();
     };
   }, []);
   useEffect(() => {
@@ -342,6 +344,7 @@ function KotakApp() {
         setMini(true);
         return true;
       }
+      if(catalogPage||categoryBrowse){setCatalogPage(null);setCategoryBrowse(false);return true;}
       if (screen) {
         setScreen(null);
         return true;
@@ -353,7 +356,7 @@ function KotakApp() {
       return false;
     });
     return () => sub.remove();
-  }, [playing.length, mini, tab, screen]);
+  }, [playing.length, mini, tab, screen,catalogPage,categoryBrowse]);
 
   async function importList(config: PlaylistConfig, refreshing = false) {
     if (busy || boot) return;
@@ -368,22 +371,22 @@ function KotakApp() {
         await savePlaylist(config);
         if (controller.signal.aborted) return;
         published = true;
-        void readGuide(config,catalog.epgUrl,controller.signal);
         setConfigs(prev => [...prev.filter(p => p.id !== config.id), config]);
         setAdd(false); setBusy(false); setFilter("Tümü"); setQuery("");
         if (!refreshing) {setTab("ANASAYFA"); setTop("ANASAYFA");}
       }
-      setCatalogs(prev => ({...prev, [config.id]: catalog.entries}));
+      liveFresh.current.add(config.id);setLoadingLists(false);
+      if(catalog.entries.some(e=>e.kind!=="live"))vodReady.current.add(config.id);
+      setCatalogs(prev => ({...prev, [config.id]: mergeCatalog(prev[config.id]||[],catalog.entries,["live"])}));
     };
     try {
-      const catalog = await loadCatalog(config, controller.signal, publish);
+      const catalog = await quickCatalog(config,controller.signal,publish);
       if (controller.signal.aborted) return;
       await publish(catalog);
       void observeNewContent(config,catalog.entries,controller.signal);
       setMessage(`${catalog.entries.length} içerik alındı.${catalog.warnings.length ? ` ${catalog.warnings.join(" ")}` : ""}`);
       // Persistence and EPG are independent background work, never an import gate.
       void cacheCatalog(config.id, catalog.entries).then(() => setCacheTime(Date.now())).catch(() => setMessage("Kanal önbelleği kaydedilemedi. Yayın izlemeye devam edebilirsiniz."));
-      void readGuide(config, catalog.epgUrl, controller.signal, catalog.entries);
     } catch (e) {
       if (!controller.signal.aborted) {
         const error = (e as Error).message;
@@ -398,18 +401,32 @@ function KotakApp() {
     job.current?.abort();const controller=new AbortController();job.current=controller;setBusy(false);setBoot(false);setLoadingLists(true);setMessage("");
     try{for(const config of configs){
       if(controller.signal.aborted)return;
-      void readGuide(config,inferredEpgUrl(config),controller.signal);
-      try{const result=await loadCatalog(config,controller.signal,partial=>{if(!controller.signal.aborted)setCatalogs(prev=>({...prev,[config.id]:partial.entries}));});
-       if(controller.signal.aborted)return;void observeNewContent(config,result.entries,controller.signal);setCatalogs(prev=>({...prev,[config.id]:result.entries}));
-       void cacheCatalog(config.id,result.entries).catch(()=>{});void readGuide(config,result.epgUrl,controller.signal,result.entries);
+      try{const result=await quickCatalog(config,controller.signal,partial=>{if(!controller.signal.aborted){liveFresh.current.add(config.id);setLoadingLists(false);setCatalogs(prev=>({...prev,[config.id]:mergeCatalog(prev[config.id]||[],partial.entries,["live"])}));}});
+       if(controller.signal.aborted)return;void observeNewContent(config,result.entries,controller.signal);setCatalogs(prev=>({...prev,[config.id]:mergeCatalog(prev[config.id]||[],result.entries,["live"])}));
+       void cacheCatalog(config.id,result.entries).catch(()=>{});
       }catch(e){if(!controller.signal.aborted)setMessage((e as Error).message);}
     }}finally{if(!controller.signal.aborted)setLoadingLists(false);}
   }
-  useEffect(()=>{const receive=(url:string|null)=>{if(!url)return;const invite=parseInvite(url);if(invite){setPlaying([]);setIncomingInvite(invite);}};void AppLinking.getInitialURL().then(receive).catch(()=>{});const sub=AppLinking.addEventListener("url",event=>receive(event.url));return()=>sub.remove();},[]);
+  async function ensureVod(){
+    if(child||loadingLists||vodJob.current)return;
+    const pending=configs.filter(c=>!vodReady.current.has(c.id));if(!pending.length)return;
+    const controller=new AbortController();vodJob.current=controller;setLoadingVod(true);
+    try{for(const config of pending){vodReady.current.add(config.id);try{
+      const result=await quickCatalog(config,controller.signal,partial=>{if(!controller.signal.aborted)setCatalogs(prev=>({...prev,[config.id]:mergeCatalog(prev[config.id]||[],partial.entries,["movie","series","episode"])}));},["movie","series"],25000);
+      if(controller.signal.aborted)return;
+      setCatalogs(prev=>({...prev,[config.id]:mergeCatalog(prev[config.id]||[],result.entries,["movie","series","episode"])}));void observeNewContent(config,result.entries,controller.signal);
+    }catch(e){if(controller.signal.aborted){vodReady.current.delete(config.id);return;}setMessage((e as Error).message);}}}
+    finally{if(vodJob.current===controller){vodJob.current=null;setLoadingVod(false);}}
+  }
+  useEffect(()=>{if(top==="FILM"||imdbOpen||voiceOpen||catalogPage)void ensureVod();},[top,imdbOpen,voiceOpen,catalogPage,configs,loadingLists,child]);
+  // Let the first live screen paint before fetching the two VOD catalogs. Playback cancels this work.
+  useEffect(()=>{if(boot||loadingLists||playing.length||child||!configs.length||tab!=="ANASAYFA")return;const timer=setTimeout(()=>void ensureVod(),1200);return()=>clearTimeout(timer);},[boot,loadingLists,configs,child,playing.length,tab]);
+  useEffect(()=>{if(!configs.length||loadingLists||!(tab==="EPG"||voiceOpen||details))return;const controller=new AbortController();guideJob.current=controller;for(const config of configs)void readGuide(config,inferredEpgUrl(config),controller.signal);return()=>controller.abort();},[tab,voiceOpen,details,configs,loadingLists]);
   async function observeNewContent(config:PlaylistConfig,items:Entry[],signal:AbortSignal){
-    try{const rules=await savedFollows();let snapshot=items;for(const rule of rules.filter(r=>r.kind==="series"&&r.playlistId===config.id&&r.seriesId)){
+    try{const rules=await savedFollows();if(!rules.some(r=>r.kind!=="team"))return;let snapshot=items;for(const rule of rules.filter(r=>r.kind==="series"&&r.playlistId===config.id&&r.seriesId)){
       if(signal.aborted)return;const series=items.find(e=>e.kind==="series"&&e.seriesId===rule.seriesId);if(series){const episodes=await loadEpisodes(config,series,signal);snapshot=[...snapshot,...episodes];}
     }
+    if(!items.some(e=>e.kind!=="live"))return;
     if(!signal.aborted)await observeFollowCatalog(config.id,snapshot,rules,()=>!childRef.current&&!signal.aborted);
     }catch{ /* A failing tracked series does not block the catalog/player. */ }
   }
@@ -426,10 +443,7 @@ function KotakApp() {
   }
   useEffect(()=>{if(!securityReady)return;if(child){void cancelFollowNotifications();setFollowOpen(false);return;}const controller={active:true};void syncTeamReminders(entries,guides,followRules,()=>controller.active&&!childRef.current).catch(()=>{});return()=>{controller.active=false};},[entries,guides,followRules,child,securityReady]);
   const followCheckedAt=useRef(Date.now());
-  useEffect(()=>{const check=()=>{if(child||!followRules.length||!configs.length||busy||loadingLists||boot||playing.length||AppState.currentState!=="active"||Date.now()-followCheckedAt.current<5*60000)return;followCheckedAt.current=Date.now();void refreshAll();};const sub=AppState.addEventListener("change",state=>{if(state==="active")check();});const timer=setInterval(check,5*60000);return()=>{sub.remove();clearInterval(timer)};},[child,followRules.length,configs.length,busy,loadingLists,boot,playing.length]);
-  async function refreshEntitlement(){try{const config=await serviceConfig();if(!config)return;const verified=await verifiedEntitlement(config);setEntitlement(verified);await scheduleExpiryNotices(verified);}catch{ /* No verified store result: do not fabricate dates or billing entitlement. */ }}
-  useEffect(()=>{void refreshEntitlement();const sub=AppState.addEventListener("change",state=>{if(state==="active")void refreshEntitlement();});return()=>sub.remove();},[]);
-  useEffect(()=>{if(shareRoom&&(playing.length!==1||playing[0].id!==shareRoom.itemId)){void closeShareRoom(shareRoom).catch(()=>{});setShareRoom(null);}},[playing,shareRoom]);
+  useEffect(()=>{const check=()=>{if(child||!followRules.length||!configs.length||busy||loadingLists||boot||playing.length||AppState.currentState!=="active"||Date.now()-followCheckedAt.current<5*60000)return;followCheckedAt.current=Date.now();void refreshAll().then(()=>{if(playingRef.current.length||childRef.current)return;if(followRules.some(r=>r.kind!=="team")){vodReady.current.clear();void ensureVod();}if(followRules.some(r=>r.kind==="team")){const controller=new AbortController();guideJob.current=controller;for(const config of configs)void readGuide(config,inferredEpgUrl(config),controller.signal);}});};const sub=AppState.addEventListener("change",state=>{if(state==="active")check();});const timer=setInterval(check,5*60000);return()=>{sub.remove();clearInterval(timer)};},[child,followRules.length,configs.length,busy,loadingLists,boot,playing.length]);
   async function reminder(item:Entry,p:Program){
     if(!reminders.includes(`kotak-${item.id}-${p.start}`)){setPendingReminder({item,program:p});return;}
     try{await toggleReminder(item,p);setReminders(await scheduledReminders());}catch(e){Alert.alert("Hatırlatıcı",(e as Error).message);}
@@ -459,6 +473,8 @@ function KotakApp() {
     setFormError("");
   }
   function play(item: Entry) {
+    vodJob.current?.abort();
+    const configForAddress=configs.find(c=>c.id===item.playlistId);if(configForAddress)item=restoreAddress(item,configForAddress);
     if (item.kind === "series") {
       const config = configs.find((c) => c.id === item.playlistId);
       if (!config) return;
@@ -502,6 +518,8 @@ function KotakApp() {
       });
   }
   function changeTab(value: BottomNavTab) {
+    setCatalogPage(null);setCategoryBrowse(false);setDirectPlay(value==="TV KANALI");
+    if(value==="EPG")vodJob.current?.abort();
     if (playing.length) setMini(true);
     setScreen(null);
     setTab(value);
@@ -602,11 +620,11 @@ function KotakApp() {
     if(name==="Takiplerim"){if(child){setParentOpen(true);return;}setFollowDraft(undefined);setFollowOpen(true);return;}
     if(name==="Ses Testi"){setPlaying([]);setAudioTestOpen(true);return;}
     if(name==="Yapay Zeka Sesli Komut"){setInfo(null);setPlaying([]);setVoiceOpen(true);return;}
-    if(name==="Birlikte İzle (SharePlay)"){if(child){setParentOpen(true);return;}setShareOpen(true);return;}
+    if(name==="Yayını paylaş"||name==="Birlikte İzle (SharePlay)"){if(child){setParentOpen(true);return;}setShareOpen(true);return;}
     if(name==="IMDb Sıralaması"){setImdbOpen(true);return;}
     if(name==="EPG Kaynağı"){if(child){setParentOpen(true);return;}setEpgSettingsOpen(true);return;}
     if (name === "Profil Seçin" || name === "Güvenli Çocuk Profili" || (child && name === "Kütüphaneniz")) { setParentOpen(true); return; }
-    if (name === "Çoklu Ekran & PiP") { changeTab("TV KANALI"); setSelecting(true); setSelected([]); return; }
+    if (name === "Çoklu Ekran & PiP") { changeTab("TV KANALI");setDirectPlay(false); setSelecting(true); setSelected([]); return; }
     if (name === "Kütüphaneniz") {
       setScreen("library");
       return;
@@ -673,7 +691,6 @@ function KotakApp() {
     );
   }
   if (!securityReady) return <View style={[s.root, {alignItems:"center",justifyContent:"center",padding:24}]}>{securityError ? <Text style={d.secondary}>Koruma bilgileri okunamadı. Güvenliğiniz için içerik gizlendi. Uygulamayı yeniden açın.</Text> : <ActivityIndicator color={colors.blue}/>}</View>;
-  if(incomingInvite&&!child)return <GuestPlayback invite={incomingInvite} onClose={()=>setIncomingInvite(null)}/>;
   return (
     <View style={s.root}>
       <View style={s.canvas}>
@@ -690,7 +707,7 @@ function KotakApp() {
             {screen ? (
               <View style={{ height: insets.top }} />
             ) : (
-              tab !== "DAHA FAZLA" && (
+              tab !== "DAHA FAZLA" && !catalogPage && !categoryBrowse && (
                 <TopBar
                   currentTab={top}
                   onTabChange={(value) => {
@@ -712,16 +729,16 @@ function KotakApp() {
                 <X size={13} color={colors.zinc500} />
               </Pressable>
             )}
-            {(boot || busy || loadingLists) && (
+            {(boot || busy || loadingLists) && !live.some(e=>!!e.uri) && (
               <View style={s.loading}>
                 <ActivityIndicator color={colors.blue} />
                 <Text style={d.secondary}>
-                  {boot ? "Kayıtlı bilgiler açılıyor…" : entries.length ? "İçerikler arka planda güncelleniyor…" : "Sağlayıcıdan liste alınıyor…"}
+                  {boot ? "Kayıtlı bilgiler açılıyor…" : "Canlı kanal listesi alınıyor…"}
                 </Text>
               </View>
             )}
             <View style={{ flex: 1 }}>
-              {screen === "library" ? (
+              {tab==="TV KANALI"&&directPlay ? <DirectPlay recent={recent.map(id=>byId.get(id)).filter((e):e is Entry=>!!e)} onPlay={play} onAddList={addList}/> : categoryBrowse ? <CategoriesPage groups={groups} onClose={()=>setCategoryBrowse(false)} onEdit={()=>setCategoryOpen(true)} onSelect={category=>{setCategoryBrowse(false);setDirectPlay(false);setFilter(category.name);setTab("TV KANALI");setTop("CANLI");}}/> : catalogPage ? <CatalogView title={catalogPage==="trend-movies"?"Trend Filmler":catalogPage==="trend-series"?"Trend Diziler":catalogPage==="new-movies"?"Yeni Eklenen Filmler":"Son Güncellenen Diziler"} ranked={catalogPage.startsWith("trend")} items={catalogPage==="trend-movies"?topMovies:catalogPage==="trend-series"?topSeries:catalogPage==="new-movies"?newMovies:updatedSeries} onBack={()=>setCatalogPage(null)} onSelect={setMediaDetails}/> : screen === "library" ? (
                 <LibraryScreen
                   configs={configs}
                   counts={Object.fromEntries(
@@ -743,8 +760,8 @@ function KotakApp() {
                   onBack={() => setScreen(null)}
                   onInfo={open}
                   onClearHistory={() => {
-                    setRecent([]);
-                    void AsyncStorage.removeItem("kotak.recent");
+                    setRecent([]);positions.current={};
+                    void AsyncStorage.removeItem("kotak.recent");void AsyncStorage.removeItem("kotak.positions");
                   }}
                 />
               ) : tab === "DAHA FAZLA" ? (
@@ -764,7 +781,7 @@ function KotakApp() {
                   onPlay={play}
                   reminders={reminders}
                   onReminder={(item,p)=>void reminder(item,p)}
-                  onRefresh={()=>void refreshAll()}
+                  onRefresh={()=>{const controller=new AbortController();for(const config of configs)void readGuide(config,inferredEpgUrl(config),controller.signal);}}
                   onEpgSettings={()=>open("EPG Kaynağı")}
                 />
               ) : showHome ? (
@@ -775,25 +792,25 @@ function KotakApp() {
                 >
                   {entitlement&&!!expiryMessage(entitlement,now)&&<View style={{padding:16}}><Text style={[d.secondary,{color:colors.blue}]}>{expiryMessage(entitlement,now)}</Text></View>}
                   <HomeActions onFollows={()=>open("Takiplerim")} onVoice={()=>open("Yapay Zeka Sesli Komut")} onRefresh={()=>void refreshAll()} loading={loadingLists}/>
-                  <View style={{paddingHorizontal:16,marginBottom:12}}><Pill label="IMDb’ye göre sırala" onPress={()=>setImdbOpen(true)}/></View>
-                  {settings.layout === "Modern" && (
-                    <View style={{ paddingHorizontal: 16 }}>
-                      <FeatureCards onOpen={open} />
-                    </View>
-                  )}
+
                   <MediaRail
                     title="Trend Filmler"
                     items={topMovies}
                     onPlay={setMediaDetails}
-                    onMore={() => setTop("FILM")}
+                    onMore={() => setCatalogPage("trend-movies")}
                   />
                   <MediaRail
                     title="Trend Diziler"
                     items={topSeries}
                     onPlay={setMediaDetails}
-                    onMore={() => setTop("FILM")}
+                    onMore={() => setCatalogPage("trend-series")}
                   />
-                  {recentEntry && (
+                  {!!continueWatching.length&&<PosterRail title="İzlemeye devam et" items={continueWatching} onSelect={play} onMore={()=>setTop("FILM")}/>}
+                  <PosterRail title="Yeni Eklenen Filmler" items={newMovies} onSelect={setMediaDetails} onMore={()=>setCatalogPage("new-movies")}/>
+                  <PosterRail title="Son Güncellenen Diziler" items={updatedSeries} onSelect={setMediaDetails} onMore={()=>setCatalogPage("updated-series")}/>
+                  {loadingVod&&<Text style={[d.micro,{paddingHorizontal:16,paddingVertical:8}]}>Film ve dizi kataloğu alınıyor. Canlı kanallar hazır.</Text>}
+                  {!loadingVod&&!movies.length&&!series.length&&configs.length>0&&<View style={{padding:16}}><Pill label="Film ve dizileri yükle" onPress={()=>{vodReady.current.clear();void ensureVod();}}/></View>}
+                  {recentEntry && !newMovies.length && !updatedSeries.length && (
                     <RecentCard
                       item={recentEntry}
                       guide={guides}
@@ -805,64 +822,17 @@ function KotakApp() {
                   <CategoriesList
                     categories={homeGroups}
                     totalCategoriesCount={homeGroups.length}
+                    onSeeAll={()=>setCategoryBrowse(true)}
                     onEdit={()=>setCategoryOpen(true)}
                     onSelectCategory={(category) => {
-                      setFilter(category.name);
+                      setDirectPlay(false);setFilter(category.name);
                       setTab("TV KANALI");
                       setTop("CANLI");
                     }}
                   />
                 </ScrollView>
               ) : videoCatalog ? (
-                <FlatList
-                  key="media"
-                  numColumns={2}
-                  data={listing}
-                  keyExtractor={(e) => e.id}
-                  contentContainerStyle={d.screenList}
-                  columnWrapperStyle={{ gap: 12 }}
-                  ListHeaderComponent={
-                    <View style={{ marginBottom: 16 }}>
-                      <Text style={d.h2}>Filmler & Diziler</Text>
-                      <Text style={d.secondary}>
-                        {movies.length} film · {series.length} dizi / bölüm
-                      </Text>
-                    </View>
-                  }
-                  renderItem={({ item }) => (
-                    <Pressable onPress={() => setMediaDetails(item)} style={s.movieCard}>
-                      {item.logo ? (
-                        <Image
-                          source={{ uri: item.logo }}
-                          style={s.moviePoster}
-                          resizeMode="cover"
-                        />
-                      ) : (
-                        <View
-                          style={[
-                            s.moviePoster,
-                            { alignItems: "center", justifyContent: "center" },
-                          ]}
-                        >
-                          <Film size={32} color={colors.zinc500} />
-                        </View>
-                      )}
-                      <View style={{ padding: 10 }}>
-                        <Text numberOfLines={1} style={d.name}>
-                          {item.name}
-                        </Text>
-                        <Text numberOfLines={1} style={d.micro}>
-                          {item.group}
-                        </Text>
-                      </View>
-                    </Pressable>
-                  )}
-                  ListEmptyComponent={
-                    <Text style={d.emptyRail}>
-                      Bu listede film veya dizi bulunmuyor.
-                    </Text>
-                  }
-                />
+                <View style={{flex:1}}>{loadingVod&&<Text style={[d.micro,{paddingHorizontal:16}]}>Film ve diziler yükleniyor…</Text>}<CatalogView title="Filmler & Diziler" items={listing} onBack={()=>setTop("ANASAYFA")} onSelect={setMediaDetails}/></View>
               ) : channelView ? (
                 <FlatList
                   key="channels"
@@ -911,20 +881,8 @@ function KotakApp() {
                           />
                         </View>
                       </View>
-                      <ScrollView
-                        horizontal
-                        showsHorizontalScrollIndicator={false}
-                        contentContainerStyle={{ gap: 6, paddingBottom: 16 }}
-                      >
-                        {["Tümü", ...groups.map((g) => g.name)].map((group) => (
-                          <Pill
-                            key={group}
-                            label={group}
-                            active={group === filter}
-                            onPress={() => setFilter(group)}
-                          />
-                        ))}
-                      </ScrollView>
+                      <FlatList horizontal data={["Tümü",...groups.map(g=>g.name)]} keyExtractor={g=>g} initialNumToRender={6} maxToRenderPerBatch={6} windowSize={3} showsHorizontalScrollIndicator={false} contentContainerStyle={{gap:6,paddingBottom:16}} renderItem={({item:group})=><Pill label={group} active={group===filter} onPress={()=>setFilter(group)}/>}/>
+
                       {selecting && (
                         <View style={[d.between, { marginBottom: 14 }]}>
                           <Text style={d.secondary}>
@@ -978,7 +936,8 @@ function KotakApp() {
         >
           <PlaybackPanel
             items={playing}
-            room={shareRoom}
+            positions={positions.current}
+            onProgress={recordProgress}
             mini={mini}
             onMini={() => setMini((v) => !v)}
             onClose={() => setPlaying([])}
@@ -987,16 +946,16 @@ function KotakApp() {
             bufferSeconds={settings.bufferSeconds || 15}
             onMulti={() => {
               setMini(true);
-              changeTab("TV KANALI");
+              changeTab("TV KANALI");setDirectPlay(false);
               setSelecting(true);
             }}
           />
         </View>
       )}
       {followOpen&&<FollowPanel rules={followRules} initial={followDraft} onSave={addFollow} onClose={()=>setFollowOpen(false)} onRemove={async id=>{const next=followRules.filter(r=>r.id!==id);await saveFollows(next);setFollowRules(next);}}/>}
-      {shareOpen&&<SharePanel item={playing.length===1?playing[0]:undefined} room={shareRoom} onRoom={setShareRoom} onClose={()=>setShareOpen(false)} onConfigured={()=>void refreshEntitlement()}/>}
+      {shareOpen&&<SharePanel item={playing.length===1?playing[0]:undefined} onClose={()=>setShareOpen(false)}/>}
       {pendingReminder&&<ReminderPicker item={pendingReminder.item} program={pendingReminder.program} onClose={()=>setPendingReminder(null)} onSave={async minutes=>{await toggleReminder(pendingReminder.item,pendingReminder.program,minutes);setReminders(await scheduledReminders());setPendingReminder(null);Alert.alert("Hatırlatıcı kuruldu",`${minutes} dakika önce bildirim gönderilecek.`);}}/>}
-      {mediaDetails&&<MediaDetails item={mediaDetails} onFollow={mediaDetails.kind==="series"||mediaDetails.kind==="episode"?()=>{setFollowDraft({kind:"series",label:mediaTitle(mediaDetails.name),playlistId:mediaDetails.playlistId,seriesId:mediaDetails.seriesId});setMediaDetails(null);setFollowOpen(true);}:undefined} info={imdb[metadataKey(mediaDetails)]} onClose={()=>setMediaDetails(null)} onPlay={()=>{const item=mediaDetails;setMediaDetails(null);play(item);}}/>}
+      {mediaDetails&&<MediaDetails key={mediaDetails.id} item={mediaDetails} onFollow={mediaDetails.kind==="series"||mediaDetails.kind==="episode"?()=>{setFollowDraft({kind:"series",label:mediaTitle(mediaDetails.name),playlistId:mediaDetails.playlistId,seriesId:mediaDetails.seriesId});setMediaDetails(null);setFollowOpen(true);}:undefined} provider={providerDetails[mediaDetails.id]} loading={detailsBusy} similar={entries.filter(e=>e.kind===mediaDetails.kind&&e.id!==mediaDetails.id&&e.group===mediaDetails.group).slice(0,12)} onSelect={setMediaDetails} onNavigate={changeTab} info={imdb[metadataKey(mediaDetails)]} onClose={()=>setMediaDetails(null)} onPlay={()=>{const item=mediaDetails;setMediaDetails(null);play(item);}}/>}
       {audioTestOpen&&<AudioDiagnostics onClose={()=>setAudioTestOpen(false)}/>}
       {categoryOpen&&<CategoryPicker groups={groups} selected={homeCategories} onClose={()=>setCategoryOpen(false)} onSave={values=>{setHomeCategories(values);setCategoryOpen(false);void AsyncStorage.setItem("kotak.homeCategories",JSON.stringify(values)).catch(()=>setMessage("Kategori seçimi kaydedilemedi."));}}/>}
       {voiceOpen&&<VoiceSearch entries={entries} onFollowTeam={label=>{if(child){setParentOpen(true);return;}setFollowDraft({kind:"team",label});setFollowOpen(true);}} guide={guides} metadata={imdb} onDetails={setMediaDetails} onReminder={(item,p)=>void reminder(item,p)} onClose={()=>setVoiceOpen(false)} onPlay={item=>{
@@ -1095,11 +1054,11 @@ function KotakApp() {
         </View>
       </Sheet>
       {parentOpen && <ParentPanel protection={protection} child={child} groups={[...new Set(allEntries.filter(e => e.kind === "live").map(e => e.group))]} onClose={() => setParentOpen(false)} onChange={(value, isChild) => {episodeJob.current?.abort(); setProtection(value); setChild(isChild); setPlaying([]); setScreen(null); setSearchOpen(false); setInfo(null); setOptionsOpen(false); setEpisodes(null); setDetails(null); setSelected([]);setFollowOpen(false);setShareOpen(false);setPendingReminder(null);setMediaDetails(null);setVoiceOpen(false);setImdbOpen(false);setCategoryOpen(false);setEpgSettingsOpen(false);}} />}
-      {(info === "Kotak AI & Birlikte İzle" || FEATURE_NAMES.includes(info || "")) && <FeaturesPanel key={info} active={info!} entries={entries} cacheTime={cacheTime} onOpen={open} onClose={() => setInfo(null)} onPlay={play}/>}
+      {(info === "Kotak TV Özellikleri" || FEATURE_NAMES.includes(info || "")) && <FeaturesPanel key={info} active={info!} entries={entries} cacheTime={cacheTime} onOpen={open} onClose={() => setInfo(null)} onPlay={play}/>}
       {(info === "Kotak TV PRO" || info === "Pro Sürümüne Geç") && <ProPanel onClose={() => setInfo(null)}/>}
       {info === "Hakkında" && <AboutPanel onClose={() => setInfo(null)}/>}
       <Sheet
-        visible={info !== null && !FEATURE_NAMES.includes(info) && !["Kotak AI & Birlikte İzle","Kotak TV PRO","Pro Sürümüne Geç","Hakkında"].includes(info)}
+        visible={info !== null && !FEATURE_NAMES.includes(info) && !["Kotak TV Özellikleri","Kotak TV PRO","Pro Sürümüne Geç","Hakkında"].includes(info)}
         title={info || ""}
         onClose={() => setInfo(null)}
       >
@@ -1133,7 +1092,7 @@ function KotakApp() {
               style={[d.secondary, { textAlign: "center", lineHeight: 22 }]}
             >
               {info === "Hakkında"
-                ? "Kotak TV\nKendi IPTV listenizle canlı TV, film ve dizi deneyimi.\nSürüm 1.0.2 · kotaktv@gmail.com"
+                ? "Kotak TV\nKendi IPTV listenizle canlı TV, film ve dizi deneyimi.\nSürüm 1.0.7 · kotaktv@gmail.com"
                 : info === "İletişim"
                   ? "kotaktv@gmail.com"
                   : info?.includes("EPG")

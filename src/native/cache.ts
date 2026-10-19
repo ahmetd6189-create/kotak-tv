@@ -1,6 +1,8 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { createCacheStore } from './cache-store';
 const cache = createCacheStore(AsyncStorage);
-export const cacheCatalog = cache.save;
+export const cacheCatalog = (id:string,entries:import("./iptv").Entry[])=>cache.save(id,entries.filter(e=>e.kind==="live"),{});
+export const cacheGuide = (id:string,guide:import("./iptv").Guide)=>cache.save(`guide.${id}`,[],guide);
+export const cachedGuide = (id:string)=>cache.read(`guide.${id}`);
 export const cachedCatalog = cache.read;
-export const removeCache = cache.remove;
+export const removeCache = async(id:string)=>{await cache.remove(id);await cache.remove(`guide.${id}`)};

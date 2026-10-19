@@ -47,7 +47,7 @@ export const TrendSection: React.FC<TrendSectionProps> = ({
             onPress={() => onItemClick(item)}
             style={[styles.card, { width: cardWidth }]}
           >
-            <View style={[styles.posterWrap, { height: cardWidth * 0.56 }]}>
+            <View style={[styles.posterWrap, { height: cardWidth * 0.57 }]}>
               {item.posterUrl ? (
                 <Image source={{ uri: item.posterUrl }} style={styles.poster} />
               ) : null}
@@ -65,7 +65,7 @@ export const TrendSection: React.FC<TrendSectionProps> = ({
 };
 
 const styles = StyleSheet.create({
-  wrap: { paddingVertical: 12 },
+  wrap: { paddingVertical: 10 },
   header: {
     flexDirection: "row",
     justifyContent: "space-between",
@@ -74,7 +74,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   headerLeft: { flexDirection: "row", alignItems: "center", gap: 4 },
-  title: { color: colors.white, fontWeight: "800", fontSize: 22 },
+  title: { color: colors.white, fontWeight: "700", fontSize: 21 },
   list: { paddingHorizontal: 16, gap: 12 },
   card: { width: 172 },
   posterWrap: {
@@ -92,6 +92,6 @@ const styles = StyleSheet.create({
     fontWeight: "900",
     color: "rgba(255,255,255,0.42)",
   },
-  name: { color: colors.white, fontWeight: "500", fontSize: 16, marginTop: 8 },
+  name: { color: colors.white, fontWeight: "500", fontSize: 14, marginTop: 5 },
   meta: { color: colors.zinc400, fontSize: 12, marginTop: 2 },
 });

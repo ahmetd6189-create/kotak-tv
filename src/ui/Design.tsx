@@ -356,8 +356,8 @@ export function MediaRail({
           title: item.name,
           posterUrl: item.logo,
           rating: item.imdbRating || 0,
-          releaseDate: "",
-          genre: item.imdbRating ? `IMDb ${item.imdbRating.toFixed(1)} / 10` : item.group,
+          releaseDate: item.released||"",
+          genre: [item.imdbRating ? `IMDb ${item.imdbRating.toFixed(1)}` : item.rating ? `★ ${item.rating.toFixed(1)}` : "",item.released?.slice(0,10)].filter(Boolean).join(" · "),
           description: "",
           type: item.kind === "series" ? "series" : "movie",
           rank: i + 1,
@@ -718,7 +718,7 @@ export function MoreScreen({
         ["Kaydedilmiş videolar", "", FolderOpen],
         ["Pro Sürümüne Geç", "KOTAK TV PRO", Sparkles],
         ["Ayarlar", "DİL • TEMA • EBEVEYN KONTROLÜ", Settings],
-        ["Kotak AI & Birlikte İzle", "SESLİ ARAMA • ANALİZ • ÖZET • SHAREPLAY", Sparkles],
+        ["Kotak TV Özellikleri", "SESLİ ARAMA • EPG • PAYLAŞIM", Sparkles],
         ["Arkadaşınıza önerin", "", Share2],
         ["Bizimle iletişime geçin", "HERHANGİ BİR SORUNUZ VARSA", Mail],
         ["Hakkında", "", Info],
@@ -749,6 +749,7 @@ export function MoreScreen({
       <Text style={[d.micro, { textAlign: "center", marginTop: 24 }]}>
         Kotak TV · 1.0.4
       </Text>
+      <FeatureCards onOpen={onOpen}/>
     </ScrollView>
   );
 }

@@ -1,0 +1,12 @@
+KOTAK TV 1.0.7 — 20 Ekim 2026
+
+Önceki uzun bekleme akışı düzeltildi: canlı TV, VOD ve tam EPG açılışta tek
+ortak iş olarak beklenmiyor. Kullanılabilir canlı kanal hemen listeye verilir.
+Yeni Nesil Özellikler ana ekrandan çıkarıldı, Daha Fazla'ya taşındı.
+Video referansına göre katalog, afiş detayı, kategori ve EPG çizelgesi düzenlendi.
+Yayını paylaş yalnız telefonun paylaşım menüsünü kullanır; paylaşım sunucusu yok.
+
+Hazır APK kuruyorsanız GUNCELLE-UX.cmd ile yeniden derleme başlatmanız gerekmez.
+APK'yı mevcut uygulamanın üstüne kurun. Hakkında: 1.0.7.
+Kaynak ZIP için README.md; ayrıntılı kontroller için DOGRULAMA.txt.
+Gerçek sağlayıcı hesabıyla ses/video ve cihaz hızı bu ortamda doğrulanmadı.

@@ -31,3 +31,9 @@ export function programWindow(list:Program[],now:number,window:'now'|'tonight'|'
  const end=start+9*3600000; // 03:00 Türkiye
  return list.filter(p=>p.end>Math.max(now,start)&&p.start<end);
 }
+
+/** A provider score is never relabelled as IMDb. Prefer verified IMDb rows, then provider scores. */
+export function displayRanked(entries:Entry[],kind:'movie'|'series',limit=20){
+ const verified=rankedMedia(entries,kind,limit);if(verified.length)return verified;
+ const seen=new Set<string>();return entries.filter(e=>(kind==='movie'?e.kind==='movie':e.kind==='series'||e.kind==='episode')&&typeof e.rating==='number'&&e.rating>=7&&e.rating<=10).sort((a,b)=>(b.rating||0)-(a.rating||0)).filter(e=>{const name=normalized(mediaTitle(e.name));if(seen.has(name))return false;seen.add(name);return true;}).slice(0,limit).map(e=>({...e,name:mediaTitle(e.name)}));
+}

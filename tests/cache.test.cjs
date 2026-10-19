@@ -28,3 +28,8 @@ test('Oversized legacy cache does not prevent creating the new chunked cache',as
  assert.equal(await cache.read('p'),null);await cache.save('p',[entry(1)]);
  assert.equal((await cache.read('p')).entries.length,1);assert.equal(store.values.has('kotak.cache.p'),false);
 });
+
+test('EPG aliases share one stored program array and cached playback metadata retains only the format',async()=>{
+ const kv=memory(),cache=createCacheStore(kv);const now=Date.now(),programs=[{title:'Now',start:now-1000,end:now+10000}];await cache.save('aliases',[{...entry(1),uri:'https://host/user/password/1.m3u8'}],{'p:id':programs,'p:@alias':programs});
+ const restored=await cache.read('aliases');assert.equal(restored.entries[0].streamFormat,'m3u8');assert.equal(restored.entries[0].uri,undefined);assert.equal(restored.guide['p:id'],restored.guide['p:@alias']);assert.ok([...kv.values.values()].some(v=>v.includes('"alias":"p:@alias"')));
+});

@@ -9,6 +9,7 @@ interface CategoriesListProps {
   onSelectCategory: (category: CategoryItem) => void;
   totalCategoriesCount?: number;
   onEdit?: () => void;
+  onSeeAll?:()=>void;
 }
 
 export const CategoriesList: React.FC<CategoriesListProps> = ({
@@ -16,6 +17,7 @@ export const CategoriesList: React.FC<CategoriesListProps> = ({
   onSelectCategory,
   totalCategoriesCount,
   onEdit,
+  onSeeAll,
 }) => {
   const { width } = useWindowDimensions();
   const columnWidth = Math.max(230, Math.min(width, 672) - 54);
@@ -31,13 +33,13 @@ export const CategoriesList: React.FC<CategoriesListProps> = ({
   return (
     <View style={styles.wrap}>
       <View style={styles.header}>
-        <View style={styles.headerLeft}>
+        <Pressable accessibilityRole="button" accessibilityLabel="Tüm kategorileri göster" onPress={onSeeAll} style={styles.headerLeft}>
           <Text style={styles.title}>Kategoriler</Text>
           <Text style={styles.count}>
             {totalCategoriesCount ?? categories.length}
           </Text>
           <ChevronRight size={16} color={colors.zinc500} />
-        </View>
+        </Pressable>
         <Pressable accessibilityRole="button" accessibilityLabel="Ana ekran kategorilerini seç" onPress={onEdit} style={{padding:8}}><Glasses size={22} color={colors.blue} /></Pressable>
       </View>
       <Pressable
@@ -90,7 +92,7 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   headerLeft: { flexDirection: "row", alignItems: "center", gap: 6 },
-  title: { color: colors.white, fontWeight: "800", fontSize: 22 },
+  title: { color: colors.white, fontWeight: "800", fontSize: 21 },
   count: { color: colors.zinc500, fontWeight: "800" },
   sort: { flexDirection: "row", alignItems: "center", gap: 4, marginBottom: 8 },
   sortText: { color: colors.blue, fontWeight: "700", fontSize: 15 },
@@ -98,12 +100,12 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    paddingVertical: 18,
+    paddingVertical: 15,
     borderBottomWidth: StyleSheet.hairlineWidth,
     borderBottomColor: "rgba(255,255,255,0.16)",
   },
   left: { flexDirection: "row", alignItems: "center", gap: 8 },
-  name: { color: colors.white, fontSize: 17, fontWeight: "500" },
+  name: { color: colors.white, fontSize: 15, fontWeight: "500" },
   badge: {
     backgroundColor: "#2c2c2e",
     borderRadius: 4,
@@ -111,5 +113,5 @@ const styles = StyleSheet.create({
     paddingVertical: 2,
   },
   badgeText: { color: colors.zinc300, fontSize: 9, fontWeight: "800" },
-  num: { color: colors.blue, fontWeight: "800", fontSize: 22 },
+  num: { color: colors.blue, fontWeight: "800", fontSize: 21 },
 });

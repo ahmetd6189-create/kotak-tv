@@ -1,100 +1,89 @@
-# Kotak TV 1.0.6
+# Kotak TV 1.0.7
 
-Expo SDK 54 / React Native kaynak projesi. Bu ZIP hazır APK içermez.
+Expo SDK 54 / React Native / expo-video mobil IPTV oynatıcı.
+Kendi M3U veya Xtream hesabınızla kullanılır. Kanal sağlayıcısı değildir.
+Bu kaynak ZIP'i hazır APK içermez; APK Expo derlemesinden indirilir.
 
-## Sırayla kurulum
+## Hazır APK'yı kullanma
 
-1. Yeni ZIP'i ayrı klasöre çıkarın, `KotakTV` klasörünü açın.
-2. `GUNCELLE-UX.cmd` dosyasını çalıştırın. Önce `npm.cmd ci --include=dev`, sonra
-   Android production APK derlemesi başlatılır. Expo bağlantısından takip edin.
-3. İşlem bitince APK'yı indirin. Yalnız `Kotak_Phone` açıkken APK'yı
-   `APK-YUKLE.cmd` üzerine sürükleyin. Aynı imzalı mevcut uygulama güncellenir.
-4. Hakkında ekranındaki sürüm **1.0.6** olmalı.
-5. Önce **Daha Fazla → Ayarlar → Ses Testi** ile yerel test sesini dinleyin.
-   Ardından canlı kanal ve filmi ayrı ayrı deneyin.
+1. Expo'da **1.0.7** sürümünün tamamlanan Android APK'sını indirin.
+2. Telefonunuza kurun veya açık telefon emülatörüne APK'yı sürükleyin.
+3. Alternatif: APK'yı ZIP'teki `APK-YUKLE.cmd` dosyasının üzerine bırakın.
+4. Eski uygulamayı silmeden aynı imzalı APK'yı yükleyin. Hesabınız ve listeleriniz korunur.
+5. Daha Fazla → Hakkında bölümünde sürüm 1.0.7 görünür.
 
-## Yeni takip/paylaşım/TV özellikleri
+## Kaynaktan çalıştırma
 
-Güncel kurulum ve gerçek sınırlar için **SURUM-1.0.6.txt** dosyasını okuyun.
-Takım, yeni bölüm ve yeni film takipleri eklendi. Yeni içerik kontrolü yalnız
-uygulama açıkken yapılır; önceden kurulmuş EPG alarmını telefon işler. Android
-Google Cast ve iOS AirPlay oynatıcıya eklendi. Gerçek TV/telefon test edilmedi.
-Paylaşım bağlantısı native Kotak TV davetini açar. Gerçek alan adı doğrulaması,
-mağaza sayfaları ve yayımlanmış servis olmadan mağaza yönlendirmesi etkin değildir.
-
-## Bu sürümde değişenler
-
-- Kanalın yanındaki takvim simgesi güncel programı ve sonraki yayınları açar.
-  EPG ekranında Şimdi / Bu Akşam / 24 Saat / Hatırlatıcılar sekmeleri vardır.
-  XMLTV adresi sağlayıcıdan çıkarılır veya EPG Kaynağı ayarından eklenir.
-  EPG verisi yoksa program uydurulmaz.
-- Zile basınca 5 / 10 / 30 dakika, 1 saat veya özel dakika seçilir. Bildirime
-  dokununca kanal açılır. Geçmiş bir hatırlatma zamanı kabul edilmez.
-  İkinci zil basışı hatırlatmayı kaldırır. Cihaz izni ve güç yönetimi etkilidir.
-- Ana ekran kategorileri kullanıcı seçimine göre kaydedilir; yalnız işaretlenenler
-  görünür. Listeler sanallaştırılır; yenileme katalog isteğini iptal edip yeniden başlatır.
-- Trend Filmler / Trend Diziler yalnız IMDb puanı bilinen ve en az 7 olan
-  VOD/dizilerden sıralanır. Canlı kanallar bu alanlara konmaz, dizi bölümleri tek
-  başlıkta gruplanır. Bilinmeyen IMDb puanı uydurulmaz.
-- Trend kartı önce afiş, yayın tarihi (varsa ay/yıl), IMDb puanı, tür ve özet
-  içeren pencere açar. İzle düğmesi filmi veya dizi bölümlerini açar.
-  Sağlayıcı veri vermiyorsa IMDb ayarında kendi OMDb anahtarı gerekir.
-  Eşleştirme en fazla 20 film + 20 dizi ile sınırlıdır; tüm katalog/global IMDb
-  sıralaması değildir. OMDb özetleri servisin sağladığı dilde olabilir.
-- Ana ekrandaki sesli asistan gerçek cihaz konuşma tanımasını kullanır:
-  “Bugün TRT1’de ne var?” EPG gösterir; “IMDb puanı yüksek aksiyon filmi öner”
-  bilinen puanları türüne göre sıralar; “Galatasaray maçını aç” mevcut EPG’de
-  şu anki maçın tek eşleşen kanalını açar. Henüz başlamayan maçın saatini gösterir.
-  Kanal/film/dizi adıyla doğrudan arama da vardır. Bu, yerel katalog/EPG üzerinde
-  çalışan komut motorudur; genel amaçlı LLM veya internette film arama servisi değildir.
-- Oynatıcı hata/ilerlememe halinde otomatik yeniden bağlanır. Ortada mavi dönen,
-  büyüyüp küçülen yıldız gösterilir. İlk donma eşiği 8 saniye; bağlantı arası
-  bekleme 4/8/16/30 saniye, sonrasında 30 saniyedir. Oynatıcı açıkken deneme
-  sayısı sınırlanmaz. Kullanıcı duraklatması korunur; VOD kaldığı yere döner.
-- Ses seviyesi, hoparlör ve ses oturumu açık ayarlanır; Türkçe/ilk ses parçası
-  seçilir. Ses/Altyazı → Sesi Yenile ve Ayarlar → Ses Testi mevcuttur.
-  Kullanıcının akışındaki gerçek ses/codec bu ortamda doğrulanmadı.
-- Birlikte İzle mobil düğmesi gerçek oda API'sine bağlanır. `server/` içinde
-  tek kullanımlık davet, yalnız bir konuk tarayıcı oturumu, kaynak proxy'si ve
-  oynat/duraklat/sarma senkronizasyonu uygulanmıştır. Servis henüz yayımlanmadı;
-  HTTPS adresi/hesap anahtarı olmadan davet üretilemez. Ayrıntı: server/README.md.
-- Doğrulanmış deneme/abonelik son tarihi geldiğinde 48 saat kala bir, son gün
-  24/16/8 saat kala üç bildirim ve uygulama içi süre mesajı planlanır.
-  Gerçek mağaza doğrulama servisi/ödeme kurulmadığı için bu akış şu an etkin değildir.
-  Ödeme alınmış veya deneme süresi doğrulanmış gibi davranılmaz.
-
-## Veri ve cihaz sınırları
-
-EPG, sağlayıcının XMLTV verisine bağlıdır; sıkıştırılmış ham .gz içeriği desteklenmez.
-Program saatleri Türkiye saatidir. Sistemin yerel bildirimleri tam zamanında
-iletmesi OS izinlerine ve pil ayarlarına bağlıdır. Ses tanıma için cihazın Google/
-Apple konuşma hizmeti ve gerektiğinde internet gerekir; bu modül Expo Go'da değil,
-yeni native APK'da çalışır. İçerik eşleştirmesi yerel kurallıdır; LLM sohbet servisi yoktur.
-
-4K/60 FPS, MKV ses codec'leri ve çoklu yayınlar kaynak/canlı bağlantı/cihaz desteğine
-bağlıdır. Yeni ses ayarları her kaynakta sesin kesin düzeldiğini kanıtlamaz.
-Yerel Ses Testi internet/sağlayıcı olmadan bu ayrımı yapmaya yardımcı olur.
-
-Kanal/EPG metadata önbelleği küçük kayıtlara ayrılır. Oynatma URL'leri ve başlıkları
-bu önbelleğe yazılmaz; hesaplar SecureStore'dadır. İnternetsiz canlı video devam etmez.
-
-AI maç tahmini, otomatik 1 dakikalık özet, ses çevirisi, mağaza satın alımı ve
-7 günlük sunucu kilidi henüz bağlanmadı. SharePlay servisi henüz yayımlanmadı. Bunlar başarılı
-çalışıyormuş gibi gösterilmez. Pro tasarımında aylık ₺249 / yıllık ₺999 seçenekleri vardır.
-
-## Doğrulama
+ZIP'i ayrı klasöre çıkarın, `KotakTV` klasöründe terminal açın:
 
 ```powershell
 npm.cmd ci --include=dev
 npm.cmd run check
-npm.cmd test
-npm.cmd run test:ui
+npx.cmd expo run:android
 ```
 
-17 veri/ağ + 3 önbellek + 8 medya/asistan/kurtarma + 28 bileşen/cihaz
-API akışı + 3 servis/senkronizasyon testi: **65 test**. Mikrofon ve bildirim API'leri testlerde taklit edilir.
-Android native prebuild/izinler ve Android JS paketlemesi denetlenir; bu APK'nın
-cihazda gerçek yayın sesi, gerçek konuşma, gerçek alarm ve piksel eşitliği bu
-ortamda doğrulanmamıştır. Hazır APK veya mağaza yayını tamamlanmış ürün değildir.
+Telefonda/emülatörde Expo Go yerine native Android uygulaması gerekir.
+Yeni bir EAS APK derlemesi gerekiyorsa `GUNCELLE-UX.cmd` çalıştırılabilir.
+Hazır APK indiriyorsanız tekrar derleme başlatmanız gerekmez.
 
-Üretim girişi `index.ts` → `App.tsx`. Destek: kotaktv@gmail.com
+## Video referansına göre arayüz
+
+- Saf siyah zemin, mavi kontroller, kompakt üst sekmeler ve kapsül alt menü.
+- Büyük sıra numaralı yatay Trend Filmler / Trend Diziler.
+- Yeni Eklenen Filmler, Son Güncellenen Diziler ve İzlemeye Devam Et.
+- Katalogda üç sütunlu afişler, arama ve iki/üç sütun geçişi.
+- Başlık detayı: büyük afiş, tarih, puan, özet, İzle, kadro ve resimler.
+  Film/dizi detayları mevcut IPTV sağlayıcısının tek başlık sorgusundan alınır.
+- Tüm kategoriler sayfası, kategori araması ve ana ekranda gösterilecek kategori seçimi.
+- EPG'de sabit kanal sütunu, kaydırılabilir saatler ve program hücreleri.
+  Hücreye dokununca açıklama açılır; Bana Hatırlat ile süre seçilir.
+- TV Kanalı alt sekmesinde doğrudan HLS/MP4 yayın adresi açılabilir.
+  Oynatma listeleri video diye oynatılmaz; liste olarak eklenir.
+- Tanıtım/özellik kartları ana ekrandan kaldırıldı; Daha Fazla bölümündedir.
+- Yayını Paylaş, telefonun WhatsApp/Telegram/SMS vb. paylaşım menüsünü açar.
+  Eş zamanlı oynatma, oda sunucusu veya paylaşım sunucusu yoktur.
+
+## Açılış ve performans
+
+İlk ağ isteği yalnız canlı kanal listesini alır. Kullanılabilir kanallar kategori
+adları gelmeden yayınlanır. Film/dizi listesi ilk canlı ekran çizildikten sonra
+ayrı yüklenir. Oynatmaya veya EPG'ye geçildiğinde VOD yüklemesi iptal edilir.
+Tam XMLTV yalnız EPG/kanal programı/asistan gerektiğinde istenir; açılışı engellemez.
+Katalog isteği toplam 20 saniye, VOD isteği toplam 25 saniyede kesilir; hata gösterilir.
+Bunlar açılış süresi vaadi değil, üst bekleme sınırlarıdır.
+Büyük JSON dizileri UI'ya sırayla çalışma zamanı vererek işlenir. Kanal ve EPG
+önbelleği ayrı yazılır; rehber, tüm katalogla tekrar kaydedilmez. EPG takma adları
+aynı veriyi tekrar yazmaz. Büyük listeler sanallaştırılır.
+Xtream önbelleğinden oynatma adresi güvenli hesap kaydından yeniden oluşturulur.
+Genel M3U listesinde bağlantılar değişmişse ağdan listeyi yenilemek gerekir.
+
+## Verinin sınırları
+
+IMDb puanı yalnız doğrulanmış IMDb alanından veya kullanıcı OMDb anahtarıyla
+alınan eşleşmeden gösterilir. IMDb yoksa sağlayıcı puanı `★` ile ayrı etiketlenir;
+yüksek sağlayıcı puanları trend alanına alternatif olabilir. Canlı kanallar
+film/dizi trendine girmez. Bu listeler global IMDb/TMDB trend kataloğu değildir.
+Sağlayıcı görsel, tarih, kadro fotoğrafı veya özet vermezse içerik uydurulmaz.
+Oyuncu isimleri varsa profil baş harfleri gösterilir; gerçek fotoğraf diye sunulmaz.
+Video referansındaki filmler/afişler uygulamaya kopyalanmış bir demo değildir.
+
+Program bilgisi ve 24 saatlik rehber sağlayıcının XMLTV verisine bağlıdır.
+EPG alarmı 5/10/15/30/60 veya özel dakika ile cihazın bildirim sistemine kaydedilir.
+Telefonun izinleri/pil politikası bildirim zamanını etkiler. Yeni içerik kontrolü
+uygulama açıkken yapılır; uygulama kapalıyken anlık kontrol garantisi verilmez.
+Yerel konuşma tanıma Türkçe komutu kanal/film/dizi/EPG üzerinde eşleştirir.
+Genel amaçlı LLM, maç tahmini, AI özet ve canlı çeviri bu sürümde bağlı değildir.
+Mağaza satın alma ve doğrulanmış deneme/abonelik kilidi etkin değildir.
+
+Oynatıcı expo-video kullanır; hata/donma halinde mavi yıldızla yeniden bağlanır.
+Ses/altyazı seçimi, tam ekran, cihaz destekliyorsa PiP, 2/4 ekran vardır.
+İnternet/kaynak/codec/cihaz kapasitesi nedeniyle kesintisiz 4K60 garantisi verilemez.
+Google Cast/AirPlay mevcut cihaz desteğine bağlıdır. Özel HTTP başlığı gerektiren
+kaynak varsayılan Cast alıcısına sunucusuz aktarılamıyorsa anlaşılır hata gösterilir.
+Destek: kotaktv@gmail.com
+
+## Doğrulama
+
+`DOGRULAMA.txt` ve `VIDEO-INCELEME.md` dosyaları yapılan kontrolleri ve referans
+karşılaştırmasını içerir. Gerçek IPTV hesabınızla Android ses/video ve fiziksel
+cihaz bildirimleri bu ortamda denenmedi. Piksel düzeyinde eşitlik iddiası yoktur.

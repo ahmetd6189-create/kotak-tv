@@ -1,3 +1,4 @@
+import {parseJsonArray} from "./json-array.ts";
 export type Kind = "live" | "movie" | "series" | "episode";
 export type Entry = {
   id: string;
@@ -7,6 +8,7 @@ export type Entry = {
   kind: Kind;
   uri?: string;
   contentType?: "hls" | "auto";
+  streamFormat?: string;
   headers?: Record<string, string>;
   epgId?: string;
   seriesId?: string;
@@ -14,6 +16,9 @@ export type Entry = {
   imdbRating?: number;
   imdbId?: string;
   rating?: number;
+  added?: number;
+  released?: string;
+  genre?: string;
 };
 export type PlaylistConfig = {
   id: string;
@@ -25,7 +30,7 @@ export type PlaylistConfig = {
   epgUrl?: string;
 };
 export type Catalog = { entries: Entry[]; epgUrl?: string; warnings: string[] };
-export type Program = { title: string; start: number; end: number };
+export type Program = { title: string; start: number; end: number; description?:string };
 export type Guide = Record<string, Program[]>;
 
 export function httpUrl(input: string, base?: string): string {
@@ -251,6 +256,7 @@ async function api(
   action?: string,
   signal?: AbortSignal,
   extra?: Record<string, string>,
+  timeoutMs?: number,
 ): Promise<unknown> {
   const query = new URLSearchParams({
     username: config.username || "",
@@ -261,10 +267,10 @@ async function api(
   const response = await requestText(
     `${baseUrl(config)}/player_api.php?${query}`,
     signal,
-    action ? 30000 : 8000,
+    timeoutMs ?? (action ? 30000 : 8000),
   );
   try {
-    return JSON.parse(response.text);
+    return response.text.length>128000&&response.text.trimStart().startsWith("[")?await parseJsonArray(response.text,signal):JSON.parse(response.text);
   } catch {
     throw new Error(
       "Xtream sunucusu geçerli JSON döndürmedi. Sunucu adresini kontrol edin.",
@@ -283,19 +289,20 @@ export async function loadCatalog(
   config: PlaylistConfig,
   signal?: AbortSignal,
   onPartial?: (catalog: Catalog) => void | Promise<void>,
+  options: {kinds?:("live"|"movie"|"series")[];requestTimeoutMs?:number;categoryTimeoutMs?:number} = {},
 ): Promise<Catalog> {
   if (config.type === "m3u") {
     const account = xtreamFromM3u(config);
     if(account) {
-      try { return await loadCatalog(account,signal,onPartial); }
+      try { return await loadCatalog(account,signal,onPartial,options); }
       catch {if(signal?.aborted)throw new Error("İşlem iptal edildi.");}
     }
-    const data = await requestText(config.url, signal);
+    const data = await requestText(config.url, signal,options.requestTimeoutMs);
     const catalog = await parsePlaylistAsync(data.text, config, data.url, signal);
     if (onPartial) await onPartial(catalog);
     return catalog;
   }
-  const auth = (await api(config, undefined, signal)) as {
+  const auth = (await api(config, undefined, signal,undefined,options.requestTimeoutMs?5000:undefined)) as {
     user_info?: {
       auth?: number | string;
       status?: string;
@@ -328,12 +335,13 @@ export async function loadCatalog(
     ["movie", "get_vod_streams", "get_vod_categories"],
     ["series", "get_series", "get_series_categories"],
   ] as const;
+  const selectedTasks=tasks.filter(([kind])=>!options.kinds||options.kinds.includes(kind));
   const results = await Promise.allSettled(
-    tasks.map(async ([kind, action, categoryAction]) => {
+    selectedTasks.map(async ([kind, action, categoryAction]) => {
       // Category requests may be slow; they must not hide already usable streams.
       let categoryRows: Row[] = [];
-      const categoryJob = api(config, categoryAction, signal).then(value => { categoryRows = rows(value); }).catch(() => {});
-      const data = await api(config, action, signal);
+      const categoryJob = api(config, categoryAction, signal,undefined,options.categoryTimeoutMs).then(value => { categoryRows = rows(value); }).catch(() => {});
+      const data = await api(config, action, signal,undefined,options.requestTimeoutMs);
       if (!Array.isArray(data)) throw new Error("Katalog yanıtı geçersiz.");
       const groups = new Map(
         categoryRows.map((c) => [
@@ -359,7 +367,11 @@ export async function loadCatalog(
           logo: String(r.stream_icon || r.cover || ""),
           epgId: r.epg_channel_id ? String(r.epg_channel_id) : undefined,
           seriesId: kind === "series" ? id : undefined,
+          streamFormat:kind==="live"?output:String(r.container_extension||"mp4"),
           rating: Number.isFinite(Number(r.rating)) ? Number(r.rating) : undefined,
+          added:Number(r.added||r.last_modified)||undefined,
+          released:String(r.releaseDate||r.release_date||r.year||'')||undefined,
+          genre:String(r.genre||'')||undefined,
           imdbRating: r.imdb_rating !== undefined && Number.isFinite(Number(r.imdb_rating)) ? Number(r.imdb_rating) : undefined,
           imdbId: /^tt\d+$/.test(String(r.imdb_id || "")) ? String(r.imdb_id) : undefined,
           uri:
@@ -384,7 +396,7 @@ export async function loadCatalog(
   );
   results.forEach((r, i) => {
     if (r.status === "fulfilled") { for (const entry of r.value) entries.push(entry); }
-    else warnings.push(`${["Canlı TV", "Film", "Dizi"][i]} listesi alınamadı.`);
+    else warnings.push(`${({live:"Canlı TV",movie:"Film",series:"Dizi"})[selectedTasks[i][0]]} listesi alınamadı.`);
   });
   if (!entries.length)
     throw new Error(
@@ -478,6 +490,7 @@ function* guideSteps(xml: string, now = Date.now()): Generator<void, Guide, void
       m[2].match(/<title\b[^>]*>([\s\S]*?)<\/title>/i)?.[1] || "Program";
     (guide[xmlText(a.channel)] ||= []).push({
       title: xmlText(title),
+      ...(m[2].match(/<desc\b[^>]*>([\s\S]*?)<\/desc>/i)?.[1]?{description:xmlText(m[2].match(/<desc\b[^>]*>([\s\S]*?)<\/desc>/i)![1]).slice(0,8000)}:{}),
       start,
       end,
     });
@@ -504,4 +517,16 @@ export async function parseGuideAsync(xml: string, now = Date.now(), signal?: Ab
   while (!result.done) { await yieldToUI(signal); result = steps.next(); }
   if (signal?.aborted) throw new Error("İşlem iptal edildi.");
   return result.value;
+}
+
+export type ProviderInfo={title?:string;poster?:string;backdrops:string[];plot?:string;released?:string;genre?:string;cast?:string;director?:string;duration?:string;rating?:number;imdbRating?:number;imdbId?:string};
+/** Read only the selected title, using the user's existing provider account. */
+export async function loadMediaInfo(config:PlaylistConfig,item:Entry,signal?:AbortSignal):Promise<ProviderInfo|null>{
+ config=xtreamFromM3u(config)||config;if(config.type!=="xtream")return null;
+ const series=item.kind==='series'||item.kind==='episode';const id=series?item.seriesId:item.id.slice(`${config.id}-movie-`.length);if(!id||!/^[0-9]+$/.test(id))return null;
+ const result=await api(config,series?'get_series_info':'get_vod_info',signal,series?{series_id:id}:{vod_id:id},8000) as {info?:Record<string,unknown>};const data=result.info;if(!data)return null;
+ const str=(v:unknown)=>typeof v==='string'&&v!=='N/A'?v:undefined;
+ const image=(v:unknown)=>typeof v==='string'&&/^https?:\/\//i.test(v)?v:undefined;
+ const imdb=Number(data.imdb_rating);const rating=Number(data.rating);
+ return {title:str(data.name),poster:image(data.movie_image)||image(data.cover),backdrops:(Array.isArray(data.backdrop_path)?data.backdrop_path:[]).map(image).filter((v):v is string=>!!v).slice(0,8),plot:str(data.plot)||str(data.description),released:str(data.releasedate)||str(data.releaseDate)||str(data.release_date),genre:str(data.genre),cast:str(data.cast)||str(data.actors),director:str(data.director),duration:str(data.duration),rating:rating>0&&rating<=10?rating:undefined,imdbRating:imdb>0&&imdb<=10?imdb:undefined,imdbId:/^tt\d+$/.test(String(data.imdb_id||''))?String(data.imdb_id):undefined};
 }
