@@ -1,4 +1,4 @@
-# Kotak TV 1.0.5
+# Kotak TV 1.0.6
 
 Expo SDK 54 / React Native kaynak projesi. Bu ZIP hazır APK içermez.
 
@@ -9,9 +9,18 @@ Expo SDK 54 / React Native kaynak projesi. Bu ZIP hazır APK içermez.
    Android production APK derlemesi başlatılır. Expo bağlantısından takip edin.
 3. İşlem bitince APK'yı indirin. Yalnız `Kotak_Phone` açıkken APK'yı
    `APK-YUKLE.cmd` üzerine sürükleyin. Aynı imzalı mevcut uygulama güncellenir.
-4. Hakkında ekranındaki sürüm **1.0.5** olmalı.
+4. Hakkında ekranındaki sürüm **1.0.6** olmalı.
 5. Önce **Daha Fazla → Ayarlar → Ses Testi** ile yerel test sesini dinleyin.
    Ardından canlı kanal ve filmi ayrı ayrı deneyin.
+
+## Yeni takip/paylaşım/TV özellikleri
+
+Güncel kurulum ve gerçek sınırlar için **SURUM-1.0.6.txt** dosyasını okuyun.
+Takım, yeni bölüm ve yeni film takipleri eklendi. Yeni içerik kontrolü yalnız
+uygulama açıkken yapılır; önceden kurulmuş EPG alarmını telefon işler. Android
+Google Cast ve iOS AirPlay oynatıcıya eklendi. Gerçek TV/telefon test edilmedi.
+Paylaşım bağlantısı native Kotak TV davetini açar. Gerçek alan adı doğrulaması,
+mağaza sayfaları ve yayımlanmış servis olmadan mağaza yönlendirmesi etkin değildir.
 
 ## Bu sürümde değişenler
 
@@ -82,8 +91,8 @@ npm.cmd test
 npm.cmd run test:ui
 ```
 
-17 veri/ağ + 3 önbellek + 8 medya/asistan/kurtarma + 22 bileşen/cihaz
-API akışı + 3 servis/senkronizasyon testi: **53 test**. Mikrofon ve bildirim API'leri testlerde taklit edilir.
+17 veri/ağ + 3 önbellek + 8 medya/asistan/kurtarma + 28 bileşen/cihaz
+API akışı + 3 servis/senkronizasyon testi: **65 test**. Mikrofon ve bildirim API'leri testlerde taklit edilir.
 Android native prebuild/izinler ve Android JS paketlemesi denetlenir; bu APK'nın
 cihazda gerçek yayın sesi, gerçek konuşma, gerçek alarm ve piksel eşitliği bu
 ortamda doğrulanmamıştır. Hazır APK veya mağaza yayını tamamlanmış ürün değildir.

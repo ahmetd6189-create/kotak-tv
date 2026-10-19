@@ -51,7 +51,7 @@ export function ProPanel({onClose}:{onClose:()=>void}) {
 export function AboutPanel({onClose}:{onClose:()=>void}) {
  return <Sheet visible title="Hakkında" onClose={onClose}>
   <View style={[s.orb,{backgroundColor:c.blue,width:112,height:112,borderRadius:30}]}><Play color="white" size={52}/></View>
-  <Text style={[d.h2,{textAlign:'center',letterSpacing:4}]}>KOTAK TV</Text><Text style={[s.copy,{textAlign:'center'}]}>Sürüm 1.0.5</Text>
+  <Text style={[d.h2,{textAlign:'center',letterSpacing:4}]}>KOTAK TV</Text><Text style={[s.copy,{textAlign:'center'}]}>Sürüm 1.0.6</Text>
   <View style={s.box}><Text style={s.copy}>Kotak TV, kendi IPTV listenizle canlı yayın, film ve dizi izlemek için tasarlanmış bir oynatıcıdır. İçerik sağlayıcınızın M3U veya Xtream Codes bilgileriyle kullanılır.</Text><Text style={d.secondary}>Desteklenen yayınlarda tam ekran, ses/altyazı seçimi, 2/4 ekran ve PiP sunar. Görüntü kalitesi kaynak yayına ve cihaz desteğine bağlıdır.</Text></View>
   <Pressable onPress={()=>void Linking.openURL('mailto:kotaktv@gmail.com').catch(()=>{})}><Text style={[d.name,{color:c.blue,marginVertical:24}]}>kotaktv@gmail.com</Text></Pressable>
  </Sheet>;

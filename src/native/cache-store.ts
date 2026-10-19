@@ -5,7 +5,7 @@ type Manifest = {version:2; savedAt:number; keys:string[]};
 type RecordRow = {entry:Entry} | {channel:string; programs:Guide[string]};
 const pause = () => new Promise<void>(resolve=>setTimeout(resolve,0));
 let sequence=0;
-export function createCacheStore(store:KeyValueStore) {
+export function createCacheStore(store:KeyValueStore,ttlMs=86400000) {
  const queues = new Map<string,Promise<void>>();
  const prefix=(id:string)=>`kotak.cache.v2.${id}`;
  async function manifest(id:string):Promise<Manifest|null> {
@@ -16,7 +16,7 @@ export function createCacheStore(store:KeyValueStore) {
  async function read(id:string):Promise<Snapshot|null> {
   const meta=await manifest(id);
   if(!meta) {try{return readSnapshot(await store.getItem(`kotak.cache.${id}`));}catch{return null;}}
-  if(meta.savedAt>Date.now()||Date.now()-meta.savedAt>=86400000) return null;
+  if(meta.savedAt>Date.now()||Date.now()-meta.savedAt>=ttlMs) return null;
   const entries:Entry[]=[];const guide:Guide={};
   try {
    for(let i=0;i<meta.keys.length;i+=8){

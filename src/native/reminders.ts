@@ -3,7 +3,7 @@ import { Platform } from 'react-native';
 import type { Entry, Program } from './iptv';
 Notifications.setNotificationHandler({handleNotification:async()=>({shouldPlaySound:true,shouldSetBadge:false,shouldShowBanner:true,shouldShowList:true})});
 export function reminderId(item:Entry,p:Program){return `kotak-${item.id}-${p.start}`;}
-export async function scheduledReminders(){return (await Notifications.getAllScheduledNotificationsAsync()).map(n=>n.identifier).filter(id=>!id.startsWith("kotak-expiry-"));}
+export async function scheduledReminders(){return (await Notifications.getAllScheduledNotificationsAsync()).map(n=>n.identifier).filter(id=>!id.startsWith("kotak-expiry-")&&!id.startsWith("kotak-follow-")&&!id.startsWith("kotak-new-"));}
 export async function toggleReminder(item:Entry,p:Program,minutes=5):Promise<boolean>{
  const identifier=reminderId(item,p);
  if((await scheduledReminders()).includes(identifier)){await Notifications.cancelScheduledNotificationAsync(identifier);return false;}

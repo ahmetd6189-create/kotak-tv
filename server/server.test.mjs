@@ -38,3 +38,16 @@ test('browser sync forwards an actual guest pause after a no-op host poll',async
  const context={location:{pathname:'/watch/room',hash:'#invite'},history:{replaceState(){}},document:{querySelector:name=>elements[name],hidden:false},Date:{now:()=>now},Hls:{isSupported:()=>false},setInterval:fn=>timers.push(fn),fetch:async(path,options)=>{requests.push([path,options]);return {ok:true,json:async()=>path.endsWith('/join')||path.endsWith('/command')?{ok:true}:state}}};
  runInNewContext(await readFile(new URL('./watch.js',import.meta.url),'utf8'),context);await elements['#join'].onclick();now+=2000;state.serverNow=now;state.state.updatedAt=now;await timers[0]();video.paused=true;events.get('pause')();await new Promise(r=>setImmediate(r));assert.ok(requests.some(([path,options])=>path.endsWith('/command')&&JSON.parse(options.body).action==='pause'));
 });
+test('app invite landing, real store configuration, native one-use redemption and scoped Cast proxy',async()=>{
+ const provider=http.createServer((req,res)=>{res.setHeader('Content-Type','application/vnd.apple.mpegurl');res.end('#EXTM3U\n#EXTINF:5,\nsegment.ts\n');});const source=await listen(provider);
+ const server=createService({secret,origin:'http://localhost',hosts:[new URL(source).host],allowTestLocal:true,androidStoreUrl:'https://play.google.com/store/apps/details?id=com.kotaktv.app',androidFingerprints:['TEST-FINGERPRINT'],appleAppId:'TEST.com.kotaktv.app'});const base=await listen(server);
+ const headers={Authorization:`Bearer ${hostToken(secret,'owner')}`,'Content-Type':'application/json'};const request=(path,data,extra=headers)=>fetch(base+path,{method:data?'POST':'GET',headers:extra,body:data?JSON.stringify(data):undefined});
+ try{
+  const room=await(await request('/v1/rooms',{uri:source+'/live.m3u8'})).json();assert.match(room.url,/\/join\//);const invite=room.url.split('#')[1];
+  const landing=await request(`/join/${room.id}`);assert.match(await landing.text(),/Kotak TV/);const config=await(await request('/link-config')).json();assert.match(config.stores.android,/play.google.com/);assert.equal(config.stores.ios,'');
+  const join=await(await request(`/v1/rooms/${room.id}/join`,{invite,native:true},{})).json();assert.equal(join.guestToken.length,43);assert.equal((await request(`/v1/rooms/${room.id}`,null,{'X-Kotak-Guest':join.guestToken})).status,200);assert.equal((await request(`/v1/rooms/${room.id}/join`,{invite,native:true},{})).status,403);
+  const cast=await(await request('/v1/rooms',{uri:source+'/live.m3u8',mode:'cast'})).json();const castPath=new URL(cast.castSource).pathname+new URL(cast.castSource).search;
+  const manifest=await(await request(castPath,null,{})).text();assert.match(manifest,/\?cast=/);assert.equal((await request(new URL(cast.castSource).pathname,null,{})).status,403);
+  assert.equal((await(await request('/.well-known/assetlinks.json')).json())[0].target.package_name,'com.kotaktv.app');
+ }finally{server.closeAllConnections();provider.closeAllConnections();await Promise.all([new Promise(r=>server.close(r)),new Promise(r=>provider.close(r))]);}
+});

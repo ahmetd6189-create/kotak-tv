@@ -9,7 +9,7 @@ import {assistantAnswer} from '../native/assistant';
 import type {ImdbInfo} from '../native/imdb';
 import {Pill,Sheet,clock,d} from './Design';
 import {colors as c} from '../theme';
-export function VoiceSearch({entries,guide={},metadata={},onReminder,onDetails,onPlay,onClose}:{entries:Entry[];guide?:Guide;metadata?:Record<string,ImdbInfo>;onReminder?:(item:Entry,p:Program)=>void;onDetails?:(item:Entry)=>void;onPlay:(item:Entry)=>void;onClose:()=>void}){
+export function VoiceSearch({entries,guide={},metadata={},onReminder,onDetails,onFollowTeam,onPlay,onClose}:{entries:Entry[];guide?:Guide;metadata?:Record<string,ImdbInfo>;onReminder?:(item:Entry,p:Program)=>void;onFollowTeam?:(team:string)=>void;onDetails?:(item:Entry)=>void;onPlay:(item:Entry)=>void;onClose:()=>void}){
  const [text,setText]=useState('');const [listening,setListening]=useState(false);const [error,setError]=useState('');const delivered=useRef(false);
  const index=useMemo(()=>buildVoiceIndex(entries),[entries]);const deferredText=useDeferredValue(text);
  const answer=useMemo(()=>assistantAnswer(index,deferredText,guide,metadata),[index,deferredText,guide,metadata]);
@@ -36,6 +36,7 @@ export function VoiceSearch({entries,guide={},metadata={},onReminder,onDetails,o
   {!!error&&<Text style={{color:c.red,marginVertical:16}}>{error}</Text>}
   <TextInput accessibilityLabel="Sesli arama metni" placeholder="İstersen yazarak ara" placeholderTextColor={c.zinc500} value={text} onChangeText={setText} style={{padding:16,borderRadius:16,backgroundColor:'#2c2c2e',color:c.white,fontSize:16}}/>
   {!!text&&<Text style={[d.secondary,{marginTop:16}]}>{answer.message}</Text>}
+  {answer.teamQuery&&!!answer.schedule?.length&&onFollowTeam&&<View style={{marginTop:16}}><Pill active label="Takip et" onPress={()=>{onClose();onFollowTeam(answer.teamQuery!);}}/></View>}
   {(answer.schedule||[]).map(({channel,programs})=><View key={channel.id} style={{marginTop:16}}><Text style={d.h2}>{channel.name}</Text>{programs.map(p=><View key={p.start} style={{flexDirection:'row',gap:10,alignItems:'center',paddingVertical:12}}><Text style={d.micro}>{clock(p.start)}</Text><Text style={[d.secondary,{flex:1}]}>{p.title}</Text>{p.start>Date.now()&&onReminder&&<Pill label="Hatırlat" onPress={()=>{onClose();onReminder(channel,p);}}/>}</View>)}</View>)}
   {(answer.mode==='schedule'?[]:results).map(item=><Pressable key={item.id} onPress={()=>{onClose();if(answer.mode==='recommend'&&onDetails)onDetails(item);else onPlay(item)}} style={{paddingVertical:16,borderBottomWidth:1,borderBottomColor:'#ffffff18',flexDirection:'row',alignItems:'center',gap:12}}><View style={{flex:1}}><Text style={d.name}>{item.name}</Text><Text style={d.secondary}>{item.group}</Text></View><Play color={c.blue} size={20}/></Pressable>)}
 

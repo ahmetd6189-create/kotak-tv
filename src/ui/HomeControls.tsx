@@ -1,11 +1,11 @@
 import React,{useMemo,useState} from 'react';
 import {FlatList,Modal,Pressable,StyleSheet,Text,TextInput,View} from 'react-native';
-import {Check,Mic,RefreshCw,X} from 'lucide-react-native';
+import {Bell,Check,Mic,RefreshCw,X} from 'lucide-react-native';
 import {IconButton,Pill,d} from './Design';
 import {colors as c} from '../theme';
 import type {CategoryItem} from '../types/iptv';
-export function HomeActions({onVoice,onRefresh,loading}:{onVoice:()=>void;onRefresh:()=>void;loading:boolean}){
- return <View style={s.actions}><Pressable accessibilityRole="button" accessibilityLabel="Sesli TV asistanını aç" onPress={onVoice} style={s.voice}><Mic color={c.blue} size={22}/><View><Text style={d.name}>Kotak TV Asistanı</Text><Text style={d.micro}>Yayın akışı sor, film önerisi al, maç aç</Text></View></Pressable><IconButton icon={RefreshCw} label={loading?'Yüklemeyi yeniden başlat':'Listeleri yenile'} onPress={onRefresh}/></View>;
+export function HomeActions({onVoice,onRefresh,loading,onFollows}:{onFollows?:()=>void;onVoice:()=>void;onRefresh:()=>void;loading:boolean}){
+ return <View style={s.actions}><Pressable accessibilityRole="button" accessibilityLabel="Sesli TV asistanını aç" onPress={onVoice} style={s.voice}><Mic color={c.blue} size={22}/><View><Text style={d.name}>Kotak TV Asistanı</Text><Text style={d.micro}>Yayın akışı sor, film önerisi al, maç aç</Text></View></Pressable>{!!onFollows&&<IconButton icon={Bell} label="Takiplerim" onPress={onFollows}/>}<IconButton icon={RefreshCw} label={loading?'Yüklemeyi yeniden başlat':'Listeleri yenile'} onPress={onRefresh}/></View>;
 }
 export function CategoryPicker({groups,selected,onSave,onClose}:{groups:CategoryItem[];selected:string[]|null;onSave:(values:string[]|null)=>void;onClose:()=>void}){
  const [query,setQuery]=useState('');const [choices,setChoices]=useState(selected??groups.map(g=>g.name));

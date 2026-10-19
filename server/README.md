@@ -46,3 +46,33 @@ Mobil bildirim planlayıcısı gerçek sonuç geldiğinde 48 saat kala bir; son 
 24,16,8 saat kala üç bildirim kurar. Uygulama açılışında süre mesajı gösterir.
 Yenilemede eski plan iptal edilir. Bildirim izni ve işletim sistemi zamanlaması
 etkilidir; uygulama kaldırılmış/hiç açılmamışken sunucu push altyapısı gerekir.
+
+## 1.0.6: uygulamaya açılan paylaşım daveti
+
+Yeni davet `/join/oda#tek-kullanimlik-davet` biçimindedir. Telefonun paylaş menüsü
+WhatsApp/Telegram/SMS/Messenger dahil kurulu ve metin paylaşmayı destekleyen
+uygulamaları listeler. Konuk native uygulamada tek kullanımlık daveti teslim alır,
+oynatıcı ve oda komutlarını yalnız bu odaya ait geçici anahtarla kullanır; ana
+kullanıcının hesap anahtarı konuğa verilmez. Eski `/watch` tarayıcı oynatıcısı yeni
+paylaşımlarda kullanılmaz. Davet kurulumdan sonra yeniden açılmalıdır; mağaza
+kurulumundan otomatik davet devamı (deferred linking) uygulanmamıştır.
+
+Yayımlama için gerçek değerler:
+- Mobil derlemede EXPO_PUBLIC_LINK_HOST: doğrulanacak HTTPS alan adı.
+- Sunucuda ANDROID_SHA256: gerçek Android imza SHA256 parmak izi (virgüllü olabilir).
+- APPLE_APP_ID: gerçek Apple TeamID.com.kotaktv.app.
+- ANDROID_STORE_URL: yayımlanmış Google Play ürün adresi.
+- IOS_STORE_URL: yayımlanmış App Store ürün adresi.
+
+Sunucu Android assetlinks.json ve Apple apple-app-site-association dosyalarını
+bu değerlerle servis eder. Değerler yoksa boş doğrulama listesi döner ve mevcut
+olmayan mağazaya yönlendirme yapılmaz. Android intent fallback / iOS açma düğmesi
+vardır; uygulama içi tarayıcılar doğrudan açmayı kısıtlayabilir. Native OS App/
+Universal Links için alan adı ve imzanın gerçekten doğrulanması gerekir.
+
+Google Cast'te doğrudan erişilen HLS/MP4 kaynağı TV'ye gönderilir. Özel HTTP
+başlıkları isteyen yayınlar için `mode:cast` kaynak proxy'si iki saatlik, yalnız
+ilgili odaya erişen yetki bağlantısı üretir. Manifest alt kaynakları aynı yetkiyi
+taşır. TLS reverse proxy erişim günlüklerinde sorgu dizilerini kaydetmeyin.
+Bu bağlantı tüm IPTV hesabını açmaz; yalnız o yayın içindir. Varsayılan Google
+alıcı tüm codec/DRM türlerini oynatmaz; MKV aktarımı desteklenmiş gibi sunulmaz.

@@ -407,6 +407,7 @@ export async function loadEpisodes(
       rows(value).map((r) => ({
         id: `${config.id}-episode-${r.id}`,
         playlistId: config.id,
+        seriesId: series.seriesId,
         name: `S${season} B${r.episode_num || ""} · ${r.title || series.name}`,
         group: series.name,
         logo: series.logo,

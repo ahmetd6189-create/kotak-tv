@@ -1,6 +1,6 @@
 const {test}=require('node:test');const assert=require('node:assert/strict');const {mkdtempSync,rmSync}=require('node:fs');const {join}=require('node:path');const {tmpdir}=require('node:os');
 const dir=mkdtempSync(join(tmpdir(),'kotak-features-'));
-require('esbuild').buildSync({stdin:{contents:`export * from './src/native/assistant'; export * from './src/native/catalog-tools'; export * from './src/native/recovery'; export * from './src/native/imdb'; export * from './src/native/iptv';`,resolveDir:process.cwd()},bundle:true,platform:'node',format:'cjs',outfile:join(dir,'core.cjs'),logLevel:'error'});
+require('esbuild').buildSync({stdin:{contents:`export * from './src/native/invites'; export * from './src/native/follow-core'; export * from './src/native/cast'; export * from './src/native/assistant'; export * from './src/native/catalog-tools'; export * from './src/native/recovery'; export * from './src/native/imdb'; export * from './src/native/iptv';`,resolveDir:process.cwd()},bundle:true,platform:'node',format:'cjs',outfile:join(dir,'core.cjs'),logLevel:'error'});
 const core=require(join(dir,'core.cjs'));rmSync(dir,{recursive:true});
 const base={id:'1',playlistId:'p',name:'Film',group:'Film',logo:'',kind:'movie',uri:'https://host/user/secret/movie.mp4'};
 test('IMDb rails exclude live TV, unknown scores and low scores; series episodes deduplicate',()=>{
@@ -49,4 +49,26 @@ test('Assistant recommends actual highest IMDb score in requested genre and sepa
  const low={...base,name:'Low',imdbRating:7.1,group:'Aksiyon'};const high={...base,id:'high',name:'High',imdbRating:9.2,group:'Aksiyon'};const series={...base,id:'series',name:'Series',kind:'series',imdbRating:9.9,group:'Dram'};
  const index=core.buildVoiceIndex([low,high,series,{...high,id:'live',kind:'live',imdbRating:10}]);
  assert.deepEqual(core.assistantAnswer(index,'IMDb puanı en yüksek aksiyon filmi öner').entries.map(e=>e.id),['high','1']);assert.equal(core.assistantAnswer(index,'en iyi dizi öner').entries[0].id,'series');assert.equal(core.assistantAnswer(index,'korku filmi öner').entries.length,0);
+});
+
+test('Team question resolves RealMadrid genitive, gives schedule and never auto-plays without an open command',()=>{
+ const now=Date.now(),channel={...base,name:'beIN 1',kind:'live',epgId:'sport'},program={title:'Real Madrid - Barcelona',start:now-1000,end:now+3600000};const index=core.buildVoiceIndex([channel]);
+ const answer=core.assistantAnswer(index,"RealMadridin maçı hangi kanalda",{'p:sport':[program]},{},now);assert.equal(answer.entries[0].name,'beIN 1');assert.equal(answer.teamQuery,'real madrid');assert.equal(answer.autoPlay,undefined);
+ assert.equal(core.assistantAnswer(index,"Real Madrid maçını aç",{'p:sport':[program]},{},now).autoPlay.id,'1');
+});
+test('Follow diffs ignore initial library, distinguish series and report only genuinely new movie/episodes',()=>{
+ const rule={id:'f',kind:'series',label:'Çukur',playlistId:'p',leadMinutes:15,createdAt:0};const old={...base,id:'ep1',kind:'episode',name:'Çukur S01 E01'},fresh={...old,id:'ep2',name:'Çukur S01 E02'};
+ assert.equal(core.newFollowItems(null,[old,fresh],[rule]).length,0);assert.deepEqual(core.newFollowItems([old],[old,fresh,{...fresh,id:'other',name:'Other S01 E02'}],[rule])[0].items.map(e=>e.id),['ep2']);
+ assert.equal(core.newFollowItems([base],[base,{...base,id:'new'}],[{...rule,kind:'movies'}])[0].items[0].id,'new');
+});
+test('Team reminders deduplicate HD/SD, exclude recaps, and use only future EPG fixtures',()=>{
+ const now=Date.now(),a={...base,id:'a',kind:'live',epgId:'x'},b={...a,id:'b'},rule={id:'f',kind:'team',label:'Real Madrid',leadMinutes:30,createdAt:0};const p={title:'Real Madrid - Barcelona',start:now+3600000,end:now+7200000};
+ const matches=core.followedMatches([a,b],{'p:x':[p,{...p,title:'Real Madrid Maç Özeti',start:p.start+1000}]},[rule],now);assert.equal(matches.length,1);assert.equal(matches[0].channel.id,'a');
+});
+test('App invitation parsing accepts only valid scoped HTTPS/custom links and never reuses account credentials',()=>{
+ const invite={origin:'https://share.example',id:'a'.repeat(32),token:'b'.repeat(43)};assert.deepEqual(core.parseInvite(core.nativeInviteLink(invite)),invite);assert.deepEqual(core.parseInvite(`https://share.example/join/${invite.id}#${invite.token}`),invite);
+ assert.equal(core.parseInvite(`kotaktv://join/${invite.id}?origin=http://localhost&invite=${invite.token}`),null);assert.equal(core.parseInvite('https://share.example/join/nope#invalid'),null);
+});
+test('TV media keeps original HLS type when using an opaque authorized proxy URL',()=>{
+ assert.equal(core.castInfo({...base,uri:'https://provider.example/live.m3u8',kind:'live'},'https://service.example/media/opaque').contentType,'application/x-mpegURL');assert.throws(()=>core.castInfo({...base,uri:'https://provider.example/file.mkv'}),/MKV/);
 });

@@ -1,7 +1,8 @@
+import {teamName} from './follow-core';
 import type {Entry,Guide,Program} from './iptv';
 import {buildVoiceIndex,guideKey,matchVoice,normalized,programWindow,scheduleFor} from './catalog-tools';
 import {metadataKey,type ImdbInfo} from './imdb';
-export type AssistantResult={mode:'search'|'schedule'|'recommend'|'match';entries:Entry[];schedule?:{channel:Entry;programs:Program[]}[];message:string;autoPlay?:Entry};
+export type AssistantResult={mode:'search'|'schedule'|'recommend'|'match';entries:Entry[];schedule?:{channel:Entry;programs:Program[]}[];message:string;teamQuery?:string;autoPlay?:Entry};
 const genres:[RegExp,RegExp][]=[[/aksiyon/,/action|aksiyon/],[/komedi/,/comedy|komedi/],[/korku/,/horror|korku/],[/bilim kurgu/,/sci.?fi|bilim kurgu/],[/dram/,/drama?/],[/gerilim/,/thriller|gerilim/],[/animasyon/,/animation|animasyon/],[/belgesel/,/documentary|belgesel/],[/romantik/,/romance|romantik/]];
 export function assistantAnswer(index:ReturnType<typeof buildVoiceIndex>,spoken:string,guide:Guide={},metadata:Record<string,ImdbInfo>={},now=Date.now()):AssistantResult{
  const q=normalized(spoken);if(!q)return {mode:'search',entries:[],message:''};
@@ -18,10 +19,10 @@ export function assistantAnswer(index:ReturnType<typeof buildVoiceIndex>,spoken:
   return {mode:'recommend',entries:ranked,message:ranked.length?'Listendeki bilinen IMDb puanlarına göre en yüksek puanlı içerikler':'Bu türde puanı bilinen içerik bulunamadı. IMDb verilerini ayarlardan yükle.'};
  }
  if(/\bmac|macini|maci\b/.test(q)){
-  const terms=q.replace(/\b(bana|bugun|bu|aksam|mac|maci|macini|ac|oynat|izle|lutfen)\b/g,' ').trim().split(/\s+/).filter(Boolean);
-  const schedule=index.filter(x=>x.entry.kind==='live').map(x=>({channel:x.entry,programs:scheduleFor(x.entry,guide).filter(p=>p.end>now&&terms.length&&terms.every(t=>normalized(p.title).includes(t)))})).filter(x=>x.programs.length).slice(0,20);
+  const wanted=teamName(q.replace(/\b(bana|bugun|bu|aksam|mac|maci|macini|maci[nı]?|ac|oynat|izle|lutfen|hangi|kanalda|kanal|saat|kacta|ne|zaman)\b/g,' '));const terms=wanted.split(/\s+/).filter(Boolean);
+  const schedule=index.filter(x=>x.entry.kind==='live').map(x=>({channel:x.entry,programs:scheduleFor(x.entry,guide).filter(p=>p.end>now&&terms.length&&terms.every(t=>guideKey(teamName(p.title)).includes(guideKey(t))))})).filter(x=>x.programs.length).slice(0,20);
   const live=schedule.filter(x=>x.programs.some(p=>p.start<=now&&p.end>now)).map(x=>x.channel);
-  return {mode:'match',schedule,entries:live,message:live.length?'Maç şu anda bu kanalda':schedule.length?'Maç henüz başlamadı; yayın saati aşağıda.':'Maç EPG’de bulunamadı. EPG eksik veya yayın farklı isimde olabilir.',autoPlay:live.length===1?live[0]:undefined};
+  return {mode:'match',schedule,entries:live,teamQuery:wanted,message:live.length?'Maç şu anda bu kanalda. Takibe alalım mı?':schedule.length?'Maçın kanalı ve saati aşağıda. Takibe alalım mı?':'Maç EPG’de bulunamadı. EPG eksik veya yayın farklı isimde olabilir.',autoPlay:live.length===1&&/\b(ac|oynat|izle)\b/.test(q)?live[0]:undefined};
  }
  const entries=matchVoice(index,spoken);return {mode:'search',entries,message:entries.length?'Bulduğum içerikler':'Listende eşleşen içerik bulunamadı.',autoPlay:entries.length===1?entries[0]:undefined};
 }

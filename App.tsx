@@ -1,3 +1,8 @@
+import * as AppLinking from "expo-linking";
+import {parseInvite,type Invite} from "./src/native/invites";
+import {GuestPlayback} from "./src/ui/GuestPlayback";
+import {FollowPanel,type FollowDraft} from "./src/ui/FollowPanel";
+import {savedFollows,saveFollows,seedFollows,followPermission,observeFollowCatalog,syncTeamReminders,cancelFollowNotifications,type FollowRule} from "./src/native/follows";
 import {SharePanel} from "./src/ui/SharePanel";
 import {serviceConfig,verifiedEntitlement,closeShareRoom,type ShareRoom} from "./src/native/shareplay";
 import {scheduleExpiryNotices,expiryMessage,type Entitlement} from "./src/native/entitlement";
@@ -27,7 +32,7 @@ import {HomeActions,CategoryPicker} from "./src/ui/HomeControls";
 import {VoiceSearch} from "./src/ui/VoiceSearch";
 import {ImdbPanel} from "./src/ui/ImdbPanel";
 import {EpgSettings} from "./src/ui/EpgSettings";
-import {rankedMedia,scheduleFor} from "./src/native/catalog-tools";
+import {mediaTitle,rankedMedia,scheduleFor} from "./src/native/catalog-tools";
 import {metadataKey,type ImdbInfo} from "./src/native/imdb";
 import {scheduledReminders,toggleReminder} from "./src/native/reminders";
 import * as SecureStore from "expo-secure-store";
@@ -143,6 +148,10 @@ function KotakApp() {
   const [optionsOpen, setOptionsOpen] = useState(false);
   const [screen, setScreen] = useState<null | "library" | "settings">(null);
   const [info, setInfo] = useState<string | null>(null);
+  const [incomingInvite,setIncomingInvite]=useState<Invite|null>(null);
+  const [followOpen,setFollowOpen]=useState(false);
+  const [followDraft,setFollowDraft]=useState<FollowDraft|undefined>();
+  const [followRules,setFollowRules]=useState<FollowRule[]>([]);
   const [shareOpen,setShareOpen]=useState(false);
   const [shareRoom,setShareRoom]=useState<ShareRoom|null>(null);
   const [entitlement,setEntitlement]=useState<Entitlement|null>(null);
@@ -155,6 +164,7 @@ function KotakApp() {
   });
   const [protection, setProtection] = useState<Protection | null>(null);
   const [child, setChild] = useState(false);
+  const childRef=useRef(child);childRef.current=child;
   const [securityReady, setSecurityReady] = useState(false);
   const [securityError, setSecurityError] = useState(false);
   const [parentOpen, setParentOpen] = useState(false);
@@ -261,6 +271,7 @@ function KotakApp() {
         try{if(homeRaw){const data=JSON.parse(homeRaw);if(Array.isArray(data))setHomeCategories(data.filter((v):v is string=>typeof v==="string"));}}catch{}
         try{if(imdbRaw)setImdb(JSON.parse(imdbRaw));}catch{}
         void scheduledReminders().then(setReminders).catch(()=>{});
+        setFollowRules(await savedFollows());
         setConfigs(saved);
         setFavorites(JSON.parse(fav || "[]"));
         setRecent(JSON.parse(history || "[]"));
@@ -287,7 +298,8 @@ function KotakApp() {
               if (!controller.signal.aborted) setCatalogs(prev => ({...prev, [config.id]: partial.entries}));
             });
             if (controller.signal.aborted) return;
-            setCatalogs((prev) => ({ ...prev, [config.id]: catalog.entries }));
+            void observeNewContent(config,catalog.entries,controller.signal);
+      setCatalogs((prev) => ({ ...prev, [config.id]: catalog.entries }));
             if (catalog.warnings.length) setMessage(catalog.warnings.join(" "));
             void cacheCatalog(config.id, catalog.entries).then(() => setCacheTime(Date.now())).catch(() => setMessage("Kanal önbelleği kaydedilemedi."));
             void readGuide(config, catalog.epgUrl, controller.signal, catalog.entries);
@@ -315,7 +327,7 @@ function KotakApp() {
       if (state === "background") {
         episodeJob.current?.abort();
         setChild(true); setPlaying([]); setScreen(null); setEpisodes(null);
-        setDetails(null); setSearchOpen(false); setInfo(null); setOptionsOpen(false); setAdd(false);setShareOpen(false);setPendingReminder(null);setMediaDetails(null);setVoiceOpen(false);setImdbOpen(false);setCategoryOpen(false);setEpgSettingsOpen(false);
+        setDetails(null); setSearchOpen(false); setInfo(null); setOptionsOpen(false); setAdd(false);setFollowOpen(false);setShareOpen(false);setPendingReminder(null);setMediaDetails(null);setVoiceOpen(false);setImdbOpen(false);setCategoryOpen(false);setEpgSettingsOpen(false);
       }
     });
     return () => listener.remove();
@@ -367,6 +379,7 @@ function KotakApp() {
       const catalog = await loadCatalog(config, controller.signal, publish);
       if (controller.signal.aborted) return;
       await publish(catalog);
+      void observeNewContent(config,catalog.entries,controller.signal);
       setMessage(`${catalog.entries.length} içerik alındı.${catalog.warnings.length ? ` ${catalog.warnings.join(" ")}` : ""}`);
       // Persistence and EPG are independent background work, never an import gate.
       void cacheCatalog(config.id, catalog.entries).then(() => setCacheTime(Date.now())).catch(() => setMessage("Kanal önbelleği kaydedilemedi. Yayın izlemeye devam edebilirsiniz."));
@@ -387,11 +400,33 @@ function KotakApp() {
       if(controller.signal.aborted)return;
       void readGuide(config,inferredEpgUrl(config),controller.signal);
       try{const result=await loadCatalog(config,controller.signal,partial=>{if(!controller.signal.aborted)setCatalogs(prev=>({...prev,[config.id]:partial.entries}));});
-       if(controller.signal.aborted)return;setCatalogs(prev=>({...prev,[config.id]:result.entries}));
+       if(controller.signal.aborted)return;void observeNewContent(config,result.entries,controller.signal);setCatalogs(prev=>({...prev,[config.id]:result.entries}));
        void cacheCatalog(config.id,result.entries).catch(()=>{});void readGuide(config,result.epgUrl,controller.signal,result.entries);
       }catch(e){if(!controller.signal.aborted)setMessage((e as Error).message);}
     }}finally{if(!controller.signal.aborted)setLoadingLists(false);}
   }
+  useEffect(()=>{const receive=(url:string|null)=>{if(!url)return;const invite=parseInvite(url);if(invite){setPlaying([]);setIncomingInvite(invite);}};void AppLinking.getInitialURL().then(receive).catch(()=>{});const sub=AppLinking.addEventListener("url",event=>receive(event.url));return()=>sub.remove();},[]);
+  async function observeNewContent(config:PlaylistConfig,items:Entry[],signal:AbortSignal){
+    try{const rules=await savedFollows();let snapshot=items;for(const rule of rules.filter(r=>r.kind==="series"&&r.playlistId===config.id&&r.seriesId)){
+      if(signal.aborted)return;const series=items.find(e=>e.kind==="series"&&e.seriesId===rule.seriesId);if(series){const episodes=await loadEpisodes(config,series,signal);snapshot=[...snapshot,...episodes];}
+    }
+    if(!signal.aborted)await observeFollowCatalog(config.id,snapshot,rules,()=>!childRef.current&&!signal.aborted);
+    }catch{ /* A failing tracked series does not block the catalog/player. */ }
+  }
+  async function addFollow(draft:FollowDraft,minutes:number){
+    if(busy||loadingLists)throw new Error("Liste güncelleniyor. Tamamlanınca takibi kaydedebilirsin.");
+    await followPermission();const rules=await savedFollows();
+    if(rules.length>=50)throw new Error("En fazla 50 takip eklenebilir.");
+    let baseline=entries;
+    if(draft.kind==="series"&&draft.seriesId){const series=entries.find(e=>e.seriesId===draft.seriesId&&e.playlistId===draft.playlistId);const config=configs.find(c=>c.id===draft.playlistId);if(series&&config)baseline=[...entries,...await loadEpisodes(config,series)];}
+    await seedFollows(baseline);
+    const existing=rules.find(r=>r.kind===draft.kind&&r.label===draft.label&&r.playlistId===draft.playlistId);
+    const next=[...rules.filter(r=>r.id!==existing?.id),{...draft,id:existing?.id||`f${Date.now().toString(36)}`,createdAt:existing?.createdAt||Date.now(),leadMinutes:minutes}];
+    await saveFollows(next);setFollowRules(next);await syncTeamReminders(entries,guides,next,()=>!childRef.current);
+  }
+  useEffect(()=>{if(!securityReady)return;if(child){void cancelFollowNotifications();setFollowOpen(false);return;}const controller={active:true};void syncTeamReminders(entries,guides,followRules,()=>controller.active&&!childRef.current).catch(()=>{});return()=>{controller.active=false};},[entries,guides,followRules,child,securityReady]);
+  const followCheckedAt=useRef(Date.now());
+  useEffect(()=>{const check=()=>{if(child||!followRules.length||!configs.length||busy||loadingLists||boot||playing.length||AppState.currentState!=="active"||Date.now()-followCheckedAt.current<5*60000)return;followCheckedAt.current=Date.now();void refreshAll();};const sub=AppState.addEventListener("change",state=>{if(state==="active")check();});const timer=setInterval(check,5*60000);return()=>{sub.remove();clearInterval(timer)};},[child,followRules.length,configs.length,busy,loadingLists,boot,playing.length]);
   async function refreshEntitlement(){try{const config=await serviceConfig();if(!config)return;const verified=await verifiedEntitlement(config);setEntitlement(verified);await scheduleExpiryNotices(verified);}catch{ /* No verified store result: do not fabricate dates or billing entitlement. */ }}
   useEffect(()=>{void refreshEntitlement();const sub=AppState.addEventListener("change",state=>{if(state==="active")void refreshEntitlement();});return()=>sub.remove();},[]);
   useEffect(()=>{if(shareRoom&&(playing.length!==1||playing[0].id!==shareRoom.itemId)){void closeShareRoom(shareRoom).catch(()=>{});setShareRoom(null);}},[playing,shareRoom]);
@@ -406,7 +441,9 @@ function KotakApp() {
     const handle=(response:Notifications.NotificationResponse|null)=>{
       if(!response || handledNotification.current===response.notification.request.identifier)return;
       if(response.notification.request.content.data.screen==="subscription"){setInfo("Kotak TV PRO");return;}
-      const id=response.notification.request.content.data.channelId;
+      const data=response.notification.request.content.data;
+      if(data.followKind){handledNotification.current=response.notification.request.identifier;void Notifications.clearLastNotificationResponseAsync().catch(()=>{});const found=latestEntries.current.find(e=>e.id===data.mediaId)||latestEntries.current.find(e=>e.kind==="series"&&e.seriesId===data.seriesId&&e.playlistId===data.playlistId);if(found){handledNotification.current=response.notification.request.identifier;latestPlay.current(found);}else {setTab("ANASAYFA");setTop("FILM");}return;}
+      const id=data.channelId;
       const entry=latestEntries.current.find(e=>e.id===id);
       if(entry){handledNotification.current=response.notification.request.identifier;void Notifications.clearLastNotificationResponseAsync().catch(()=>{});latestPlay.current(entry);}
     };
@@ -561,6 +598,8 @@ function KotakApp() {
   function open(name: string) {
     setOptionsOpen(false);
     if (playing.length) setMini(true);
+    if(name==="Ekran Paylaşımı"){if(!playing.length){Alert.alert("TV’ye aktar","Önce izlemek istediğin yayını aç. Oynatıcıdaki TV simgesinden aynı Wi-Fi ağındaki TV’yi seç.");return;}setMini(false);return;}
+    if(name==="Takiplerim"){if(child){setParentOpen(true);return;}setFollowDraft(undefined);setFollowOpen(true);return;}
     if(name==="Ses Testi"){setPlaying([]);setAudioTestOpen(true);return;}
     if(name==="Yapay Zeka Sesli Komut"){setInfo(null);setPlaying([]);setVoiceOpen(true);return;}
     if(name==="Birlikte İzle (SharePlay)"){if(child){setParentOpen(true);return;}setShareOpen(true);return;}
@@ -634,6 +673,7 @@ function KotakApp() {
     );
   }
   if (!securityReady) return <View style={[s.root, {alignItems:"center",justifyContent:"center",padding:24}]}>{securityError ? <Text style={d.secondary}>Koruma bilgileri okunamadı. Güvenliğiniz için içerik gizlendi. Uygulamayı yeniden açın.</Text> : <ActivityIndicator color={colors.blue}/>}</View>;
+  if(incomingInvite&&!child)return <GuestPlayback invite={incomingInvite} onClose={()=>setIncomingInvite(null)}/>;
   return (
     <View style={s.root}>
       <View style={s.canvas}>
@@ -734,7 +774,7 @@ function KotakApp() {
                   refreshControl={<RefreshControl refreshing={loadingLists} onRefresh={()=>void refreshAll()} tintColor={colors.blue}/>}
                 >
                   {entitlement&&!!expiryMessage(entitlement,now)&&<View style={{padding:16}}><Text style={[d.secondary,{color:colors.blue}]}>{expiryMessage(entitlement,now)}</Text></View>}
-                  <HomeActions onVoice={()=>open("Yapay Zeka Sesli Komut")} onRefresh={()=>void refreshAll()} loading={loadingLists}/>
+                  <HomeActions onFollows={()=>open("Takiplerim")} onVoice={()=>open("Yapay Zeka Sesli Komut")} onRefresh={()=>void refreshAll()} loading={loadingLists}/>
                   <View style={{paddingHorizontal:16,marginBottom:12}}><Pill label="IMDb’ye göre sırala" onPress={()=>setImdbOpen(true)}/></View>
                   {settings.layout === "Modern" && (
                     <View style={{ paddingHorizontal: 16 }}>
@@ -953,12 +993,13 @@ function KotakApp() {
           />
         </View>
       )}
+      {followOpen&&<FollowPanel rules={followRules} initial={followDraft} onSave={addFollow} onClose={()=>setFollowOpen(false)} onRemove={async id=>{const next=followRules.filter(r=>r.id!==id);await saveFollows(next);setFollowRules(next);}}/>}
       {shareOpen&&<SharePanel item={playing.length===1?playing[0]:undefined} room={shareRoom} onRoom={setShareRoom} onClose={()=>setShareOpen(false)} onConfigured={()=>void refreshEntitlement()}/>}
       {pendingReminder&&<ReminderPicker item={pendingReminder.item} program={pendingReminder.program} onClose={()=>setPendingReminder(null)} onSave={async minutes=>{await toggleReminder(pendingReminder.item,pendingReminder.program,minutes);setReminders(await scheduledReminders());setPendingReminder(null);Alert.alert("Hatırlatıcı kuruldu",`${minutes} dakika önce bildirim gönderilecek.`);}}/>}
-      {mediaDetails&&<MediaDetails item={mediaDetails} info={imdb[metadataKey(mediaDetails)]} onClose={()=>setMediaDetails(null)} onPlay={()=>{const item=mediaDetails;setMediaDetails(null);play(item);}}/>}
+      {mediaDetails&&<MediaDetails item={mediaDetails} onFollow={mediaDetails.kind==="series"||mediaDetails.kind==="episode"?()=>{setFollowDraft({kind:"series",label:mediaTitle(mediaDetails.name),playlistId:mediaDetails.playlistId,seriesId:mediaDetails.seriesId});setMediaDetails(null);setFollowOpen(true);}:undefined} info={imdb[metadataKey(mediaDetails)]} onClose={()=>setMediaDetails(null)} onPlay={()=>{const item=mediaDetails;setMediaDetails(null);play(item);}}/>}
       {audioTestOpen&&<AudioDiagnostics onClose={()=>setAudioTestOpen(false)}/>}
       {categoryOpen&&<CategoryPicker groups={groups} selected={homeCategories} onClose={()=>setCategoryOpen(false)} onSave={values=>{setHomeCategories(values);setCategoryOpen(false);void AsyncStorage.setItem("kotak.homeCategories",JSON.stringify(values)).catch(()=>setMessage("Kategori seçimi kaydedilemedi."));}}/>}
-      {voiceOpen&&<VoiceSearch entries={entries} guide={guides} metadata={imdb} onDetails={setMediaDetails} onReminder={(item,p)=>void reminder(item,p)} onClose={()=>setVoiceOpen(false)} onPlay={item=>{
+      {voiceOpen&&<VoiceSearch entries={entries} onFollowTeam={label=>{if(child){setParentOpen(true);return;}setFollowDraft({kind:"team",label});setFollowOpen(true);}} guide={guides} metadata={imdb} onDetails={setMediaDetails} onReminder={(item,p)=>void reminder(item,p)} onClose={()=>setVoiceOpen(false)} onPlay={item=>{
         if(item.kind!=="series"){play(item);return;}
         const config=configs.find(c=>c.id===item.playlistId);if(!config)return;
         const controller=new AbortController();episodeJob.current?.abort();episodeJob.current=controller;
@@ -1053,7 +1094,7 @@ function KotakApp() {
           />
         </View>
       </Sheet>
-      {parentOpen && <ParentPanel protection={protection} child={child} groups={[...new Set(allEntries.filter(e => e.kind === "live").map(e => e.group))]} onClose={() => setParentOpen(false)} onChange={(value, isChild) => {episodeJob.current?.abort(); setProtection(value); setChild(isChild); setPlaying([]); setScreen(null); setSearchOpen(false); setInfo(null); setOptionsOpen(false); setEpisodes(null); setDetails(null); setSelected([]);setShareOpen(false);setPendingReminder(null);setMediaDetails(null);setVoiceOpen(false);setImdbOpen(false);setCategoryOpen(false);setEpgSettingsOpen(false);}} />}
+      {parentOpen && <ParentPanel protection={protection} child={child} groups={[...new Set(allEntries.filter(e => e.kind === "live").map(e => e.group))]} onClose={() => setParentOpen(false)} onChange={(value, isChild) => {episodeJob.current?.abort(); setProtection(value); setChild(isChild); setPlaying([]); setScreen(null); setSearchOpen(false); setInfo(null); setOptionsOpen(false); setEpisodes(null); setDetails(null); setSelected([]);setFollowOpen(false);setShareOpen(false);setPendingReminder(null);setMediaDetails(null);setVoiceOpen(false);setImdbOpen(false);setCategoryOpen(false);setEpgSettingsOpen(false);}} />}
       {(info === "Kotak AI & Birlikte İzle" || FEATURE_NAMES.includes(info || "")) && <FeaturesPanel key={info} active={info!} entries={entries} cacheTime={cacheTime} onOpen={open} onClose={() => setInfo(null)} onPlay={play}/>}
       {(info === "Kotak TV PRO" || info === "Pro Sürümüne Geç") && <ProPanel onClose={() => setInfo(null)}/>}
       {info === "Hakkında" && <AboutPanel onClose={() => setInfo(null)}/>}

@@ -1,4 +1,4 @@
-# Kotak TV 1.0.5 — Gerçek durum
+# Kotak TV 1.0.6 — Gerçek durum
 
 | Özellik | Kod / durum |
 |---|---|
@@ -16,4 +16,4 @@
 | Canlı AI maç istatistiği / canlı Türkçe çeviri / özet | Veri/AI servisleri bağlı değil |
 
 Kaynak ZIP hazır APK değildir. 4K/60FPS veya hiç donmama garantisi verilemez.
-53 otomatik senaryo, gerçek telefon/Safari/Chrome oynatma testinin yerini tutmaz.
+65 otomatik senaryo, gerçek telefon/Safari/Chrome oynatma testinin yerini tutmaz.

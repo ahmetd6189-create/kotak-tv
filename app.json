@@ -2,7 +2,7 @@
   "expo": {
     "name": "Kotak TV",
     "slug": "kotak-tv",
-    "version": "1.0.5",
+    "version": "1.0.6",
     "orientation": "default",
     "userInterfaceStyle": "dark",
     "newArchEnabled": true,
@@ -19,7 +19,8 @@
         ],
         "NSAppTransportSecurity": {
           "NSAllowsArbitraryLoads": true
-        }
+        },
+        "NSLocalNetworkUsageDescription": "Kotak TV, aynı Wi-Fi ağındaki TV cihazlarını bulmak için yerel ağa erişir."
       }
     },
     "android": {
@@ -62,13 +63,22 @@
           "defaultChannel": "epg"
         }
       ],
-      "expo-asset"
+      "expo-asset",
+      [
+        "react-native-google-cast",
+        {
+          "receiverAppId": "CC1AD845",
+          "androidPlayServicesCastFrameworkVersion": "22.3.1",
+          "iosStartDiscoveryAfterFirstTapOnCastButton": true
+        }
+      ]
     ],
     "extra": {
       "eas": {
         "projectId": "f8ce60f3-ea52-4636-8261-29edf0f14630"
       }
     },
-    "owner": "kotak618900"
+    "owner": "kotak618900",
+    "scheme": "kotaktv"
   }
 }

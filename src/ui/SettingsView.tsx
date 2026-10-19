@@ -64,6 +64,7 @@ export function SettingsView({
       <Text style={s.section}>GENEL</Text>
       <View style={s.group}>
         {row("Dil", "Türkçe")}
+        {row("Takiplerim", "Takım, dizi, yeni film", () => onInfo("Takiplerim"))}
         {row("Bildirimler", "Cihaz ayarları", () => {void Linking.openSettings();})}
         {row("Ebeveyn Kontrolü", "Profil ve PIN", () =>
           onInfo("Güvenli Çocuk Profili"),

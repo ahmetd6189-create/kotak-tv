@@ -1,7 +1,9 @@
+import {CastControls} from "../ui/CastControls";
 import React, { memo, useEffect, useRef, useState } from "react";
 import {
   Alert,
   AppState,
+  Platform,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -14,6 +16,7 @@ import {
   isPictureInPictureSupported,
   useVideoPlayer,
   VideoView,
+  VideoAirPlayButton,
   type AudioTrack,
   type SubtitleTrack,
 } from "expo-video";
@@ -83,6 +86,7 @@ const Tile = memo(function Tile({
   const [subtitleId, setSubtitleId] = useState<string | null>(null);
   const player = useVideoPlayer(null, (p) => {
     p.loop = false;
+    p.allowsExternalPlayback=true;
     p.muted = !audible;
     p.volume = 1;
     p.audioMixingMode = "doNotMix";
@@ -114,6 +118,7 @@ const Tile = memo(function Tile({
     const tick=async()=>{if(stopped||busy)return;busy=true;try{
       const result=await serviceRequest(room.config,`/v1/rooms/${room.id}`);
       if(stopped)return;
+      if(room.config.guestToken){const state=result.state;const desired=state.position+(state.playing?(result.serverNow-state.updatedAt)/1000:0);if(item.kind!=="live"&&Math.abs(player.currentTime-desired)>2)player.currentTime=desired;if(state.playing&&!player.playing){watchdog.current.paused=false;player.play();}else if(!state.playing&&player.playing){watchdog.current.paused=true;player.pause();}return;}
       const command=result.command;
       if(command&&command.sequence>sequence){sequence=command.sequence;if(command.action==="pause"){watchdog.current.paused=true;player.pause();}else if(command.action==="play"){watchdog.current.paused=false;watchdog.current.advancedAt=Date.now();player.play();}else if(command.action==="seek"&&item.kind!=="live")player.currentTime=command.position;}
       await serviceRequest(room.config,`/v1/rooms/${room.id}/state`,"POST",{position:player.currentTime,playing:player.playing});
@@ -165,7 +170,7 @@ const Tile = memo(function Tile({
           if(item.kind!=="live"&&resumePosition.current>0)player.currentTime=resumePosition.current;
           player.volume=1;player.muted=!audioIntent.current.audible || audioIntent.current.userMuted;
           void setAudioModeAsync({playsInSilentMode:true,shouldPlayInBackground:!multi,shouldRouteThroughEarpiece:false,allowsRecording:false,interruptionMode:"doNotMix"}).catch(()=>{});
-          player.play();
+          if(!watchdog.current.paused)player.play();
         }
       })
       .catch(() => {
@@ -192,6 +197,7 @@ const Tile = memo(function Tile({
     });
     return () => sub.remove();
   }, [player, multi]);
+  const guestCommand=(action:string,position?:number)=>{if(room?.config.guestToken)void serviceRequest(room.config,`/v1/rooms/${room.id}/command`,"POST",{action,position}).catch(()=>{});};
   const failed = loadError || status === "error";
   const duration = player.duration;
   const live = item.kind === "live";
@@ -229,6 +235,7 @@ const Tile = memo(function Tile({
         )}
       </View>
       {!!recovery && <Text style={[d.micro,{color:c.blue,padding:8}]}>{recovery}</Text>}
+      {!multi&&!room?.config.guestToken&&<View style={{paddingHorizontal:8,paddingTop:8,flexDirection:"row",justifyContent:"space-between"}}><CastControls item={item} position={currentTime} onTransferred={()=>{watchdog.current.paused=true;player.pause();}}/>{Platform.OS==="ios"&&<VideoAirPlayButton style={{width:36,height:36}} tint={c.blue}/>}</View>}
       <View style={s.transport}>
         {!multi && (
           <View style={s.progressLine}>
@@ -240,14 +247,14 @@ const Tile = memo(function Tile({
                 seekWidth.current = e.nativeEvent.layout.width;
               }}
               onPress={(e) => {
-                if (!live && duration > 0)
+                if (!live && duration > 0){
                   player.currentTime = Math.max(
                     0,
                     Math.min(
                       duration,
                       (e.nativeEvent.locationX / seekWidth.current) * duration,
                     ),
-                  );
+                  );guestCommand("seek",player.currentTime);}
               }}
               style={s.seek}
             >
@@ -265,7 +272,7 @@ const Tile = memo(function Tile({
                 small
                 icon={RotateCcw}
                 label={`${seekSeconds} saniye geri`}
-                onPress={() => player.seekBy(-seekSeconds)}
+                onPress={() => {player.seekBy(-seekSeconds);guestCommand("seek",player.currentTime);}}
               />
             )}
             <IconButton
@@ -273,14 +280,14 @@ const Tile = memo(function Tile({
               small
               icon={isPlaying ? Pause : Play}
               label={isPlaying ? "Duraklat" : "Oynat"}
-              onPress={() => {watchdog.current.paused=player.playing;if(player.playing)player.pause();else {watchdog.current.advancedAt=Date.now();player.play();}}}
+              onPress={() => {guestCommand(player.playing?"pause":"play");watchdog.current.paused=player.playing;if(player.playing)player.pause();else {watchdog.current.advancedAt=Date.now();player.play();}}}
             />
             {!live && !multi && (
               <IconButton
                 small
                 icon={RotateCw}
                 label={`${seekSeconds} saniye ileri`}
-                onPress={() => player.seekBy(seekSeconds)}
+                onPress={() => {player.seekBy(seekSeconds);guestCommand("seek",player.currentTime);}}
               />
             )}
             <IconButton
@@ -412,7 +419,7 @@ export function PlaybackPanel({
 }: {
   items: Entry[];
   mini: boolean;
-  onMini: () => void;
+  onMini?: () => void;
   onClose: () => void;
   onMulti?: () => void;
   onFeature?: (name: string) => void;
@@ -455,14 +462,14 @@ export function PlaybackPanel({
             onPress={onMulti}
           />
         )}
-        <IconButton
+        {!!onMini&&<IconButton
           small
           icon={mini ? Maximize2 : Minimize2}
           label={mini ? "Büyüt" : "Küçült"}
           onPress={onMini}
-        />
+        />}
       </View>
-      {!mini && <View style={{paddingHorizontal:12,paddingBottom:8}}><ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{gap:8}}>
+      {!mini && !room?.config.guestToken && <View style={{paddingHorizontal:12,paddingBottom:8}}><ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{gap:8}}>
         {items[0]?.kind === "live" && <Pill icon={Sparkles} label="AI Maç Analizi" active={analysis} onPress={() => setAnalysis(v => !v)}/>}
         <Pill label="Birlikte İzle" onPress={() => onFeature?.("Birlikte İzle (SharePlay)")}/>
         <Pill label="AI Türkçe Altyazı" onPress={() => onFeature?.("AI Canlı Ses Çevirisi")}/>
