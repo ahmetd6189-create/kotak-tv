@@ -6,6 +6,7 @@ export type Entry = {
   logo: string;
   kind: Kind;
   uri?: string;
+  contentType?: "hls" | "auto";
   headers?: Record<string, string>;
   epgId?: string;
   seriesId?: string;

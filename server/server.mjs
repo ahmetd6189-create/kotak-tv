@@ -58,7 +58,7 @@ export function createService({secret,origin,hosts,allowTestLocal=false,entitlem
    }
    if(!owner&&!guest(req,room)){send(res,403,{error:'Yayın erişimi yok'});return;}
    if(req.method==='DELETE'&&match&&!match[2]&&owner){rooms.delete(room.id);send(res,200,{closed:true});return;}
-   if(req.method==='GET'&&match&&!match[2]){const source=unseal(room.source);send(res,200,{id:room.id,expiresAt:room.expiresAt,title:room.title,live:room.live,source:resource(room,source.uri),state:room.state,serverNow:Date.now(),command:owner?room.command:undefined});return;}
+   if(req.method==='GET'&&match&&!match[2]){const source=unseal(room.source);send(res,200,{id:room.id,expiresAt:room.expiresAt,title:room.title,live:room.live,contentType:/\.m3u8(?:[?#]|$)/i.test(source.uri)?"hls":"auto",source:resource(room,source.uri),state:room.state,serverNow:Date.now(),command:owner?room.command:undefined});return;}
    if(req.method==='POST'&&match?.[2]==='state'&&owner){const data=await json(req);if(!Number.isFinite(data.position)||data.position<0||typeof data.playing!=='boolean'){send(res,400,{error:'Geçersiz oynatıcı durumu'});return;}room.state={position:data.position,playing:data.playing,updatedAt:Date.now()};send(res,200,{ok:true});return;}
    if(req.method==='POST'&&match?.[2]==='command'){const data=await json(req);if(!['play','pause','seek'].includes(data.action)||data.action==='seek'&&(!Number.isFinite(data.position)||data.position<0||room.live)){send(res,400,{error:'Geçersiz komut'});return;}room.command={sequence:++room.sequence,action:data.action,position:data.position};send(res,200,{ok:true});return;}
    if(req.method==='GET'&&media){

@@ -162,7 +162,7 @@ const Tile = memo(function Tile({
       .replaceAsync({
         uri: item.uri,
         headers: item.kind==="live" ? {"Cache-Control":"no-cache",...item.headers} : item.headers,
-        contentType: /\.m3u8(?:[?#]|$)/i.test(item.uri || "") ? "hls" : "auto",
+        contentType: item.contentType || (/\.m3u8(?:[?#]|$)/i.test(item.uri || "") ? "hls" : "auto"),
         metadata: { title: item.name },
       })
       .then(() => {

@@ -27,6 +27,6 @@ export async function joinShareRoom(invite:import('./invites').Invite):Promise<{
  if(typeof joined.guestToken!=='string'||!/^[-_A-Za-z0-9]{43}$/.test(joined.guestToken))throw new Error('Geçerli davet oturumu alınamadı.');
  config.guestToken=joined.guestToken;const result=await serviceRequest(config,`/v1/rooms/${invite.id}`);
  if(typeof result.source!=='string'||!new RegExp(`^/media/${invite.id}/[a-f0-9]+$`).test(result.source))throw new Error('Paylaşılan kaynak doğrulanamadı.');
- const item:Entry={id:`guest-${invite.id}`,playlistId:'shared-room',kind:result.live?'live':'movie',name:result.title,group:'Birlikte İzle',logo:'',uri:invite.origin+result.source,headers:{'X-Kotak-Guest':joined.guestToken}};
+ const item:Entry={id:`guest-${invite.id}`,playlistId:'shared-room',kind:result.live?'live':'movie',contentType:result.contentType==='hls'?'hls':'auto',name:result.title,group:'Birlikte İzle',logo:'',uri:invite.origin+result.source,headers:{'X-Kotak-Guest':joined.guestToken}};
  return {room:{id:invite.id,url:'',expiresAt:result.expiresAt||Date.now()+7200000,itemId:item.id,config},item};
 }

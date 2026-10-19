@@ -13,7 +13,7 @@ test('single-use guest invitation, stream-scoped cookie, bidirectional commands,
   assert.equal((await request(`/v1/rooms/${room.id}`,'GET',null,{})).status,403);
   const joined=await request(`/v1/rooms/${room.id}/join`,'POST',{invite},{});assert.equal(joined.status,200);const cookie=joined.headers.get('set-cookie').split(';')[0];const guest={Cookie:cookie,'Content-Type':'application/json'};
   assert.equal((await request(`/v1/rooms/${room.id}/join`,'POST',{invite},{})).status,403);
-  const state=await (await request(`/v1/rooms/${room.id}`,'GET',null,guest)).json();assert.equal(state.title,'Test');assert.equal(JSON.stringify(state).includes(source),false);
+  const state=await (await request(`/v1/rooms/${room.id}`,'GET',null,guest)).json();assert.equal(state.title,'Test');assert.equal(state.contentType,'hls');assert.equal(JSON.stringify(state).includes(source),false);
   const manifest=await (await request(state.source,'GET',null,guest)).text();assert.match(manifest,/URI="\/media\//);assert.equal(manifest.includes(source),false);
   const segment=manifest.split('\n').find(x=>x.startsWith('/media/'));assert.equal(await (await request(segment,'GET',null,guest)).text(),'media-bytes');
   await request(`/v1/rooms/${room.id}/command`,'POST',{action:'pause'},guest);const command=await (await request(`/v1/rooms/${room.id}`)).json();assert.equal(command.command.action,'pause');
