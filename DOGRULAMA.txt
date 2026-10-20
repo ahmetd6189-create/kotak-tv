@@ -1,0 +1,6 @@
+Kotak TV 1.0.9 doğrulama
+TypeScript kontrolü geçti.
+17 ayrıştırıcı + 37 özellik/önbellek + 45 UI + 3 sunucu testi geçti.
+Android Expo JS dışa aktarımı geçti.
+VLC testleri native kaynak/seek parametrelerini taklit eder; gerçek telefon video/ses/seek doğrulaması değildir.
+Mağaza ödemesi veya gerçek cihaz deneme engeli testi yapılmadı; ilgili entegrasyonlar etkin değil.
