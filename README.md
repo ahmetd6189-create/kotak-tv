@@ -1,4 +1,4 @@
-# Kotak TV 1.0.8
+# Kotak TV 1.0.9
 
 Expo SDK 54 / React Native / VLC + expo-video mobil IPTV oynatıcı (Android 8+).
 Kendi M3U veya Xtream hesabınızla kullanılır. Kanal sağlayıcısı değildir.
@@ -6,11 +6,11 @@ Bu kaynak ZIP'i hazır APK içermez; APK Expo derlemesinden indirilir.
 
 ## Hazır APK'yı kullanma
 
-1. Expo'da **1.0.8** sürümünün tamamlanan Android APK'sını indirin.
+1. Expo'da **1.0.9** sürümünün tamamlanan Android APK'sını indirin.
 2. Telefonunuza kurun veya açık telefon emülatörüne APK'yı sürükleyin.
 3. Alternatif: APK'yı ZIP'teki `APK-YUKLE.cmd` dosyasının üzerine bırakın.
 4. Eski uygulamayı silmeden aynı imzalı APK'yı yükleyin. Hesabınız ve listeleriniz korunur.
-5. Daha Fazla → Hakkında bölümünde sürüm 1.0.8 görünür.
+5. Daha Fazla → Hakkında bölümünde sürüm 1.0.9 görünür.
 
 ## Kaynaktan çalıştırma
 
@@ -93,7 +93,7 @@ Destek: kotaktv@gmail.com
 karşılaştırmasını içerir. Gerçek IPTV hesabınızla Android ses/video ve fiziksel
 cihaz bildirimleri bu ortamda denenmedi. Piksel düzeyinde eşitlik iddiası yoktur.
 
-## 1.0.8 değişiklikleri
+## 1.0.9 değişiklikleri
 
 - Film İzle, sağlayıcıdan gerçek konteyner uzantısını ve doğrudan kaynağı sorgular.
 - Ses parçası kapalı seçilmez; Türkçe varsa tercih edilir, alternatif ses seçilebilir.
@@ -107,3 +107,8 @@ cihaz bildirimleri bu ortamda denenmedi. Piksel düzeyinde eşitlik iddiası yok
 Sağlayıcı IMDb, yayın tarihi, EPG veya Türkçe altyazı vermiyorsa bu veriler
 uydurulmaz. Türkçe ses tanıma cihazın konuşma tanıma hizmetini ve mikrofon iznini
 gerektirir. Bu sürüm için gerçek IPTV hesabınızda ses/video dinleme testi yapılmadı.
+
+
+## 1.0.9: EPG, trend ve sarma düzeltmeleri
+
+Güncel davranış ve gerçek test sınırları SURUM-1.0.9.txt içindedir. Ödeme ve 24 saat demo sunucu temeli billing-service/README.md içinde açıklanır. Bu APK gerçek ödeme veya zorunlu demo kilidi açmaz; mağaza/giriş/servis bağlantıları beklemektedir. IBAN ya da gizli anahtarları sohbete veya GitHub’a koymayın.

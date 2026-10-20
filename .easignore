@@ -15,3 +15,5 @@ src/data/
 *.log
 .env*
 !.env.example
+
+billing-service/

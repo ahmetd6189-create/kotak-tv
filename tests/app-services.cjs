@@ -14,5 +14,5 @@ exports.systemMock={source:null};
 exports.useVideoPlayer=()=>React.useRef({status:'readyToPlay',playing:false,currentTime:0,duration:100,availableAudioTracks:[],availableSubtitleTracks:[],addListener:()=>({remove(){}}),replaceAsync:async source=>{exports.systemMock.source=source},play(){},pause(){},seekBy(){}}).current;
 exports.useKeepAwake=()=>{};
 exports.unlockAsync=async()=>{};exports.lockAsync=async()=>{};exports.OrientationLock={LANDSCAPE:1};
-exports.vlcMock={props:null};
-exports.VLCPlayer=React.forwardRef((props,ref)=>{exports.vlcMock.props=props;React.useImperativeHandle(ref,()=>({seek(value){exports.vlcMock.seek=value;}}));return null;});
+exports.vlcMock={props:null,renders:0};
+exports.VLCPlayer=React.forwardRef((props,ref)=>{exports.vlcMock.props=props;exports.vlcMock.renders++;React.useImperativeHandle(ref,()=>({seek(value){exports.vlcMock.seek=value;}}));return null;});

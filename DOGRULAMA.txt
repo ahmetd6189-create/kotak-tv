@@ -1,43 +1,6 @@
-Kotak TV 1.0.8 — 20 Ekim 2026
-
-GEÇEN KONTROLLER
-- TypeScript: tsc --noEmit
-- Expo SDK 54 bağımlılık uyumu: expo install --check
-- Android native prebuild --clean --no-install (VLC otomatik bağlantısı)
-- Android Metro/Hermes export (release JS bytecode)
-- 17 IPTV / ağ / M3U / Xtream / XMLTV testi
-- 33 önbellek / metadata / performans / asistan / EPG / kurtarma testi
-- 42 UI etkileşim testi
-TOPLAM: 92 geçen test.
-UI testleri JSDOM ve React Native Web'de çalışır. Native VLC, expo-video,
-mikrofon, bildirim ve Cast API'leri taklit edilir; örnek ağ yanıtları kullanılır.
-
-BU SÜRÜMDE ÖZELLİKLE DOĞRULANANLAR
-- Sağlayıcının genel puanı 10 olsa bile IMDb trendine taşınmaz.
-- Film için get_vod_info MKV diyorsa oynatıcıya MKV adresi gider.
-- Gerçek App film detayı -> İzle akışında doğru adres sisteme ulaşır.
-- Doğrudan kaynak ve özel HTTP başlıkları kaybolmaz; iptal dikkate alınır.
-- Ses kapalı parça (-1) seçilmez, Türkçe ses varsa seçilir; VLC volume=100.
-- Gerçek altyazı parçası seçimi AI çeviri ekranına yönlenmez.
-- VLC süreleri milisaniyeden saniyeye çevrilir; kaldığı yerden devam edilir.
-- Film başarısız olunca uygun sağlayıcı yolunun alternatif uzantısı denenir.
-- IMDb ve yayın tarihi sıralamasında bilinmeyenler sona gelir.
-- Film/Dizi ayrı sekmeler, dizi kategorileri ayrı afiş gruplarıdır.
-- Enter ile 'umami film adı bul' tek sonucu açar.
-- Galatasaray ve Beşiktaş canlı maçı açılır; Türkiye'nin ileriki maçı EPG'ye gider.
-- Kanal API'si base64 Türkçe metinleri ve saniye tarihlerini doğru dönüştürür.
-- XMLTV gzip açılır; yanıtsız sunucuda süre sınırı vardır.
-- Gerçek App XMLTV 404 durumunda kanal API verisini EPG'ye ve hatırlatmaya aktarır.
-- İlk liste VOD/tam XMLTV beklemez; büyük listelerde iş parçalı ve sanallaştırılmıştır.
-- Yayını paylaş, paylaşım sunucusu olmadan OS paylaşım menüsüne URL verir.
-
-YAPILMAYAN DOĞRULAMALAR
-- Kullanıcının gerçek IPTV hesabıyla fiziksel Android'de ses/video dinleme
-- Fiziksel cihazda mikrofon, alarm zamanı, PiP ve Cast
-- 4K60, uzun oynatma ve gerçek cihaz performansı
-- Referansla piksel düzeyinde görsel eşitlik
-
-Android varsayılan motor VLC'dir. PiP sistem oynatıcısı seçeneğindedir.
-Sağlayıcı altyazı/EPG/IMDb vermiyorsa veriler uydurulmaz.
-Expo native derleme sonucu ayrıca Expo sayfasından doğrulanır. Kaynak testleri
-fiziksel cihaz testinin yerine geçmez.
+Kotak TV 1.0.9 doğrulama
+TypeScript kontrolü geçti.
+17 ayrıştırıcı + 37 özellik/önbellek + 45 UI + 3 sunucu testi geçti.
+Android Expo JS dışa aktarımı geçti.
+VLC testleri native kaynak/seek parametrelerini taklit eder; gerçek telefon video/ses/seek doğrulaması değildir.
+Mağaza ödemesi veya gerçek cihaz deneme engeli testi yapılmadı; ilgili entegrasyonlar etkin değil.

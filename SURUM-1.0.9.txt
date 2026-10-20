@@ -1,0 +1,17 @@
+Kotak TV 1.0.9 — 20 Ekim 2026
+
+- Trend Film/Dizi: IMDb yoksa sağlayıcı puanıyla büyükten küçüğe sıralama; puanın kaynağı kart altında açıkça gösterilir.
+- EPG: ana ekranda seçilen kategoriler, kanal araması, doğal yatay kaydırma ve program hatırlatması.
+- Önce görünür kanalların EPG'si yüklenir; ortak 3 istek sınırı ve boş cevaplar için 60 saniye bekleme. Büyük XMLTV otomatik olarak Xtream kanal sorgularının önüne geçmez.
+- VLC: ilerleme olaylarında native kaynağı yeniden çizme önlendi; kontrollü sarma ve sarma sırasında 15 saniye kurtarma toleransı.
+- Asistan: mevcut sonuç hazırsa ağ beklemez; eksik veride bekleme 8 saniyeyle sınırlı. Macera/Macbeth maç komutu sanılmaz.
+- 24 saat demo için son 3/2/1 saat bildirim planlayıcısı ve Android ödeme doğrulama sunucu temeli.
+
+ÖNEMLİ DURUM
+Gerçek ödeme, zorunlu hesap girişi ve demo kilidi bu APK'da etkin değil.
+Aynı hesaba 24 saat deneme sunucu temeli testlidir; başka hesapla aynı cihazda denemeyi engelleyen cihaz doğrulaması henüz yoktur.
+Canlı mağaza, sunucu kurulumu, iOS ödeme doğrulaması ve görsel yönetim paneli tamamlanmadı.
+Ayrıntılar: billing-service/README.md.
+
+Kontroller: TypeScript, 17 ayrıştırma + 37 özellik/önbellek + 45 arayüz + 3 sunucu testi.
+Android JS paketi dışa aktarıldı. Gerçek IPTV sağlayıcısı/cihazı ile ses, sarma, mikrofon ve yatay dokunma testi yapılamadı.

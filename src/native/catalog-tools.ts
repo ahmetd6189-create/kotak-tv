@@ -32,9 +32,10 @@ export function programWindow(list:Program[],now:number,window:'now'|'tonight'|'
  return list.filter(p=>p.end>Math.max(now,start)&&p.start<end);
 }
 
-/** Trends use explicit IMDb data only. Generic provider scores are not IMDb. */
-export function displayRanked(entries:Entry[],kind:'movie'|'series',limit=20){return rankedMedia(entries,kind,limit);}
+/** Provider fallback is explicitly attributed by the UI. */
+export function catalogScore(item:Entry){const value=item.imdbRating??item.rating;return typeof value==='number'&&Number.isFinite(value)&&value>0&&value<=10?value:0;}
+export function displayRanked(entries:Entry[],kind:'movie'|'series',limit=20){const seen=new Set<string>();return entries.filter(e=>kind==='movie'?e.kind==='movie':e.kind==='series'||e.kind==='episode').filter(e=>catalogScore(e)>0).sort((a,b)=>catalogScore(b)-catalogScore(a)).filter(e=>{const key=normalized(mediaTitle(e.name));if(seen.has(key))return false;seen.add(key);return true;}).slice(0,limit).map(e=>({...e,name:mediaTitle(e.name)}));}
 export function releaseTime(item:Entry){const value=item.released||item.name.match(/\b(?:19|20)\d{2}\b/)?.[0];if(!value)return 0;const time=Date.parse(value);return Number.isFinite(time)?time:0;}
 export function sortedCatalog(entries:Entry[],sort:'imdb'|'release'|'name'|'added'){
- return [...entries].sort((a,b)=>sort==='imdb'?(b.imdbRating||0)-(a.imdbRating||0):sort==='release'?releaseTime(b)-releaseTime(a):sort==='added'?(b.added||0)-(a.added||0):a.name.localeCompare(b.name,'tr'));
+ return [...entries].sort((a,b)=>sort==='imdb'?catalogScore(b)-catalogScore(a):sort==='release'?releaseTime(b)-releaseTime(a):sort==='added'?(b.added||0)-(a.added||0):a.name.localeCompare(b.name,'tr'));
 }

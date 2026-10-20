@@ -357,7 +357,7 @@ export function MediaRail({
           posterUrl: item.logo,
           rating: item.imdbRating || 0,
           releaseDate: item.released||"",
-          genre: [item.imdbRating ? `IMDb ${item.imdbRating.toFixed(1)}` : "IMDb —",item.released?.slice(0,10)].filter(Boolean).join(" · "),
+          genre: [item.imdbRating ? `IMDb ${item.imdbRating.toFixed(1)}` : item.rating ? `IMDb — · Sağlayıcı ${item.rating.toFixed(1)}` : "IMDb —",item.released?.slice(0,10)].filter(Boolean).join(" · "),
           description: "",
           type: item.kind === "series" ? "series" : "movie",
           rank: i + 1,
@@ -370,7 +370,7 @@ export function MediaRail({
       />
       {!items.length && (
         <Text style={d.emptyRail}>
-          IMDb puanı doğrulanmış{" "}
+          Puanı bulunan{" "}
           {title.toLocaleLowerCase("tr-TR").includes("dizi") ? "dizi" : "film"}{" "}
           bulunmuyor.
         </Text>

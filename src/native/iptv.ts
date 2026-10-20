@@ -376,7 +376,7 @@ export async function loadCatalog(
           epgId: r.epg_channel_id ? String(r.epg_channel_id) : undefined,
           seriesId: kind === "series" ? id : undefined,
           streamFormat:kind==="live"?output:String(r.container_extension||"mp4"),
-          rating: Number.isFinite(Number(r.rating)) ? Number(r.rating) : undefined,
+          rating: providerRating(r.rating),
           added:Number(r.added||r.last_modified)||undefined,
           released:String(r.releaseDate||r.release_date||r.releasedate||r.year||'')||undefined,
           genre:String(r.genre||'')||undefined,
@@ -529,6 +529,7 @@ export async function parseGuideAsync(xml: string, now = Date.now(), signal?: Ab
   return result.value;
 }
 
+export function providerRating(value:unknown){if(typeof value!=='number'&&typeof value!=='string')return undefined;const n=Number(String(value).trim().replace(',','.'));return Number.isFinite(n)&&n>0&&n<=10?n:undefined;}
 export type ProviderInfo={title?:string;poster?:string;backdrops:string[];plot?:string;released?:string;genre?:string;cast?:string;director?:string;duration?:string;rating?:number;imdbRating?:number;imdbId?:string};
 /** Read only the selected title, using the user's existing provider account. */
 export async function loadMediaInfo(config:PlaylistConfig,item:Entry,signal?:AbortSignal):Promise<ProviderInfo|null>{
@@ -537,8 +538,8 @@ export async function loadMediaInfo(config:PlaylistConfig,item:Entry,signal?:Abo
  const result=await api(config,series?'get_series_info':'get_vod_info',signal,series?{series_id:id}:{vod_id:id},8000) as {info?:Record<string,unknown>};const data=result.info;if(!data)return null;
  const str=(v:unknown)=>typeof v==='string'&&v!=='N/A'?v:undefined;
  const image=(v:unknown)=>typeof v==='string'&&/^https?:\/\//i.test(v)?v:undefined;
- const imdb=Number(data.imdb_rating);const rating=Number(data.rating);
- return {title:str(data.name),poster:image(data.movie_image)||image(data.cover),backdrops:(Array.isArray(data.backdrop_path)?data.backdrop_path:[]).map(image).filter((v):v is string=>!!v).slice(0,8),plot:str(data.plot)||str(data.description),released:str(data.releasedate)||str(data.releaseDate)||str(data.release_date),genre:str(data.genre),cast:str(data.cast)||str(data.actors),director:str(data.director),duration:str(data.duration),rating:rating>0&&rating<=10?rating:undefined,imdbRating:imdb>0&&imdb<=10?imdb:undefined,imdbId:/^tt\d+$/.test(String(data.imdb_id||''))?String(data.imdb_id):undefined};
+ const imdb=Number(data.imdb_rating);const rating=providerRating(data.rating);
+ return {title:str(data.name),poster:image(data.movie_image)||image(data.cover),backdrops:(Array.isArray(data.backdrop_path)?data.backdrop_path:[]).map(image).filter((v):v is string=>!!v).slice(0,8),plot:str(data.plot)||str(data.description),released:str(data.releasedate)||str(data.releaseDate)||str(data.release_date),genre:str(data.genre),cast:str(data.cast)||str(data.actors),director:str(data.director),duration:str(data.duration),rating,imdbRating:imdb>0&&imdb<=10?imdb:undefined,imdbId:/^tt\d+$/.test(String(data.imdb_id||''))?String(data.imdb_id):undefined};
 }
 
 export {api as providerApi};

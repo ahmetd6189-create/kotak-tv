@@ -255,10 +255,27 @@ async function check(name, fn) { try { await fn(); passes++; console.log(`PASS $
   let progress;render(wrap(h(UI.VlcTile,{item:movie,multi:false,audible:true,onAudio(){},seekSeconds:15,onFullscreen(){},onSystemPlayer(){},initialPosition:30,onProgress:(id,p,d)=>progress={p,d}})));
   assert.equal(UI.vlcMock.props.volume,100);assert.equal(UI.vlcMock.props.muted,false);assert.equal(UI.vlcMock.props.autoplay,true);
   await act(async()=>UI.vlcMock.props.onLoad({duration:120000,videoSize:{width:1920,height:1080},audioTracks:[{id:-1,name:'Disable'},{id:1,name:'English'},{id:2,name:'Türkçe ses'}],textTracks:[{id:-1,name:'Disable'},{id:4,name:'Türkçe altyazı'}]}));
-  assert.equal(UI.vlcMock.props.audioTrack,2);assert.equal(UI.vlcMock.seek,.25);
+  assert.equal(UI.vlcMock.props.audioTrack,2);assert.equal(UI.vlcMock.props.seek,.25);
   fireEvent.click(screen.getByLabelText('Ses ve altyazı'));fireEvent.click(screen.getByRole('button',{name:'Türkçe altyazı'}));assert.equal(UI.vlcMock.props.textTrack,4);assert.equal(screen.queryByText('AI Türkçe Altyazı'),null);
   fireEvent.click(screen.getByRole('button',{name:'English'}));assert.equal(UI.vlcMock.props.audioTrack,1);
   await act(async()=>UI.vlcMock.props.onProgress({currentTime:45000,duration:120000}));assert.deepEqual(progress,{p:45,d:120});
+ });
+ await check('VLC progress does not redraw the native source and manual seek is retained',async()=>{
+  render(wrap(h(UI.VlcTile,{item:movie,multi:false,audible:true,onAudio(){},seekSeconds:15,onFullscreen(){},onSystemPlayer(){}})));
+  await act(async()=>UI.vlcMock.props.onLoad({duration:120000,audioTracks:[],textTracks:[]}));
+  await act(async()=>UI.vlcMock.props.onProgress({currentTime:45000,duration:120000}));const renders=UI.vlcMock.renders,source=UI.vlcMock.props.source;
+  for(let i=0;i<5;i++)await act(async()=>UI.vlcMock.props.onProgress({currentTime:45000+i*100,duration:120000}));
+  assert.equal(UI.vlcMock.renders,renders);fireEvent.click(screen.getByLabelText('15 saniye ileri'));assert.ok(UI.vlcMock.props.seek>.49&&UI.vlcMock.props.seek<.51);assert.equal(UI.vlcMock.props.source,source);
+  const target=UI.vlcMock.props.seek;await act(async()=>UI.vlcMock.props.onProgress({currentTime:60000,duration:120000}));assert.equal(UI.vlcMock.props.seek,target);assert.equal(UI.vlcMock.props.source,source);
+ });
+ await check('Trial notices are scheduled 3, 2 and 1 hours before the verified deadline',async()=>{
+  UI.notificationMock.reset();const now=Date.now(),entitlement=UI.parseEntitlement({verified:true,id:'trial',kind:'trial',expiresAt:now+86400000,verifiedAt:now});
+  assert.deepEqual(UI.expiryNotices(entitlement,now).map(x=>x.hours),[3,2,1]);await UI.scheduleExpiryNotices(entitlement);assert.equal(UI.notificationMock.scheduled.size,3);assert.match(UI.expiryMessage(entitlement,entitlement.expiresAt-90*60000),/1 saat 30 dakika/);
+ });
+ await check('EPG search and category taps remain available with missing program data',async()=>{
+  render(wrap(h(UI.EpgScreen,{channels:[channel,{...channel,id:'sport',name:'Spor TV',group:'Spor'}],guide:{},now:Date.now(),notice:'Sağlayıcı program göndermedi',onPlay(){}})));
+  fireEvent.change(screen.getByLabelText('EPG kanal ara'),{target:{value:'TRT'}});assert.ok(screen.getByLabelText('TRT 1 izle'));assert.equal(screen.queryByLabelText('Spor TV izle'),null);
+  fireEvent.change(screen.getByLabelText('EPG kanal ara'),{target:{value:''}});fireEvent.click(screen.getByRole('button',{name:'Spor',exact:true}));assert.equal(screen.queryByLabelText('TRT 1 izle'),null);assert.ok(screen.getByLabelText('Spor TV izle'));
  });
  await check('VLC film hata verince sadece uygun sağlayıcı yolunun alternatif konteynerini dener',async()=>{
   render(wrap(h(UI.VlcTile,{item:{...movie,uri:'https://test.invalid/movie/u/p/71.mp4'},multi:false,audible:true,onAudio(){},seekSeconds:15,onFullscreen(){},onSystemPlayer(){}})));

@@ -35,14 +35,19 @@ export function parseProviderEpg(result:unknown,now=Date.now()):Program[]{
 }
 export function scopeChannelGuide(item:Entry,programs:Program[]):Guide{const keys=[`${item.playlistId}:#${item.id}`,`${item.playlistId}:@${guideKey(item.name)}`];if(item.epgId)keys.push(`${item.playlistId}:${item.epgId}`,`${item.playlistId}:@${guideKey(item.epgId)}`);return Object.fromEntries(keys.map(k=>[k,programs]));}
 const epgCache=new Map<string,{at:number;programs:Program[]}>();
+let activeGuideRequests=0;
+const guideWaiters:(()=>void)[]=[];
+async function guideSlot(signal?:AbortSignal){if(activeGuideRequests>=3)await new Promise<void>((resolve,reject)=>{const ready=()=>{signal?.removeEventListener('abort',cancel);resolve();};const cancel=()=>{const i=guideWaiters.indexOf(ready);if(i>=0)guideWaiters.splice(i,1);reject(new Error('İşlem iptal edildi.'));};if(signal?.aborted){cancel();return;}guideWaiters.push(ready);signal?.addEventListener('abort',cancel,{once:true});});else activeGuideRequests++;return ()=>{const next=guideWaiters.shift();if(next)next();else activeGuideRequests--;};}
 export async function loadChannelGuide(config:PlaylistConfig,item:Entry,signal?:AbortSignal,now=Date.now()):Promise<Guide>{
  const account=accountFor(config),id=streamId(item);if(!account||!id)return {};
- const key=`${config.id}:${id}`,cached=epgCache.get(key);if(cached&&now-cached.at<5*60000)return scopeChannelGuide(item,cached.programs);
+ const key=`${config.id}:${id}`,cached=epgCache.get(key);if(cached&&now-cached.at<(cached.programs.length?5*60000:60000))return scopeChannelGuide(item,cached.programs);
+ const release=await guideSlot(signal);try{
  let programs:Program[]=[];
  for(const action of ['get_simple_data_table','get_short_epg']){
   try{const response=await providerApi(account,action,signal,{stream_id:id,limit:'60'},4500);programs=parseProviderEpg(response,now);if(programs.length)break;}catch{if(signal?.aborted)throw new Error('İşlem iptal edildi.');}
  }
- if(programs.length){epgCache.set(key,{at:now,programs});if(epgCache.size>200)epgCache.delete(epgCache.keys().next().value!);return scopeChannelGuide(item,programs);}return {};
+ if(!signal?.aborted)epgCache.set(key,{at:now,programs});if(epgCache.size>500)epgCache.delete(epgCache.keys().next().value!);return programs.length?scopeChannelGuide(item,programs):{};
+ }finally{release();}
 }
 export async function requestGuideText(url:string,signal?:AbortSignal,timeoutMs=12000):Promise<string>{
  const controller=new AbortController();const abort=()=>controller.abort();signal?.addEventListener('abort',abort);if(signal?.aborted)abort();
