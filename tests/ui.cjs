@@ -1,6 +1,6 @@
 // Bellek içi DOM testi; tarayıcı açmaz ve ağ isteği yapmaz.
 const { JSDOM } = require('jsdom');
-const dom = new JSDOM('<!doctype html><html><head></head><body></body></html>', { url: 'https://test.invalid' });
+const dom = new JSDOM('<!doctype html><html><head></head><body></body></html>', { url: 'https://test.invalid', pretendToBeVisual:true });
 Object.assign(global, { window: dom.window, document: dom.window.document, HTMLElement: dom.window.HTMLElement, ShadowRoot: dom.window.ShadowRoot, SVGElement: dom.window.SVGElement, Element: dom.window.Element, MutationObserver: dom.window.MutationObserver, getComputedStyle: dom.window.getComputedStyle, requestAnimationFrame: fn => setTimeout(fn, 0), cancelAnimationFrame: clearTimeout });
 Object.defineProperty(global, 'navigator', { value: dom.window.navigator, configurable: true });
 window.requestAnimationFrame = global.requestAnimationFrame;
@@ -284,10 +284,16 @@ async function check(name, fn) { try { await fn(); passes++; console.log(`PASS $
 
  await check('Gerçek App: XMLTV hatası olsa da kanal API akışı EPG ekranına ve hatırlatmaya ulaşır',async()=>{
   const previous=global.fetch,now=Date.now();const id='guide-app';await UI.storeMock.setItem('kotak.playlists.v2',JSON.stringify([id]));await UI.secureMock.setItemAsync('kotak.'+id,JSON.stringify({id,name:'EPG',type:'xtream',url:'https://guide-app.test',username:'u',password:'p'}));
-  try{global.fetch=async input=>{const url=new URL(String(input)),action=url.searchParams.get('action');if(url.pathname.includes('xmltv'))return new Response('No XMLTV',{status:404});return new Response(JSON.stringify(!action?{user_info:{auth:1}}:action==='get_live_streams'?[{stream_id:51,name:'TRT 1 HD',category_id:1}]:action==='get_live_categories'?[{category_id:1,category_name:'Ulusal'}]:action==='get_simple_data_table'?{epg_listings:[{title:Buffer.from('Kanal API Programı').toString('base64'),description:Buffer.from('Gerçek API açıklaması').toString('base64'),start_timestamp:Math.floor(now/1000)+600,stop_timestamp:Math.floor(now/1000)+3600}]}:[]));};
+  try{global.fetch=async input=>{const url=new URL(String(input)),action=url.searchParams.get('action');if(url.pathname.includes('xmltv'))return new Response('No XMLTV',{status:404});return new Response(JSON.stringify(!action?{user_info:{auth:1}}:action==='get_live_streams'?[{stream_id:51,name:'TRT 1 HD',category_id:1},{stream_id:52,name:'İkinci Kanal',category_id:1}]:action==='get_live_categories'?[{category_id:1,category_name:'Ulusal'}]:action==='get_simple_data_table'?{epg_listings:[{title:Buffer.from(url.searchParams.get('stream_id')==='52'?'İkinci Kanal Programı':'Kanal API Programı').toString('base64'),description:Buffer.from('Gerçek API açıklaması').toString('base64'),start_timestamp:Math.floor(now/1000)+600,stop_timestamp:Math.floor(now/1000)+3600}]}:[]));};
    render(h(UI.App));await waitFor(()=>assert.ok(screen.getAllByText('TRT 1 HD').length));fireEvent.click(screen.getByRole('tab',{name:'EPG'}));await waitFor(()=>assert.ok(screen.getAllByText('Kanal API Programı').length),{timeout:5000});
-   fireEvent.click(screen.getByLabelText(/TRT 1 HD · Kanal API Programı/));assert.ok(screen.getByText('Gerçek API açıklaması'));await act(async()=>fireEvent.click(screen.getByRole('button',{name:'Bana hatırlat'})));await waitFor(()=>assert.ok(screen.getByRole('button',{name:'30 dk kala',exact:true})));
+   await waitFor(()=>assert.ok(screen.getAllByText('İkinci Kanal Programı').length));fireEvent.click(screen.getByLabelText(/TRT 1 HD · Kanal API Programı/));assert.ok(screen.getByText('Gerçek API açıklaması'));await act(async()=>fireEvent.click(screen.getByRole('button',{name:'Bana hatırlat'})));await waitFor(()=>assert.ok(screen.getByRole('button',{name:'30 dk kala',exact:true})));
   }finally{global.fetch=previous;await UI.storeMock.removeItem('kotak.playlists.v2');}
+ });
+ await check('Background transition aborts catalog downloads instead of continuing synchronization',async()=>{
+  const previous=global.fetch;let started=0,aborted=0;const id='background-perf';await UI.storeMock.setItem('kotak.playlists.v2',JSON.stringify([id]));await UI.secureMock.setItemAsync('kotak.'+id,JSON.stringify({id,name:'Background',type:'xtream',url:'https://background-perf.test',username:'u',password:'p'}));
+  try{global.fetch=async(input,options)=>{const action=new URL(String(input)).searchParams.get('action');if(action==='get_vod_streams'||action==='get_series'){started++;return new Promise((resolve,reject)=>{options.signal.addEventListener('abort',()=>{aborted++;reject(new Error('aborted'));},{once:true});});}return new Response(JSON.stringify(!action?{user_info:{auth:1}}:action==='get_live_streams'?[{stream_id:1,name:'Background TV'}]:[]));};
+   render(h(UI.App));await waitFor(()=>assert.ok(started>0),{timeout:4000});await act(async()=>{Object.defineProperty(document,'visibilityState',{configurable:true,value:'hidden'});document.dispatchEvent(new window.Event('visibilitychange'));});await waitFor(()=>assert.ok(aborted>0));
+  }finally{Object.defineProperty(document,'visibilityState',{configurable:true,value:'visible'});global.fetch=previous;await UI.storeMock.removeItem('kotak.playlists.v2');}
  });
  console.log(`${passes} UI interaction tests passed`);
  require('node:fs').unlinkSync('tests/.ui-bundle.cjs'); dom.window.close();
