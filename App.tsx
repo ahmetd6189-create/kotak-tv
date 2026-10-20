@@ -1,5 +1,5 @@
 import {resolvePlayback,loadChannelGuide,requestGuideText,accountFor} from "./src/native/provider";
-import {assistantIntent,assistantChannels} from "./src/native/assistant";
+import {assistantIntent,assistantChannels,assistantAnswer} from "./src/native/assistant";
 import {EpisodePanel} from "./src/ui/EpisodePanel";
 import {DirectPlay} from "./src/ui/DirectPlay";
 import {CatalogView,PosterRail} from "./src/ui/CatalogView";
@@ -35,7 +35,7 @@ import {HomeActions,CategoryPicker} from "./src/ui/HomeControls";
 import {VoiceSearch} from "./src/ui/VoiceSearch";
 import {ImdbPanel} from "./src/ui/ImdbPanel";
 import {EpgSettings} from "./src/ui/EpgSettings";
-import {mediaTitle,rankedMedia,displayRanked,scheduleFor} from "./src/native/catalog-tools";
+import {mediaTitle,rankedMedia,displayRanked,scheduleFor,buildVoiceIndex} from "./src/native/catalog-tools";
 import {metadataKey,type ImdbInfo} from "./src/native/imdb";
 import {scheduledReminders,toggleReminder} from "./src/native/reminders";
 import * as SecureStore from "expo-secure-store";
@@ -420,7 +420,8 @@ function KotakApp() {
     const dataset=childEntries(Object.values(catalogsRef.current).flat().map(e=>{const value=e.kind!=="live"?imdb[metadataKey(e)]:undefined;return value?{...e,imdbRating:value.rating,genre:value.genre||e.genre}:e;}),childRef.current,protection?.groups||[]);
     if(intent==="schedule"||intent==="match"){
       const candidates=assistantChannels(dataset,spoken);await ensureChannelEpg(candidates,signal);
-      if(!candidates.some(e=>scheduleFor(e,guidesRef.current).length)){for(const config of configs)await readGuide(config,inferredEpgUrl(config),signal,candidates.filter(e=>e.playlistId===config.id));}
+      const found=assistantAnswer(buildVoiceIndex(dataset),spoken,guidesRef.current,imdb);
+      if(intent==="match"?!found.schedule?.length:!candidates.some(e=>scheduleFor(e,guidesRef.current).length)){for(const config of configs){if(signal.aborted)break;await readGuide(config,inferredEpgUrl(config),signal,candidates.filter(e=>e.playlistId===config.id));}}
     }
     return {entries:dataset,guide:guidesRef.current,metadata:imdb};
   }

@@ -378,7 +378,7 @@ export async function loadCatalog(
           streamFormat:kind==="live"?output:String(r.container_extension||"mp4"),
           rating: Number.isFinite(Number(r.rating)) ? Number(r.rating) : undefined,
           added:Number(r.added||r.last_modified)||undefined,
-          released:String(r.releaseDate||r.release_date||r.year||'')||undefined,
+          released:String(r.releaseDate||r.release_date||r.releasedate||r.year||'')||undefined,
           genre:String(r.genre||'')||undefined,
           imdbRating: r.imdb_rating !== undefined && Number.isFinite(Number(r.imdb_rating)) ? Number(r.imdb_rating) : undefined,
           imdbId: /^tt\d+$/.test(String(r.imdb_id || "")) ? String(r.imdb_id) : undefined,
