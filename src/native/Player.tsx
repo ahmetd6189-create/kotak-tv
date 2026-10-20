@@ -1,3 +1,6 @@
+import {VlcTile} from "./VlcTile";
+import {needsSystemPlayer} from "./playback-tools";
+import * as ScreenOrientation from "expo-screen-orientation";
 import {CastControls} from "../ui/CastControls";
 import React, { memo, useEffect, useRef, useState } from "react";
 import {
@@ -75,6 +78,7 @@ const Tile = memo(function Tile({
   const [reload, setReload] = useState(0);
   const [loadError, setLoadError] = useState(false);
   const [userMuted, setUserMuted] = useState(false);
+  const explicitAudio=useRef<string|null>(null);
   const audioIntent=useRef({audible,userMuted});audioIntent.current={audible,userMuted};
   const sourceFailure=useRef(false);
   const resumePosition=useRef(initialPosition);
@@ -117,7 +121,7 @@ const Tile = memo(function Tile({
   useEffect(() => {
     const updateAudio = () => {
       const tracks=[...player.availableAudioTracks];setAudioTracks(tracks);
-      if(!player.audioTrack && tracks.length) player.audioTrack=preferredAudio(tracks,null);
+      if(tracks.length)player.audioTrack=tracks.find(t=>t.id===explicitAudio.current)||preferredAudio(tracks,null);
       setAudioId(player.audioTrack?.id || null);
     };
     const source = player.addListener("sourceLoad", () => {
@@ -186,7 +190,6 @@ const Tile = memo(function Tile({
     });
     return () => sub.remove();
   }, [player, multi]);
-  const guestCommand=(_action:string,_position?:number)=>{};
   const failed = loadError || status === "error";
   const duration = player.duration;
   const live = item.kind === "live";
@@ -243,7 +246,7 @@ const Tile = memo(function Tile({
                       duration,
                       (e.nativeEvent.locationX / seekWidth.current) * duration,
                     ),
-                  );guestCommand("seek",player.currentTime);}
+                  );}
               }}
               style={s.seek}
             >
@@ -261,7 +264,7 @@ const Tile = memo(function Tile({
                 small
                 icon={RotateCcw}
                 label={`${seekSeconds} saniye geri`}
-                onPress={() => {player.seekBy(-seekSeconds);guestCommand("seek",player.currentTime);}}
+                onPress={() => {player.seekBy(-seekSeconds);}}
               />
             )}
             <IconButton
@@ -269,14 +272,14 @@ const Tile = memo(function Tile({
               small
               icon={isPlaying ? Pause : Play}
               label={isPlaying ? "Duraklat" : "Oynat"}
-              onPress={() => {guestCommand(player.playing?"pause":"play");watchdog.current.paused=player.playing;if(player.playing)player.pause();else {watchdog.current.advancedAt=Date.now();player.play();}}}
+              onPress={() => {watchdog.current.paused=player.playing;if(player.playing)player.pause();else {watchdog.current.advancedAt=Date.now();player.play();}}}
             />
             {!live && !multi && (
               <IconButton
                 small
                 icon={RotateCw}
                 label={`${seekSeconds} saniye ileri`}
-                onPress={() => {player.seekBy(seekSeconds);guestCommand("seek",player.currentTime);}}
+                onPress={() => {player.seekBy(seekSeconds);}}
               />
             )}
             <IconButton
@@ -355,6 +358,7 @@ const Tile = memo(function Tile({
             key={track.id}
             style={s.trackRow}
             onPress={() => {
+              explicitAudio.current=track.id;
               player.audioTrack = track;
               setAudioId(track.id);
             }}
@@ -381,8 +385,7 @@ const Tile = memo(function Tile({
             key={track.id}
             style={s.trackRow}
             onPress={() => {
-              player.subtitleTrack = track;
-              setSubtitleId(track.id);
+              try{player.subtitleTrack = track;setSubtitleId(track.id);}catch{Alert.alert("Altyazı","Bu altyazı parçası seçilemedi. Başka bir parça veya uyumlu oynatıcıyı deneyin.");}
             }}
           >
             <Text style={d.secondary}>
@@ -418,8 +421,11 @@ export function PlaybackPanel({
   seekSeconds?: number;
   bufferSeconds?: number;
 }) {
+  const [engine,setEngine]=useState<"vlc"|"system">(Platform.OS==="android"?"vlc":"system");
+  const [wide,setWide]=useState(false);
+  useEffect(()=>()=>{void ScreenOrientation.unlockAsync().catch(()=>{});},[]);
+  useEffect(()=>{if(mini){setWide(false);void ScreenOrientation.unlockAsync().catch(()=>{});}},[mini]);
   const [audio, setAudio] = useState(0);
-  const [analysis, setAnalysis] = useState(false);
   useEffect(() => setAudio(0), [items]);
   const multi = items.length > 1;
   return (
@@ -460,11 +466,7 @@ export function PlaybackPanel({
           onPress={onMini}
         />}
       </View>
-      {!mini && true && <View style={{paddingHorizontal:12,paddingBottom:8}}><ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{gap:8}}>
-        {items[0]?.kind === "live" && <Pill icon={Sparkles} label="AI Maç Analizi" active={analysis} onPress={() => setAnalysis(v => !v)}/>}
-        <Pill label="Yayını paylaş" onPress={() => onFeature?.("Yayını paylaş")}/>
-        <Pill label="AI Türkçe Altyazı" onPress={() => onFeature?.("AI Canlı Ses Çevirisi")}/>
-      </ScrollView></View>}
+      {!mini&&<View style={{paddingHorizontal:12,paddingBottom:8}}><ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{gap:8}}><Pill label="Yayını paylaş" onPress={()=>onFeature?.("Yayını paylaş")}/>{Platform.OS==="android"&&<Pill label={engine==="vlc"?"Oynatıcı: Uyumlu VLC":"Oynatıcı: Sistem"} onPress={()=>setEngine(v=>v==="vlc"?"system":"vlc")}/>}</ScrollView></View>}
       <View style={s.grid}>
         {items.map((item, index) => (
           <View
@@ -474,7 +476,7 @@ export function PlaybackPanel({
               height: items.length === 4 ? "50%" : "100%",
             }}
           >
-            <Tile
+            {engine==="vlc"&&!needsSystemPlayer(item)?<VlcTile item={item} multi={multi} audible={index===audio} onAudio={()=>setAudio(index)} seekSeconds={seekSeconds} initialPosition={positions[item.id]?.position||0} onProgress={onProgress} onSystemPlayer={()=>setEngine("system")} onFullscreen={()=>{setWide(v=>!v);void (wide?ScreenOrientation.unlockAsync():ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE)).catch(()=>{});}}/>:<Tile
               item={item}
               initialPosition={positions[item.id]?.position||0}
               onProgress={onProgress}
@@ -483,17 +485,10 @@ export function PlaybackPanel({
               onAudio={() => setAudio(index)}
               seekSeconds={seekSeconds}
               bufferSeconds={bufferSeconds}
-            />
+            />}
           </View>
         ))}
-        {analysis && !mini && <View style={s.analysis}>
-          <View style={d.between}><Text style={d.name}>AI Maç Analizi</Text><IconButton small icon={X} label="Analizi kapat" onPress={()=>setAnalysis(false)}/></View>
-          <Text style={[d.secondary,{marginVertical:14}]}>Canlı maç verisi bekleniyor</Text>
-          <Text style={d.micro}>Gol ihtimali</Text><Text style={{fontSize:40,color:c.blue}}>—</Text>
-          <View style={{height:4,backgroundColor:"#ffffff22",marginVertical:12}}/>
-          <Text style={d.micro}>Oyuncu performansı: —</Text>
-          <Text style={[d.micro,{marginTop:20}]}>Veri sağlayıcısı bağlı değil. Tahmin üretilmiyor.</Text>
-        </View>}
+
       </View>
     </View>
   );

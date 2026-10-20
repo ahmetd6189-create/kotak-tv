@@ -62,7 +62,7 @@ export interface Playlist {
   channelCount?: number;
 }
 
-export type MainTab = 'ANASAYFA' | 'CANLI' | 'FILM';
+export type MainTab = 'ANASAYFA' | 'CANLI' | 'FILM' | 'DIZI';
 export type BottomNavTab = 'ANASAYFA' | 'EPG' | 'TV KANALI' | 'DAHA FAZLA';
 
 export interface UserProfile {

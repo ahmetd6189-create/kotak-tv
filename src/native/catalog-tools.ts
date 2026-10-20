@@ -16,13 +16,13 @@ export function buildVoiceIndex(entries:Entry[]){
  const seen=new Set<string>();return entries.map(entry=>({entry,name:normalized(mediaTitle(entry.name))})).filter(item=>{const key=(item.entry.kind==='episode'?'series':item.entry.kind)+':'+item.name;if(seen.has(key))return false;seen.add(key);return true;});
 }
 export function matchVoice(index:ReturnType<typeof buildVoiceIndex>,spoken:string){
- const query=normalized(spoken).replace(/\b(?:bana|ac|oynat|izle|istiyorum|lutfen|kanalini|kanali|filmini|filmi|dizisini|dizisi)\b/g,' ').replace(/\s+/g,' ').trim();
+ const query=normalized(spoken).replace(/\b(?:bana|ac|oynat|izle|istiyorum|lutfen|kanalini|kanali|kanal|filmini|filmi|film|dizisini|dizisi|dizi|adli|adindaki|adi|adini|bul|getir|goster|acarmisin|acar|misin)\b/g,' ').replace(/\s+/g,' ').trim();
  if(!query)return [];
- return index.filter(e=>e.name.includes(query)||query.includes(e.name)).sort((a,b)=>(Number(b.name===query)-Number(a.name===query))||a.name.length-b.name.length).slice(0,30).map(e=>e.entry);
+ const tokens=query.split(' ').filter(Boolean);return index.filter(e=>e.name.includes(query)||query.includes(e.name)||tokens.every(t=>e.name.includes(t))||guideKey(e.name)===guideKey(query)).sort((a,b)=>(Number(b.name===query)-Number(a.name===query))||a.name.length-b.name.length).slice(0,30).map(e=>e.entry);
 }
 export function voiceMatches(entries:Entry[],spoken:string){return matchVoice(buildVoiceIndex(entries),spoken);}
-export function guideKey(s:string){return normalized(s).replace(/\b(?:hd|fhd|uhd|4k)\b/g,'').replace(/\s+/g,'');}
-export function scheduleFor(item:Entry,guide:Guide):Program[]{return guide[`${item.playlistId}:${item.epgId}`] || guide[`${item.playlistId}:@${guideKey(item.epgId||'')}`] || guide[`${item.playlistId}:@${guideKey(item.name)}`] || [];}
+export function guideKey(s:string){return normalized(s).replace(/\b(?:sd|hd|fhd|uhd|4k)\b/g,'').replace(/\s+/g,'').replace(/(?:uhd|fhd|hd|sd|4k)$/,'');}
+export function scheduleFor(item:Entry,guide:Guide):Program[]{return guide[`${item.playlistId}:#${item.id}`] || guide[`${item.playlistId}:${item.epgId}`] || guide[`${item.playlistId}:@${guideKey(item.epgId||'')}`] || guide[`${item.playlistId}:@${guideKey(item.name)}`] || [];}
 export function programWindow(list:Program[],now:number,window:'now'|'tonight'|'day'){
  if(window==='now')return list.filter(p=>p.start<=now&&p.end>now);
  if(window==='day')return list.filter(p=>p.end>now&&p.start<now+86400000);
@@ -32,8 +32,9 @@ export function programWindow(list:Program[],now:number,window:'now'|'tonight'|'
  return list.filter(p=>p.end>Math.max(now,start)&&p.start<end);
 }
 
-/** A provider score is never relabelled as IMDb. Prefer verified IMDb rows, then provider scores. */
-export function displayRanked(entries:Entry[],kind:'movie'|'series',limit=20){
- const verified=rankedMedia(entries,kind,limit);if(verified.length)return verified;
- const seen=new Set<string>();return entries.filter(e=>(kind==='movie'?e.kind==='movie':e.kind==='series'||e.kind==='episode')&&typeof e.rating==='number'&&e.rating>=7&&e.rating<=10).sort((a,b)=>(b.rating||0)-(a.rating||0)).filter(e=>{const name=normalized(mediaTitle(e.name));if(seen.has(name))return false;seen.add(name);return true;}).slice(0,limit).map(e=>({...e,name:mediaTitle(e.name)}));
+/** Trends use explicit IMDb data only. Generic provider scores are not IMDb. */
+export function displayRanked(entries:Entry[],kind:'movie'|'series',limit=20){return rankedMedia(entries,kind,limit);}
+export function releaseTime(item:Entry){const value=item.released||item.name.match(/\b(?:19|20)\d{2}\b/)?.[0];if(!value)return 0;const time=Date.parse(value);return Number.isFinite(time)?time:0;}
+export function sortedCatalog(entries:Entry[],sort:'imdb'|'release'|'name'|'added'){
+ return [...entries].sort((a,b)=>sort==='imdb'?(b.imdbRating||0)-(a.imdbRating||0):sort==='release'?releaseTime(b)-releaseTime(a):sort==='added'?(b.added||0)-(a.added||0):a.name.localeCompare(b.name,'tr'));
 }

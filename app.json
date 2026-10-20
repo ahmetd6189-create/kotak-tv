@@ -2,7 +2,7 @@
   "expo": {
     "name": "Kotak TV",
     "slug": "kotak-tv",
-    "version": "1.0.7",
+    "version": "1.0.8",
     "orientation": "default",
     "userInterfaceStyle": "dark",
     "newArchEnabled": true,
@@ -71,7 +71,16 @@
           "androidPlayServicesCastFrameworkVersion": "22.3.1",
           "iosStartDiscoveryAfterFirstTapOnCastButton": true
         }
-      ]
+      ],
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "minSdkVersion": 26
+          }
+        }
+      ],
+      "./plugins/withVlcPackaging"
     ],
     "extra": {
       "eas": {

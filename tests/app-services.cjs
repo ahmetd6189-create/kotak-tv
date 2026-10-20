@@ -10,4 +10,9 @@ exports.CastButton=()=>null;exports.useRemoteMediaClient=()=>null;exports.MediaS
 exports.isPictureInPictureSupported=()=>false;
 exports.useEvent=(_player,_event,initial)=>initial;
 exports.VideoView=React.forwardRef(()=>null);exports.VideoAirPlayButton=()=>null;
-exports.useVideoPlayer=()=>React.useRef({status:'readyToPlay',playing:false,currentTime:0,duration:100,availableAudioTracks:[],availableSubtitleTracks:[],addListener:()=>({remove(){}}),replaceAsync:async()=>{},play(){},pause(){},seekBy(){}}).current;
+exports.systemMock={source:null};
+exports.useVideoPlayer=()=>React.useRef({status:'readyToPlay',playing:false,currentTime:0,duration:100,availableAudioTracks:[],availableSubtitleTracks:[],addListener:()=>({remove(){}}),replaceAsync:async source=>{exports.systemMock.source=source},play(){},pause(){},seekBy(){}}).current;
+exports.useKeepAwake=()=>{};
+exports.unlockAsync=async()=>{};exports.lockAsync=async()=>{};exports.OrientationLock={LANDSCAPE:1};
+exports.vlcMock={props:null};
+exports.VLCPlayer=React.forwardRef((props,ref)=>{exports.vlcMock.props=props;React.useImperativeHandle(ref,()=>({seek(value){exports.vlcMock.seek=value;}}));return null;});

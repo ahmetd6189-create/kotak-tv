@@ -1,36 +1,43 @@
-Kotak TV 1.0.7 — 20 Ekim 2026
+Kotak TV 1.0.8 — 20 Ekim 2026
 
 GEÇEN KONTROLLER
-- TypeScript tsc --noEmit
+- TypeScript: tsc --noEmit
 - Expo SDK 54 bağımlılık uyumu: expo install --check
-- Android native prebuild --no-install
+- Android native prebuild --clean --no-install (VLC otomatik bağlantısı)
 - Android Metro/Hermes export (release JS bytecode)
 - 17 IPTV / ağ / M3U / Xtream / XMLTV testi
-- 4 önbellek testi: büyük katalog, atomik yazma, eski kayıt ve EPG takma adları
-- 21 performans / metadata / ses parçası / asistan / kurtarma / veri testi
-- 36 UI etkileşim / gerçek App açılış / katalog / EPG / paylaşım testi
-TOPLAM: 78 geçen test.
-UI testleri JSDOM ve React Native Web ile çalışır. Native mikrofon, bildirim,
-oynatıcı ve Cast API'leri taklit edilir. Örnek ağ yanıtları kullanılır.
+- 33 önbellek / metadata / performans / asistan / EPG / kurtarma testi
+- 42 UI etkileşim testi
+TOPLAM: 92 geçen test.
+UI testleri JSDOM ve React Native Web'de çalışır. Native VLC, expo-video,
+mikrofon, bildirim ve Cast API'leri taklit edilir; örnek ağ yanıtları kullanılır.
 
-ÖZELLİKLE DOĞRULANAN AKIŞLAR
-- İlk kanal listesini VOD ve tam XMLTV isteği bekletemiyor.
-- Geciken kategori yanıtından önce oynatma URL'si hazır liste gösteriliyor.
-- Katalog süre sınırı geçince istek iptal edilip hata döndürülüyor.
-- Büyük JSON ayrıştırması UI görevlerine çalışma zamanı bırakıyor.
-- Gerçek App bileşeninde Modern tercihte ana ekran tanıtım kartları yok.
-- Daha Fazla bölümünde özellik kartları var.
-- Gerçek App bileşeninde gecikmeli VOD, trend tümü ve film detayı akışı çalışıyor.
-- Program hücresi açıklama açıyor; Bana Hatırlat doğru programı iletiyor.
-- 5/10/15/30/60 ve özel dakika cihaz bildirim planlamasına aktarılıyor.
-- Yayını paylaş sunucu isteği yapmadan OS paylaşım menüsüne URL gönderiyor.
-- Sağlayıcı puanı IMDb diye etiketlenmiyor.
+BU SÜRÜMDE ÖZELLİKLE DOĞRULANANLAR
+- Sağlayıcının genel puanı 10 olsa bile IMDb trendine taşınmaz.
+- Film için get_vod_info MKV diyorsa oynatıcıya MKV adresi gider.
+- Gerçek App film detayı -> İzle akışında doğru adres sisteme ulaşır.
+- Doğrudan kaynak ve özel HTTP başlıkları kaybolmaz; iptal dikkate alınır.
+- Ses kapalı parça (-1) seçilmez, Türkçe ses varsa seçilir; VLC volume=100.
+- Gerçek altyazı parçası seçimi AI çeviri ekranına yönlenmez.
+- VLC süreleri milisaniyeden saniyeye çevrilir; kaldığı yerden devam edilir.
+- Film başarısız olunca uygun sağlayıcı yolunun alternatif uzantısı denenir.
+- IMDb ve yayın tarihi sıralamasında bilinmeyenler sona gelir.
+- Film/Dizi ayrı sekmeler, dizi kategorileri ayrı afiş gruplarıdır.
+- Enter ile 'umami film adı bul' tek sonucu açar.
+- Galatasaray ve Beşiktaş canlı maçı açılır; Türkiye'nin ileriki maçı EPG'ye gider.
+- Kanal API'si base64 Türkçe metinleri ve saniye tarihlerini doğru dönüştürür.
+- XMLTV gzip açılır; yanıtsız sunucuda süre sınırı vardır.
+- Gerçek App XMLTV 404 durumunda kanal API verisini EPG'ye ve hatırlatmaya aktarır.
+- İlk liste VOD/tam XMLTV beklemez; büyük listelerde iş parçalı ve sanallaştırılmıştır.
+- Yayını paylaş, paylaşım sunucusu olmadan OS paylaşım menüsüne URL verir.
 
 YAPILMAYAN DOĞRULAMALAR
-- Kullanıcının gerçek IPTV hesabıyla native Android ses/video oynatma
-- Fiziksel Android/iPhone üzerinde gerçek alarm zamanı, mikrofon, PiP ve Cast
-- 4K/60 FPS, uzun süreli oynatma ve telefon UX performansı
+- Kullanıcının gerçek IPTV hesabıyla fiziksel Android'de ses/video dinleme
+- Fiziksel cihazda mikrofon, alarm zamanı, PiP ve Cast
+- 4K60, uzun oynatma ve gerçek cihaz performansı
 - Referansla piksel düzeyinde görsel eşitlik
 
-Expo derlemesinin durumu ayrıca Expo sayfasından doğrulanır. Kaynak testlerinin
-geçmesi bu fiziksel cihaz kontrollerinin yapıldığı anlamına gelmez.
+Android varsayılan motor VLC'dir. PiP sistem oynatıcısı seçeneğindedir.
+Sağlayıcı altyazı/EPG/IMDb vermiyorsa veriler uydurulmaz.
+Expo native derleme sonucu ayrıca Expo sayfasından doğrulanır. Kaynak testleri
+fiziksel cihaz testinin yerine geçmez.

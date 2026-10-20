@@ -1,3 +1,6 @@
+import {resolvePlayback,loadChannelGuide,requestGuideText,accountFor} from "./src/native/provider";
+import {assistantIntent,assistantChannels} from "./src/native/assistant";
+import {EpisodePanel} from "./src/ui/EpisodePanel";
 import {DirectPlay} from "./src/ui/DirectPlay";
 import {CatalogView,PosterRail} from "./src/ui/CatalogView";
 import {CategoriesPage} from "./src/ui/CategoriesPage";
@@ -123,6 +126,11 @@ function KotakApp() {
   const [configs, setConfigs] = useState<PlaylistConfig[]>([]);
   const [catalogs, setCatalogs] = useState<Record<string, Entry[]>>({});
   const [guides, setGuides] = useState<Guide>({});
+  const guidesRef=useRef(guides);guidesRef.current=guides;const catalogsRef=useRef(catalogs);catalogsRef.current=catalogs;
+  const [guideFocus,setGuideFocus]=useState<{channelId:string;programStart:number}|null>(null);
+  const channelFlights=useRef(new Map<string,{signal:AbortSignal;promise:Promise<Guide>}>());const epgJobs=useRef(new Set<AbortController>());const epgAddresses=useRef(new Map<string,string>());
+  const playJob=useRef<AbortController|null>(null);const [preparing,setPreparing]=useState<string|null>(null);
+  const vodTask=useRef<Promise<void>|null>(null);
   const [guideNotice, setGuideNotice] = useState(
     "EPG bağlantısı bulunamadı. Liste ayarlarından XMLTV adresi ekleyebilirsiniz.",
   );
@@ -196,7 +204,7 @@ function KotakApp() {
   const guideFlights=useRef(new Map<string,{signal:AbortSignal;promise:Promise<Guide>}>());
   const guideCache=useRef(new Map<string,{url:string;at:number;data:Guide}>());
   const rawEntries = useMemo(() => Object.values(catalogs).flat(), [catalogs]);
-  const allEntries=useMemo(()=>Object.keys(imdb).length?rawEntries.map(item=>{if(item.kind==="live")return item;const data=imdb[metadataKey(item)];return data?{...item,imdbRating:data.rating,imdbId:data.id,logo:data.poster||item.logo}:item}):rawEntries,[rawEntries,imdb]);
+  const allEntries=useMemo(()=>Object.keys(imdb).length?rawEntries.map(item=>{if(item.kind==="live")return item;const data=imdb[metadataKey(item)];return data?{...item,imdbRating:data.rating,imdbId:data.id,released:data.released||data.year||item.released,genre:data.genre||item.genre,logo:data.poster||item.logo}:item}):rawEntries,[rawEntries,imdb]);
   const entries = useMemo(() => childEntries(allEntries, child, protection?.groups || []), [allEntries, child, protection]);
   const byId = useMemo(() => new Map(entries.map((e) => [e.id, e])), [entries]);
   const favoritesSet = useMemo(() => new Set(favorites), [favorites]);
@@ -231,33 +239,24 @@ function KotakApp() {
   const continueWatching=useMemo(()=>recent.map(id=>byId.get(id)).filter((e):e is Entry=>!!e&&e.kind!=="live").slice(0,10),[recent,byId]);
   useEffect(()=>{setDetailsBusy(false);if(!mediaDetails)return;const config=configs.find(c=>c.id===mediaDetails.playlistId);if(!config||providerDetails[mediaDetails.id])return;const controller=new AbortController();setDetailsBusy(true);void loadMediaInfo(config,mediaDetails,controller.signal).then(value=>{if(value&&!controller.signal.aborted)setProviderDetails(prev=>({...prev,[mediaDetails.id]:value}));}).catch(()=>{}).finally(()=>{if(!controller.signal.aborted)setDetailsBusy(false);});return()=>controller.abort();},[mediaDetails?.id]);
 
-  async function readGuide(config:PlaylistConfig,url:string|undefined,signal:AbortSignal,cacheEntries:Entry[]=[]){
-    url=url||inferredEpgUrl(config);
-    if(!url){setGuideNotice("EPG adresi yok. XMLTV bağlantısı ekleyin.");return;}
-    const address=url;const key=config.id+":"+address;
+  function mergeGuide(value:Guide){const next={...guidesRef.current,...value};guidesRef.current=next;setGuides(next);return next;}
+  function publishCatalog(config:PlaylistConfig,incoming:Entry[],kinds:import("./src/native/iptv").Kind[]){const next={...catalogsRef.current,[config.id]:mergeCatalog(catalogsRef.current[config.id]||[],incoming,kinds)};catalogsRef.current=next;setCatalogs(next);}
+  function rememberEpg(config:PlaylistConfig,url?:string){if(!url||config.epgUrl||epgAddresses.current.has(config.id))return;epgAddresses.current.set(config.id,url);const updated={...config,epgUrl:url};setConfigs(prev=>prev.map(c=>c.id===config.id?updated:c));void savePlaylist(updated).catch(()=>{});}
+  async function ensureChannelEpg(items:Entry[],parent?:AbortSignal):Promise<Guide>{
+    const missing=items.filter(e=>e.kind==="live"&&!scheduleFor(e,guidesRef.current).some(p=>p.end>Date.now()));if(!missing.length)return {};
+    const controller=new AbortController();epgJobs.current.add(controller);const abort=()=>controller.abort();parent?.addEventListener("abort",abort);if(parent?.aborted)abort();const timer=setTimeout(abort,18000);let index=0;const collected:Guide={};
+    try{await Promise.all(Array.from({length:Math.min(3,missing.length)},async()=>{while(index<missing.length&&!controller.signal.aborted){const item=missing[index++],config=configs.find(c=>c.id===item.playlistId);if(!config||!accountFor(config))continue;const key=item.id;let flight=channelFlights.current.get(key);if(!flight||flight.signal.aborted){const promise=loadChannelGuide(config,item,controller.signal);flight={signal:controller.signal,promise};channelFlights.current.set(key,flight);void promise.finally(()=>{if(channelFlights.current.get(key)?.promise===promise)channelFlights.current.delete(key)}).catch(()=>{});}try{const data=await flight.promise;if(!controller.signal.aborted&&Object.keys(data).length){Object.assign(collected,data);mergeGuide(data);}}catch{}}}));
+    if(Object.keys(collected).length){setGuideNotice("Kanal sunucusundan program akışı alındı.");for(const id of new Set(items.map(e=>e.playlistId))){const data=Object.fromEntries(Object.entries(guidesRef.current).filter(([key])=>key.startsWith(id+":")));void cacheGuide(id,data).catch(()=>{});}}
+    return collected;}finally{clearTimeout(timer);parent?.removeEventListener("abort",abort);epgJobs.current.delete(controller);}
+  }
+  async function readGuide(config:PlaylistConfig,url:string|undefined,signal:AbortSignal,cacheEntries:Entry[]=[]):Promise<Guide>{
+    url=url||epgAddresses.current.get(config.id)||inferredEpgUrl(config);const current=guideCache.current.get(config.id);
+    if(url&&current?.url===url&&Date.now()-current.at<120000){mergeGuide(current.data);return current.data;}
     try{
-      const previous=guideCache.current.get(config.id);
-      let scoped:Guide;
-      if(previous?.url===address&&Date.now()-previous.at<60000)scoped=previous.data;
-      else{
-        let request=guideFlights.current.get(key);
-        if(!request||request.signal.aborted){
-          setGuideNotice("EPG yükleniyor…");
-          const promise=(async()=>{
-            const data=await requestText(address,signal);const parsed=await parseGuideAsync(data.text,Date.now(),signal);
-            const result:Guide={};for(const [name,programs] of Object.entries(parsed))result[`${config.id}:${name}`]=programs;
-            if(!signal.aborted){guideCache.current.set(config.id,{url:address,at:Date.now(),data:result});setGuides(prev=>({...Object.fromEntries(Object.entries(prev).filter(([name])=>!name.startsWith(config.id+":"))),...result}));}
-            return result;
-          })();
-          request={signal,promise};guideFlights.current.set(key,request);
-          void promise.finally(()=>{if(guideFlights.current.get(key)?.promise===promise)guideFlights.current.delete(key)}).catch(()=>{});
-        }
-        scoped=await request.promise;
-      }
-      if(signal.aborted)return;
-      setGuideNotice(Object.keys(scoped).length?"Sağlayıcının 24 saatlik mevcut programları alındı.":"XMLTV’de güncel program yok veya kanal eşleştirmesi bulunamadı.");
-      void cacheGuide(config.id,scoped).then(()=>setCacheTime(Date.now())).catch(()=>setMessage("EPG önbelleği kaydedilemedi."));
-    }catch{if(!signal.aborted)setGuideNotice("EPG alınamadı. EPG Kaynağı bölümünden geçerli XMLTV adresini kontrol edin.");}
+      if(!url)throw new Error("EPG adresi yok");const address=url,key=config.id+":"+address;let flight=guideFlights.current.get(key);
+      if(!flight||flight.signal.aborted){setGuideNotice("Program akışı alınıyor…");const promise=(async()=>{const text=await requestGuideText(address,signal);const parsed=await parseGuideAsync(text,Date.now(),signal);const data:Guide={};for(const [name,programs] of Object.entries(parsed))data[`${config.id}:${name}`]=programs;if(!Object.values(data).some(v=>v.length))throw new Error("EPG boş");if(!signal.aborted){guideCache.current.set(config.id,{url:address,at:Date.now(),data});mergeGuide(data);void cacheGuide(config.id,data).catch(()=>{});}return data;})();flight={signal,promise};guideFlights.current.set(key,flight);void promise.finally(()=>{if(guideFlights.current.get(key)?.promise===promise)guideFlights.current.delete(key)}).catch(()=>{});}
+      const value=await flight.promise;if(!signal.aborted)setGuideNotice("Sağlayıcının mevcut yayın akışı alındı.");return value;
+    }catch{if(signal.aborted)return {};setGuideNotice("XMLTV alınamadı; kanalların kendi EPG verisi kontrol ediliyor…");const candidates=cacheEntries.length?cacheEntries:(catalogsRef.current[config.id]||[]).filter(e=>e.kind==="live").slice(0,10);const fallback=await ensureChannelEpg(candidates,signal);if(!signal.aborted&&!Object.keys(fallback).length)setGuideNotice("Sağlayıcı bu kanallar için EPG göndermedi. EPG Kaynağı ayarını kontrol edebilirsin.");return fallback;}
   }
   useEffect(() => {
     const controller = new AbortController();
@@ -294,7 +293,7 @@ function KotakApp() {
         setRecent(JSON.parse(history || "[]"));
         setBoot(false);
         setLoadingLists(saved.length > 0);
-        void (async()=>{for(const config of saved){const cache=await cachedCatalog(config.id).catch(()=>null);if(controller.signal.aborted)return;if(cache&&!liveFresh.current.has(config.id)){setCatalogs(prev=>({...prev,[config.id]:cache.entries.map(e=>restoreAddress(e,config))}));setCacheTime(cache.savedAt);}const storedGuide=await cachedGuide(config.id).catch(()=>null);if(storedGuide&&!controller.signal.aborted){setGuides(prev=>({...prev,...storedGuide.guide}));setGuideNotice("Kayıtlı program rehberi gösteriliyor.");}}})().catch(()=>{});
+        void (async()=>{for(const config of saved){const cache=await cachedCatalog(config.id).catch(()=>null);if(controller.signal.aborted)return;if(cache&&!liveFresh.current.has(config.id)){setCatalogs(prev=>({...prev,[config.id]:cache.entries.map(e=>restoreAddress(e,config))}));setCacheTime(cache.savedAt);}const storedGuide=await cachedGuide(config.id).catch(()=>null);if(storedGuide&&!controller.signal.aborted){mergeGuide(storedGuide.guide);setGuideNotice("Kayıtlı program rehberi gösteriliyor.");}}})().catch(()=>{});
         for (const config of saved) {
           try {
             const catalog = await quickCatalog(config,controller.signal,partial=>{if(!controller.signal.aborted){liveFresh.current.add(config.id);setLoadingLists(false);setCatalogs(prev=>({...prev,[config.id]:mergeCatalog(prev[config.id]||[],partial.entries,["live"])}));}});
@@ -302,7 +301,7 @@ function KotakApp() {
             void observeNewContent(config,catalog.entries,controller.signal);
       liveFresh.current.add(config.id);
             if(catalog.entries.some(e=>e.kind!=="live"))vodReady.current.add(config.id);
-            setCatalogs(prev=>({...prev,[config.id]:mergeCatalog(prev[config.id]||[],catalog.entries,["live"])}));
+            publishCatalog(config,catalog.entries,["live"]);rememberEpg(config,catalog.epgUrl);
             if (catalog.warnings.length) setMessage(catalog.warnings.join(" "));
             void cacheCatalog(config.id, catalog.entries).then(() => setCacheTime(Date.now())).catch(() => setMessage("Kanal önbelleği kaydedilemedi."));
           } catch (e) {
@@ -320,7 +319,7 @@ function KotakApp() {
     })();
     return () => {
       controller.abort();
-      episodeJob.current?.abort();vodJob.current?.abort();guideJob.current?.abort();
+      episodeJob.current?.abort();vodJob.current?.abort();guideJob.current?.abort();playJob.current?.abort();for(const pending of epgJobs.current)pending.abort();
     };
   }, []);
   useEffect(() => {
@@ -368,16 +367,16 @@ function KotakApp() {
     const publish = async (catalog: {entries: Entry[];epgUrl?:string}) => {
       if (controller.signal.aborted) return;
       if (!published) {
-        await savePlaylist(config);
+        const persisted={...config,epgUrl:config.epgUrl||catalog.epgUrl};await savePlaylist(persisted);
         if (controller.signal.aborted) return;
         published = true;
-        setConfigs(prev => [...prev.filter(p => p.id !== config.id), config]);
+        setConfigs(prev => [...prev.filter(p => p.id !== config.id), {...config,epgUrl:config.epgUrl||catalog.epgUrl}]);
         setAdd(false); setBusy(false); setFilter("Tümü"); setQuery("");
         if (!refreshing) {setTab("ANASAYFA"); setTop("ANASAYFA");}
       }
       liveFresh.current.add(config.id);setLoadingLists(false);
       if(catalog.entries.some(e=>e.kind!=="live"))vodReady.current.add(config.id);
-      setCatalogs(prev => ({...prev, [config.id]: mergeCatalog(prev[config.id]||[],catalog.entries,["live"])}));
+      publishCatalog(config,catalog.entries,["live"]);rememberEpg(config,catalog.epgUrl);
     };
     try {
       const catalog = await quickCatalog(config,controller.signal,publish);
@@ -402,26 +401,33 @@ function KotakApp() {
     try{for(const config of configs){
       if(controller.signal.aborted)return;
       try{const result=await quickCatalog(config,controller.signal,partial=>{if(!controller.signal.aborted){liveFresh.current.add(config.id);setLoadingLists(false);setCatalogs(prev=>({...prev,[config.id]:mergeCatalog(prev[config.id]||[],partial.entries,["live"])}));}});
-       if(controller.signal.aborted)return;void observeNewContent(config,result.entries,controller.signal);setCatalogs(prev=>({...prev,[config.id]:mergeCatalog(prev[config.id]||[],result.entries,["live"])}));
+       if(controller.signal.aborted)return;void observeNewContent(config,result.entries,controller.signal);publishCatalog(config,result.entries,["live"]);rememberEpg(config,result.epgUrl);
        void cacheCatalog(config.id,result.entries).catch(()=>{});
       }catch(e){if(!controller.signal.aborted)setMessage((e as Error).message);}
     }}finally{if(!controller.signal.aborted)setLoadingLists(false);}
   }
-  async function ensureVod(){
-    if(child||loadingLists||vodJob.current)return;
-    const pending=configs.filter(c=>!vodReady.current.has(c.id));if(!pending.length)return;
+  function ensureVod():Promise<void>{
+    if(child||loadingLists)return Promise.resolve();if(vodTask.current)return vodTask.current;
+    const pending=configs.filter(c=>!vodReady.current.has(c.id));if(!pending.length)return Promise.resolve();
     const controller=new AbortController();vodJob.current=controller;setLoadingVod(true);
-    try{for(const config of pending){vodReady.current.add(config.id);try{
-      const result=await quickCatalog(config,controller.signal,partial=>{if(!controller.signal.aborted)setCatalogs(prev=>({...prev,[config.id]:mergeCatalog(prev[config.id]||[],partial.entries,["movie","series","episode"])}));},["movie","series"],25000);
-      if(controller.signal.aborted)return;
-      setCatalogs(prev=>({...prev,[config.id]:mergeCatalog(prev[config.id]||[],result.entries,["movie","series","episode"])}));void observeNewContent(config,result.entries,controller.signal);
-    }catch(e){if(controller.signal.aborted){vodReady.current.delete(config.id);return;}setMessage((e as Error).message);}}}
-    finally{if(vodJob.current===controller){vodJob.current=null;setLoadingVod(false);}}
+    const task=(async()=>{try{for(const config of pending){try{
+      const result=await quickCatalog(config,controller.signal,partial=>{if(!controller.signal.aborted)publishCatalog(config,partial.entries,["movie","series","episode"]);},["movie","series"],25000);if(controller.signal.aborted)return;
+      publishCatalog(config,result.entries,["movie","series","episode"]);vodReady.current.add(config.id);void observeNewContent(config,result.entries,controller.signal);
+    }catch(e){if(controller.signal.aborted)return;setMessage((e as Error).message);}}}finally{if(vodJob.current===controller){vodJob.current=null;vodTask.current=null;setLoadingVod(false);}}})();vodTask.current=task;return task;
   }
-  useEffect(()=>{if(top==="FILM"||imdbOpen||voiceOpen||catalogPage)void ensureVod();},[top,imdbOpen,voiceOpen,catalogPage,configs,loadingLists,child]);
+  async function resolveAssistant(spoken:string,signal:AbortSignal){
+    const intent=assistantIntent(spoken);if(intent==="match"||intent==="schedule")vodJob.current?.abort();if(intent==="recommend"||intent==="search"&&!/kanal|trt|spor|bein|haber/i.test(spoken))await ensureVod();if(signal.aborted)throw new Error("İşlem iptal edildi.");
+    const dataset=childEntries(Object.values(catalogsRef.current).flat().map(e=>{const value=e.kind!=="live"?imdb[metadataKey(e)]:undefined;return value?{...e,imdbRating:value.rating,genre:value.genre||e.genre}:e;}),childRef.current,protection?.groups||[]);
+    if(intent==="schedule"||intent==="match"){
+      const candidates=assistantChannels(dataset,spoken);await ensureChannelEpg(candidates,signal);
+      if(!candidates.some(e=>scheduleFor(e,guidesRef.current).length)){for(const config of configs)await readGuide(config,inferredEpgUrl(config),signal,candidates.filter(e=>e.playlistId===config.id));}
+    }
+    return {entries:dataset,guide:guidesRef.current,metadata:imdb};
+  }
+  useEffect(()=>{if(top==="FILM"||top==="DIZI"||imdbOpen||catalogPage)void ensureVod();},[top,imdbOpen,catalogPage,configs,loadingLists,child]);
   // Let the first live screen paint before fetching the two VOD catalogs. Playback cancels this work.
-  useEffect(()=>{if(boot||loadingLists||playing.length||child||!configs.length||tab!=="ANASAYFA")return;const timer=setTimeout(()=>void ensureVod(),1200);return()=>clearTimeout(timer);},[boot,loadingLists,configs,child,playing.length,tab]);
-  useEffect(()=>{if(!configs.length||loadingLists||!(tab==="EPG"||voiceOpen||details))return;const controller=new AbortController();guideJob.current=controller;for(const config of configs)void readGuide(config,inferredEpgUrl(config),controller.signal);return()=>controller.abort();},[tab,voiceOpen,details,configs,loadingLists]);
+  useEffect(()=>{if(boot||loadingLists||playing.length||voiceOpen||child||!configs.length||tab!=="ANASAYFA")return;const timer=setTimeout(()=>void ensureVod(),1200);return()=>clearTimeout(timer);},[boot,loadingLists,configs,child,playing.length,tab,voiceOpen]);
+  useEffect(()=>{if(!configs.length||loadingLists||!(tab==="EPG"||details))return;const controller=new AbortController();guideJob.current=controller;for(const config of configs)void readGuide(config,inferredEpgUrl(config),controller.signal);return()=>controller.abort();},[tab,details,configs,loadingLists]);
   async function observeNewContent(config:PlaylistConfig,items:Entry[],signal:AbortSignal){
     try{const rules=await savedFollows();if(!rules.some(r=>r.kind!=="team"))return;let snapshot=items;for(const rule of rules.filter(r=>r.kind==="series"&&r.playlistId===config.id&&r.seriesId)){
       if(signal.aborted)return;const series=items.find(e=>e.kind==="series"&&e.seriesId===rule.seriesId);if(series){const episodes=await loadEpisodes(config,series,signal);snapshot=[...snapshot,...episodes];}
@@ -472,7 +478,9 @@ function KotakApp() {
     setAdd(false);
     setFormError("");
   }
-  function play(item: Entry) {
+  async function play(item: Entry) {
+    playJob.current?.abort();for(const controller of epgJobs.current)controller.abort();
+    const playController=new AbortController();playJob.current=playController;
     vodJob.current?.abort();
     const configForAddress=configs.find(c=>c.id===item.playlistId);if(configForAddress)item=restoreAddress(item,configForAddress);
     if (item.kind === "series") {
@@ -498,6 +506,7 @@ function KotakApp() {
         });
       return;
     }
+    if(item.kind==="movie"&&configForAddress){setPreparing(item.name);try{item=await resolvePlayback(item,configForAddress,playController.signal);}catch{if(playController.signal.aborted)return;setMessage("Film detayı alınamadı; listedeki yayın adresi deneniyor.");}finally{if(playJob.current===playController)setPreparing(null);}if(playController.signal.aborted)return;}
     if (!item.uri) {
       Alert.alert("Yayın bağlantısı", "Kayıtlı kanal bilgisi gösteriliyor. İnternet bağlantısını kontrol edip Kütüphaneniz ekranından listeyi yenileyin.");
       return;
@@ -559,8 +568,8 @@ function KotakApp() {
       : tab === "EPG" || tab === "TV KANALI" || top === "CANLI"
         ? live
         : top === "FILM"
-          ? [...movies, ...series]
-          : entries;
+          ? movies
+          : top === "DIZI" ? series : entries;
     const q = query.trim().toLocaleLowerCase("tr-TR");
     return source.filter(
       (e) =>
@@ -666,7 +675,7 @@ function KotakApp() {
   const recentProgram = details ? program(details) : undefined;
   const showHome =
     !screen && tab === "ANASAYFA" && top === "ANASAYFA" && !onlyFavorites;
-  const videoCatalog = top === "FILM" && tab === "ANASAYFA" && !onlyFavorites;
+  const videoCatalog = (top === "FILM"||top==="DIZI") && tab === "ANASAYFA" && !onlyFavorites;
   const channelView =
     !showHome &&
     !videoCatalog &&
@@ -774,6 +783,8 @@ function KotakApp() {
                 </View>
               ) : tab === "EPG" ? (
                 <EpgScreen
+                  focus={guideFocus}
+                  onVisibleChannels={items=>void ensureChannelEpg(items)}
                   title={configs.length===1?configs[0].name:"Yayın Akışı"}
                   onBack={()=>changeTab("ANASAYFA")}
                   channels={live}
@@ -834,7 +845,7 @@ function KotakApp() {
                   />
                 </ScrollView>
               ) : videoCatalog ? (
-                <View style={{flex:1}}>{loadingVod&&<Text style={[d.micro,{paddingHorizontal:16}]}>Film ve diziler yükleniyor…</Text>}<CatalogView title="Filmler & Diziler" items={listing} onBack={()=>setTop("ANASAYFA")} onSelect={setMediaDetails}/></View>
+                <View style={{flex:1}}>{loadingVod&&<Text style={[d.micro,{paddingHorizontal:16}]}>Film ve diziler yükleniyor…</Text>}<CatalogView key={top} title={top==="DIZI"?"Diziler":"Filmler"} overview={top==="DIZI"} items={listing} onBack={()=>setTop("ANASAYFA")} onSelect={setMediaDetails}/></View>
               ) : channelView ? (
                 <FlatList
                   key="channels"
@@ -924,6 +935,7 @@ function KotakApp() {
           </>
         )}
       </View>
+      {preparing&&<Sheet visible compact title="Film açılıyor" onClose={()=>{playJob.current?.abort();setPreparing(null);}}><ActivityIndicator color={colors.blue}/><Text style={[d.secondary,{paddingVertical:20}]}>{preparing} · Gerçek yayın adresi kontrol ediliyor…</Text><Pill label="İptal" onPress={()=>{playJob.current?.abort();setPreparing(null);}}/></Sheet>}
       {playing.length > 0 && (
         <View
           pointerEvents="box-none"
@@ -960,7 +972,7 @@ function KotakApp() {
       {mediaDetails&&<MediaDetails key={mediaDetails.id} item={mediaDetails} onFollow={mediaDetails.kind==="series"||mediaDetails.kind==="episode"?()=>{setFollowDraft({kind:"series",label:mediaTitle(mediaDetails.name),playlistId:mediaDetails.playlistId,seriesId:mediaDetails.seriesId});setMediaDetails(null);setFollowOpen(true);}:undefined} provider={providerDetails[mediaDetails.id]} loading={detailsBusy} similar={entries.filter(e=>e.kind===mediaDetails.kind&&e.id!==mediaDetails.id&&e.group===mediaDetails.group).slice(0,12)} onSelect={setMediaDetails} onNavigate={changeTab} info={imdb[metadataKey(mediaDetails)]} onClose={()=>setMediaDetails(null)} onPlay={()=>{const item=mediaDetails;setMediaDetails(null);play(item);}}/>}
       {audioTestOpen&&<AudioDiagnostics onClose={()=>setAudioTestOpen(false)}/>}
       {categoryOpen&&<CategoryPicker groups={groups} selected={homeCategories} onClose={()=>setCategoryOpen(false)} onSave={values=>{setHomeCategories(values);setCategoryOpen(false);void AsyncStorage.setItem("kotak.homeCategories",JSON.stringify(values)).catch(()=>setMessage("Kategori seçimi kaydedilemedi."));}}/>}
-      {voiceOpen&&<VoiceSearch entries={entries} onFollowTeam={label=>{if(child){setParentOpen(true);return;}setFollowDraft({kind:"team",label});setFollowOpen(true);}} guide={guides} metadata={imdb} onDetails={setMediaDetails} onReminder={(item,p)=>void reminder(item,p)} onClose={()=>setVoiceOpen(false)} onPlay={item=>{
+      {voiceOpen&&<VoiceSearch onResolve={resolveAssistant} onFuture={(item,p)=>{setGuideFocus({channelId:item.id,programStart:p.start});changeTab("EPG");}} entries={entries} onFollowTeam={label=>{if(child){setParentOpen(true);return;}setFollowDraft({kind:"team",label});setFollowOpen(true);}} guide={guides} metadata={imdb} onDetails={setMediaDetails} onReminder={(item,p)=>void reminder(item,p)} onClose={()=>setVoiceOpen(false)} onPlay={item=>{
         if(item.kind!=="series"){play(item);return;}
         const config=configs.find(c=>c.id===item.playlistId);if(!config)return;
         const controller=new AbortController();episodeJob.current?.abort();episodeJob.current=controller;
@@ -989,10 +1001,7 @@ function KotakApp() {
       >
         {[
           ["Yapay Zeka Sesli Komut", Mic],
-          ["AI Canlı Maç Analizi", Sparkles],
-          ["Kişisel AI TV Asistanı", Sparkles],
-          ["AI Canlı Ses Çevirisi", Mic],
-          ["Birlikte İzle (SharePlay)", Users],
+          ["Yayını paylaş", Users],
           ["Çoklu Ekran & PiP", Grid2X2],
           ["Yeni Oynatma Listesi Ekle", Plus],
           ["Çevrimdışı Mod & 24s EPG", WifiOff],
@@ -1019,19 +1028,7 @@ function KotakApp() {
           );
         })}
       </Sheet>
-      <Sheet
-        visible={episodes !== null}
-        title="Bölümler"
-        onClose={() => {
-          episodeJob.current?.abort();
-          setEpisodes(null);
-        }}
-      >
-        {episodeBusy && <ActivityIndicator color={colors.blue} />}
-        {(episodes || []).map((item) => (
-          <View key={item.id}>{channelRow(item)}</View>
-        ))}
-      </Sheet>
+      {episodes!==null&&<EpisodePanel items={episodes} busy={episodeBusy} onPlay={play} onClose={()=>{episodeJob.current?.abort();setEpisodes(null);}}/>}
       <Sheet
         visible={details !== null}
         title={details?.name || "Program Bilgisi"}
@@ -1094,7 +1091,7 @@ function KotakApp() {
               style={[d.secondary, { textAlign: "center", lineHeight: 22 }]}
             >
               {info === "Hakkında"
-                ? "Kotak TV\nKendi IPTV listenizle canlı TV, film ve dizi deneyimi.\nSürüm 1.0.7 · kotaktv@gmail.com"
+                ? "Kotak TV\nKendi IPTV listenizle canlı TV, film ve dizi deneyimi.\nSürüm 1.0.8 · kotaktv@gmail.com"
                 : info === "İletişim"
                   ? "kotaktv@gmail.com"
                   : info?.includes("EPG")

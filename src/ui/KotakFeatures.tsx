@@ -13,7 +13,7 @@ export function FeaturesPanel({active,entries,cacheTime,onOpen,onPlay,onClose}: 
  const voice=active===FEATURE_NAMES[0]; const match=active===FEATURE_NAMES[1]; const recap=active===FEATURE_NAMES[2]; const translation=active===FEATURE_NAMES[3]; const share=active===FEATURE_NAMES[4]; const offline=active===FEATURE_NAMES[5];
  const hub=![voice,match,recap,translation,share,offline].some(Boolean);
  return <Sheet visible full={hub} title={hub?'Kotak TV Özellikleri':active} onClose={onClose}>
-  {hub? <>{FEATURE_NAMES.map((name,i)=>{const Icon=icons[i];return <Pressable key={name} style={s.row} onPress={()=>onOpen(name)}><Icon color={c.blue} size={24}/><View style={{flex:1}}><Text style={d.name}>{name}</Text><Text style={d.micro}>{i===5?'Kayıtlı kanal bilgileri ve program rehberi':i===0?'Türkçe ses tanıma ile içerik aç':'Servis bağlantısı bekleniyor'}</Text></View></Pressable>})}</>:
+  {hub? <>{FEATURE_NAMES.filter((_,i)=>[0,4,5].includes(i)).map(name=>{const i=FEATURE_NAMES.indexOf(name);const Icon=icons[i];return <Pressable key={name} style={s.row} onPress={()=>onOpen(name)}><Icon color={c.blue} size={24}/><View style={{flex:1}}><Text style={d.name}>{name}</Text><Text style={d.micro}>{i===5?'Kayıtlı kanal bilgileri ve program rehberi':i===0?'Türkçe ses tanıma ile içerik aç':'Servis bağlantısı bekleniyor'}</Text></View></Pressable>})}</>:
   <>
    <View style={s.orb}>{React.createElement(icons[FEATURE_NAMES.indexOf(active)] || Sparkles,{size:38,color:c.blue})}</View>
    <Text style={d.h2}>{voice?'Ne izlemek istersin?':match?'Maçın nabzı':recap?'Senin TV asistanın':translation?'Türkçe canlı altyazı':share?'Yayını paylaş':'24 saatlik program rehberi'}</Text>
@@ -51,7 +51,7 @@ export function ProPanel({onClose}:{onClose:()=>void}) {
 export function AboutPanel({onClose}:{onClose:()=>void}) {
  return <Sheet visible title="Hakkında" onClose={onClose}>
   <View style={[s.orb,{backgroundColor:c.blue,width:112,height:112,borderRadius:30}]}><Play color="white" size={52}/></View>
-  <Text style={[d.h2,{textAlign:'center',letterSpacing:4}]}>KOTAK TV</Text><Text style={[s.copy,{textAlign:'center'}]}>Sürüm 1.0.7</Text>
+  <Text style={[d.h2,{textAlign:'center',letterSpacing:4}]}>KOTAK TV</Text><Text style={[s.copy,{textAlign:'center'}]}>Sürüm 1.0.8</Text>
   <View style={s.box}><Text style={s.copy}>Kotak TV, kendi IPTV listenizle canlı yayın, film ve dizi izlemek için tasarlanmış bir oynatıcıdır. İçerik sağlayıcınızın M3U veya Xtream Codes bilgileriyle kullanılır.</Text><Text style={d.secondary}>Desteklenen yayınlarda tam ekran, ses/altyazı seçimi, 2/4 ekran ve PiP sunar. Görüntü kalitesi kaynak yayına ve cihaz desteğine bağlıdır.</Text></View>
   <Pressable onPress={()=>void Linking.openURL('mailto:kotaktv@gmail.com').catch(()=>{})}><Text style={[d.name,{color:c.blue,marginVertical:24}]}>kotaktv@gmail.com</Text></Pressable>
  </Sheet>;

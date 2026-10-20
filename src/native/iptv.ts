@@ -9,6 +9,8 @@ export type Entry = {
   uri?: string;
   contentType?: "hls" | "auto";
   streamFormat?: string;
+  providerId?:string;
+  playbackResolved?:boolean;
   headers?: Record<string, string>;
   epgId?: string;
   seriesId?: string;
@@ -251,6 +253,7 @@ function rows(value: unknown): Row[] {
 function baseUrl(config: PlaylistConfig): string {
   return httpUrl(config.url).replace(/\/$/, "");
 }
+const infoCache=new Map<string,{at:number;value:unknown}>();
 async function api(
   config: PlaylistConfig,
   action?: string,
@@ -258,6 +261,9 @@ async function api(
   extra?: Record<string, string>,
   timeoutMs?: number,
 ): Promise<unknown> {
+  if(signal?.aborted)throw new Error('İşlem iptal edildi.');
+  const cacheKey=JSON.stringify([baseUrl(config),config.username,config.password,action,extra]);
+  const cached=infoCache.get(cacheKey);if((action==='get_vod_info'||action==='get_series_info')&&cached&&Date.now()-cached.at<300000)return cached.value;
   const query = new URLSearchParams({
     username: config.username || "",
     password: config.password || "",
@@ -270,7 +276,8 @@ async function api(
     timeoutMs ?? (action ? 30000 : 8000),
   );
   try {
-    return response.text.length>128000&&response.text.trimStart().startsWith("[")?await parseJsonArray(response.text,signal):JSON.parse(response.text);
+    const value=response.text.length>128000&&response.text.trimStart().startsWith("[")?await parseJsonArray(response.text,signal):JSON.parse(response.text);
+    if((action==='get_vod_info'||action==='get_series_info')&&!signal?.aborted){infoCache.set(cacheKey,{at:Date.now(),value});if(infoCache.size>24)infoCache.delete(infoCache.keys().next().value!);}return value;
   } catch {
     throw new Error(
       "Xtream sunucusu geçerli JSON döndürmedi. Sunucu adresini kontrol edin.",
@@ -360,6 +367,7 @@ export async function loadCatalog(
           : "ts";
         batch.push({
           id: `${config.id}-${kind}-${id}`,
+          providerId:id,
           playlistId: config.id,
           kind,
           name: String(r.name || "İçerik"),
@@ -421,6 +429,8 @@ export async function loadEpisodes(
         id: `${config.id}-episode-${r.id}`,
         playlistId: config.id,
         seriesId: series.seriesId,
+        providerId:String(r.id),
+        streamFormat:String(r.container_extension||"mp4"),
         name: `S${season} B${r.episode_num || ""} · ${r.title || series.name}`,
         group: series.name,
         logo: series.logo,
@@ -530,3 +540,5 @@ export async function loadMediaInfo(config:PlaylistConfig,item:Entry,signal?:Abo
  const imdb=Number(data.imdb_rating);const rating=Number(data.rating);
  return {title:str(data.name),poster:image(data.movie_image)||image(data.cover),backdrops:(Array.isArray(data.backdrop_path)?data.backdrop_path:[]).map(image).filter((v):v is string=>!!v).slice(0,8),plot:str(data.plot)||str(data.description),released:str(data.releasedate)||str(data.releaseDate)||str(data.release_date),genre:str(data.genre),cast:str(data.cast)||str(data.actors),director:str(data.director),duration:str(data.duration),rating:rating>0&&rating<=10?rating:undefined,imdbRating:imdb>0&&imdb<=10?imdb:undefined,imdbId:/^tt\d+$/.test(String(data.imdb_id||''))?String(data.imdb_id):undefined};
 }
+
+export {api as providerApi};
