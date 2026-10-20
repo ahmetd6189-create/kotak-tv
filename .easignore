@@ -17,3 +17,5 @@ src/data/
 !.env.example
 
 billing-service/
+
+supabase/

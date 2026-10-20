@@ -11,3 +11,9 @@ coverage/
 android/
 ios/
 dist-android/
+
+supabase/.temp/
+supabase/.branches/
+*.sqlite
+*.sqlite-shm
+*.sqlite-wal
