@@ -77,6 +77,8 @@ Genel amaçlı LLM, maç tahmini, AI özet ve canlı çeviri bu sürümde bağl�
 Mağaza satın alma ve doğrulanmış deneme/abonelik kilidi etkin değildir.
 
 Android varsayılan oynatıcı VLC kullanır; mevcut ses ve altyazı parçaları seçilir.
+Derlemede VLC C++ çalışma dosyası proje çıktısına açıkça seçilir; ortak Gradle
+önbelleği değiştirilmez ve kopyalanan dosya baytları kontrol edilir.
 PiP için oynatıcıdaki Sistem seçeneği expo-video motorunu açar. Özel Authorization
 başlığı gerektiren kaynaklar başlık desteği için sistem motoruna gider.
 Hata/donma halinde mavi yıldızla tekrar bağlanma denenir; ses, tam ekran ve 2/4 ekran vardır.
