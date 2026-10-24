@@ -1,3 +1,5 @@
+import * as Notifications from 'expo-notifications';
+import {scheduleExpiryNotices,type Entitlement} from '../native/entitlement';
 import React, { useMemo, useState } from 'react';
 import { Linking, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 import { BarChart3, Check, Languages, Mic, Play, Shield, Sparkles, Users, WifiOff } from 'lucide-react-native';
@@ -36,22 +38,28 @@ export function FeaturesPanel({active,entries,cacheTime,onOpen,onPlay,onClose}: 
   </>}
  </Sheet>;
 }
-export function ProPanel({onClose}:{onClose:()=>void}) {
+export function ProPanel({onClose,accountEmail,onSignOut,entitlement,onEnableNotices}:{onClose:()=>void;accountEmail?:string;onSignOut?:()=>void;entitlement?:Entitlement;onEnableNotices?:()=>Promise<string>}) {
  const [plan,setPlan]=useState('year');
+ const [notificationMessage,setNotificationMessage]=useState('');
  return <Sheet visible title="Kotak TV PRO" onClose={onClose}>
   <View style={s.orb}><Sparkles color={c.blue} size={40}/></View>
   <Text style={[d.h2,{textAlign:'center'}]}>TV deneyimini özgürleştir</Text>
   <Text style={[s.copy,{textAlign:'center'}]}>24 saat ücretsiz deneme</Text>
   {['Kendi listelerinle canlı TV, film ve dizi','Çoklu ekran ve resim içinde resim','Telefon ve Android TV deneyimi'].map(text=><View key={text} style={s.row}><Check size={20} color={c.blue}/><Text style={[d.name,{flex:1}]}>{text}</Text></View>)}
   {[{id:'month',title:'Aylık',price:'₺249',sub:'Aylık Kotak Pro'},{id:'year',title:'Yıllık',price:'₺999',sub:'Yıllık Kotak Pro · Popüler'}].map(p=><Pressable accessibilityRole="radio" accessibilityState={{checked:plan===p.id}} key={p.id} onPress={()=>setPlan(p.id)} style={[s.plan,plan===p.id&&{borderColor:c.blue}]}><View style={{flex:1}}><Text style={d.h2}>{p.title} {p.price}</Text><Text style={[d.secondary,{marginTop:6}]}>{p.sub}</Text></View>{plan===p.id&&<Check size={24} color={c.blue}/>}</Pressable>)}
+  {!!accountEmail&&<Text style={s.copy}>{accountEmail}</Text>}
+  {!!entitlement&&<Text style={s.copy}>Kullanım bitişi: {new Date(entitlement.expiresAt).toLocaleString('tr-TR')}</Text>}
+  {!!entitlement&&<Pill label="Süre bildirimlerini aç" onPress={()=>{void (async()=>{try{if(onEnableNotices){setNotificationMessage(await onEnableNotices());return;}const p=await Notifications.requestPermissionsAsync();if(!p.granted){setNotificationMessage('Bildirim izni verilmedi. Telefon ayarlarından açabilirsin.');return;}await scheduleExpiryNotices(entitlement);setNotificationMessage('Süre bildirimleri açıldı.');}catch{setNotificationMessage('Bildirimler planlanamadı. Tekrar dene.');}})();}}/>}
+  {!!notificationMessage&&<Text style={s.copy}>{notificationMessage}</Text>}
+  {!!onSignOut&&<Pill label="Hesaptan çıkış yap" onPress={onSignOut}/>}
   <Pill disabled active label="Mağaza bağlantısı bekleniyor" onPress={()=>{}}/>
-  <Text style={s.copy}>Abonelik satın alma ve 24 saatlik erişim kilidi henüz etkin değil. Apple/Google satın alma bağlantısı tamamlandığında burada kullanılabilir.</Text>
+  <Text style={s.copy}>Abonelik satın alma henüz açılmadı. Deneme süren hesabına bağlıdır; yeniden yükleme süreyi sıfırlamaz.</Text>
  </Sheet>;
 }
 export function AboutPanel({onClose}:{onClose:()=>void}) {
  return <Sheet visible title="Hakkında" onClose={onClose}>
   <View style={[s.orb,{backgroundColor:c.blue,width:112,height:112,borderRadius:30}]}><Play color="white" size={52}/></View>
-  <Text style={[d.h2,{textAlign:'center',letterSpacing:4}]}>KOTAK TV</Text><Text style={[s.copy,{textAlign:'center'}]}>Sürüm 1.0.9</Text>
+  <Text style={[d.h2,{textAlign:'center',letterSpacing:4}]}>KOTAK TV</Text><Text style={[s.copy,{textAlign:'center'}]}>Sürüm 1.0.10</Text>
   <View style={s.box}><Text style={s.copy}>Kotak TV, kendi IPTV listenizle canlı yayın, film ve dizi izlemek için tasarlanmış bir oynatıcıdır. İçerik sağlayıcınızın M3U veya Xtream Codes bilgileriyle kullanılır.</Text><Text style={d.secondary}>Desteklenen yayınlarda tam ekran, ses/altyazı seçimi, 2/4 ekran ve PiP sunar. Görüntü kalitesi kaynak yayına ve cihaz desteğine bağlıdır.</Text></View>
   <Pressable onPress={()=>void Linking.openURL('mailto:kotaktv@gmail.com').catch(()=>{})}><Text style={[d.name,{color:c.blue,marginVertical:24}]}>kotaktv@gmail.com</Text></Pressable>
  </Sheet>;

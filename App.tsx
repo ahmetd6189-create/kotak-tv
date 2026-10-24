@@ -1,3 +1,4 @@
+import {AccountGate,type AccountProps} from './src/ui/AccountGate';
 import {resolvePlayback,loadChannelGuide,requestGuideText,accountFor} from "./src/native/provider";
 import {assistantIntent,assistantChannels,assistantAnswer} from "./src/native/assistant";
 import {EpisodePanel} from "./src/ui/EpisodePanel";
@@ -117,11 +118,11 @@ export default function App() {
   return (
     <SafeAreaProvider>
       <StatusBar style="light" />
-      <KotakApp />
+      <AccountGate>{props=><KotakApp {...props}/>}</AccountGate>
     </SafeAreaProvider>
   );
 }
-function KotakApp() {
+export function KotakApp({entitlement,accountEmail,onSignOut,onEnableNotices}:AccountProps) {
   const insets = useSafeAreaInsets();
   const [configs, setConfigs] = useState<PlaylistConfig[]>([]);
   const [catalogs, setCatalogs] = useState<Record<string, Entry[]>>({});
@@ -169,7 +170,6 @@ function KotakApp() {
   const [followDraft,setFollowDraft]=useState<FollowDraft|undefined>();
   const [followRules,setFollowRules]=useState<FollowRule[]>([]);
   const [shareOpen,setShareOpen]=useState(false);
-  const [entitlement,setEntitlement]=useState<Entitlement|null>(null);
   const [pendingReminder,setPendingReminder]=useState<{item:Entry;program:Program}|null>(null);
   const [catalogPage,setCatalogPage]=useState<null|"trend-movies"|"trend-series"|"new-movies"|"updated-series">(null);
   const [directPlay,setDirectPlay]=useState(false);
@@ -1066,7 +1066,7 @@ function KotakApp() {
       </Sheet>
       {parentOpen && <ParentPanel protection={protection} child={child} groups={[...new Set(allEntries.filter(e => e.kind === "live").map(e => e.group))]} onClose={() => setParentOpen(false)} onChange={(value, isChild) => {episodeJob.current?.abort(); setProtection(value); setChild(isChild); setPlaying([]); setScreen(null); setSearchOpen(false); setInfo(null); setOptionsOpen(false); setEpisodes(null); setDetails(null); setSelected([]);setFollowOpen(false);setShareOpen(false);setPendingReminder(null);setMediaDetails(null);setVoiceOpen(false);setImdbOpen(false);setCategoryOpen(false);setEpgSettingsOpen(false);}} />}
       {(info === "Kotak TV Özellikleri" || FEATURE_NAMES.includes(info || "")) && <FeaturesPanel key={info} active={info!} entries={entries} cacheTime={cacheTime} onOpen={open} onClose={() => setInfo(null)} onPlay={play}/>}
-      {(info === "Kotak TV PRO" || info === "Pro Sürümüne Geç") && <ProPanel onClose={() => setInfo(null)}/>}
+      {(info === "Kotak TV PRO" || info === "Pro Sürümüne Geç") && <ProPanel onClose={() => setInfo(null)} accountEmail={accountEmail} onSignOut={onSignOut} entitlement={entitlement} onEnableNotices={onEnableNotices}/>}
       {info === "Hakkında" && <AboutPanel onClose={() => setInfo(null)}/>}
       <Sheet
         visible={info !== null && !FEATURE_NAMES.includes(info) && !["Kotak TV Özellikleri","Kotak TV PRO","Pro Sürümüne Geç","Hakkında"].includes(info)}

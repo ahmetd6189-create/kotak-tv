@@ -20,12 +20,12 @@ export function expiryMessage(entitlement:Entitlement,now=Date.now()){
  if(remaining<=172800000)return 'Kotak Pro kullanım süren 2 günden az kaldı.';
  return '';
 }
-export async function scheduleExpiryNotices(entitlement:Entitlement|null){
- const notices=entitlement?expiryNotices(entitlement):[];
+export async function scheduleExpiryNotices(entitlement:Entitlement|null,serverOffset=0){
+ const notices=entitlement?expiryNotices(entitlement,Date.now()+serverOffset):[];
  // Cancel old renewal dates before installing the new schedule. Program alarms are unaffected.
  for(const request of await Notifications.getAllScheduledNotificationsAsync())if(request.identifier.startsWith('kotak-expiry-'))await Notifications.cancelScheduledNotificationAsync(request.identifier);
  if(!notices.length)return;
  const permission=await Notifications.getPermissionsAsync();if(!permission.granted)return;
  if(Platform.OS==='android')await Notifications.setNotificationChannelAsync('subscription',{name:'Kotak Pro süre bildirimleri',importance:Notifications.AndroidImportance.HIGH,sound:'default'});
- for(const notice of notices)await Notifications.scheduleNotificationAsync({identifier:notice.id,content:{title:'Kotak TV Pro',body:`${entitlement!.kind==='trial'?'Deneme':'Abonelik'} sürenin bitmesine ${notice.hours} saat kaldı.`,sound:'default',data:{screen:'subscription'}},trigger:{type:Notifications.SchedulableTriggerInputTypes.DATE,date:new Date(notice.at),channelId:'subscription'}});
+ for(const notice of notices)await Notifications.scheduleNotificationAsync({identifier:notice.id,content:{title:'Kotak TV Pro',body:`${entitlement!.kind==='trial'?'Deneme':'Abonelik'} sürenin bitmesine ${notice.hours} saat kaldı.`,sound:'default',data:{screen:'subscription'}},trigger:{type:Notifications.SchedulableTriggerInputTypes.DATE,date:new Date(notice.at-serverOffset),channelId:'subscription'}});
 }
