@@ -659,7 +659,7 @@ export function KotakApp({entitlement,accountEmail,onSignOut,onEnableNotices}:Ac
       return;
     }
     if (name === "Bizimle iletişime geçin") {
-      void Linking.openURL("mailto:kotaktv@gmail.com").catch(() =>
+      void Linking.openURL("mailto:defsearchtv@gmail.com").catch(() =>
         setInfo("İletişim"),
       );
       return;
@@ -1103,9 +1103,9 @@ export function KotakApp({entitlement,accountEmail,onSignOut,onEnableNotices}:Ac
               style={[d.secondary, { textAlign: "center", lineHeight: 22 }]}
             >
               {info === "Hakkında"
-                ? "Kotak TV\nKendi IPTV listenizle canlı TV, film ve dizi deneyimi.\nSürüm 1.0.8 · kotaktv@gmail.com"
+                ? "Kotak TV\nKendi IPTV listenizle canlı TV, film ve dizi deneyimi.\nSürüm 1.0.11 · defsearchtv@gmail.com"
                 : info === "İletişim"
-                  ? "kotaktv@gmail.com"
+                  ? "defsearchtv@gmail.com"
                   : info?.includes("EPG")
                     ? guideNotice
                     : info === "Ses ve Altyazı" || info?.includes("Subwoofer")
@@ -1190,3 +1190,4 @@ const s = StyleSheet.create({
   },
   priceText: { fontSize: 27, fontWeight: "900", color: colors.white },
 });
+

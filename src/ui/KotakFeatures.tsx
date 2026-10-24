@@ -59,9 +59,10 @@ export function ProPanel({onClose,accountEmail,onSignOut,entitlement,onEnableNot
 export function AboutPanel({onClose}:{onClose:()=>void}) {
  return <Sheet visible title="Hakkında" onClose={onClose}>
   <View style={[s.orb,{backgroundColor:c.blue,width:112,height:112,borderRadius:30}]}><Play color="white" size={52}/></View>
-  <Text style={[d.h2,{textAlign:'center',letterSpacing:4}]}>KOTAK TV</Text><Text style={[s.copy,{textAlign:'center'}]}>Sürüm 1.0.10</Text>
+  <Text style={[d.h2,{textAlign:'center',letterSpacing:4}]}>KOTAK TV</Text><Text style={[s.copy,{textAlign:'center'}]}>Sürüm 1.0.11</Text>
   <View style={s.box}><Text style={s.copy}>Kotak TV, kendi IPTV listenizle canlı yayın, film ve dizi izlemek için tasarlanmış bir oynatıcıdır. İçerik sağlayıcınızın M3U veya Xtream Codes bilgileriyle kullanılır.</Text><Text style={d.secondary}>Desteklenen yayınlarda tam ekran, ses/altyazı seçimi, 2/4 ekran ve PiP sunar. Görüntü kalitesi kaynak yayına ve cihaz desteğine bağlıdır.</Text></View>
-  <Pressable onPress={()=>void Linking.openURL('mailto:kotaktv@gmail.com').catch(()=>{})}><Text style={[d.name,{color:c.blue,marginVertical:24}]}>kotaktv@gmail.com</Text></Pressable>
+  <Pressable onPress={()=>void Linking.openURL('mailto:defsearchtv@gmail.com').catch(()=>{})}><Text style={[d.name,{color:c.blue,marginVertical:24}]}>defsearchtv@gmail.com</Text></Pressable>
  </Sheet>;
 }
 const s=StyleSheet.create({orb:{height:88,width:88,borderRadius:44,backgroundColor:'#007aff22',alignSelf:'center',alignItems:'center',justifyContent:'center',marginVertical:24},row:{flexDirection:'row',alignItems:'center',gap:14,paddingVertical:17,borderBottomWidth:1,borderBottomColor:'#ffffff12'},input:{padding:16,backgroundColor:'#29292c',color:c.white,fontSize:16,borderRadius:16},copy:{color:c.zinc400,fontSize:15,lineHeight:23,marginVertical:14},box:{backgroundColor:'#242426',borderRadius:24,padding:20,marginVertical:14,gap:8},metric:{fontSize:48,color:c.blue,fontWeight:'800'},track:{height:5,borderRadius:5,backgroundColor:'#444449',marginVertical:12},plan:{borderWidth:2,borderColor:'#ffffff15',borderRadius:20,backgroundColor:'#29292c',padding:20,marginVertical:8,flexDirection:'row',alignItems:'center',gap:12}});
+
