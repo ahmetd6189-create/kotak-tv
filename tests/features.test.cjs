@@ -145,3 +145,29 @@ test('Concurrent EPG batches share a global three-request limit',async()=>{
 });
 
 test('Provider decimal-comma scores remain accurate; missing, invalid and out-of-range values are not invented',()=>{assert.equal(core.providerRating('6,7'),6.7);assert.equal(core.providerRating('8.9'),8.9);for(const value of [null,undefined,'',0,'NaN',99,-1])assert.equal(core.providerRating(value),undefined);});
+
+test('Recent rails keep the latest selection and order provider ratings descending',()=>{
+ const items=[{...base,id:'a',added:30,rating:6.7},{...base,id:'b',added:20,rating:10},{...base,id:'c',added:10,rating:9},{...base,id:'old',added:1,rating:10}];
+ assert.deepEqual(core.recentProviderRanked(items,3).map(x=>x.id),['b','c','a']);
+});
+test('Match assistant excludes archive, replay and highlights without inventing fixtures',()=>{
+ const channel={...base,id:'sports',kind:'live',name:'beIN SPORTS 1'},now=Date.now();
+ const program={start:now+60000,end:now+7200000,title:'Arşiv Süper Lig Galatasaray - Fenerbahçe'};
+ const key='p:#sports',index=core.buildVoiceIndex([channel]);
+ assert.equal(core.assistantAnswer(index,'Fenerbahçe maçı ne zaman',{[key]:[program]}, {},now).schedule.length,0);
+ const live={...program,title:'Fenerbahçe - Göztepe'};
+ assert.equal(core.assistantAnswer(index,'Fenerbahçe maçı ne zaman',{[key]:[live]}, {},now).schedule[0].programs[0].title,live.title);
+});
+test('Large voice indexes yield to UI, cache results and preserve Turkish search',async()=>{
+ const items=Array.from({length:10000},(_,i)=>({...base,id:String(i),name:'İçerik '+i}));
+ let ticks=0;const timer=setInterval(()=>ticks++,0);
+ const index=await core.buildVoiceIndexAsync(items);clearInterval(timer);
+ assert.ok(ticks>10);assert.equal(core.buildVoiceIndex(items),index);
+ assert.equal(core.matchVoice(index,'İçerik 9999 filmini aç')[0].id,'9999');
+ const stop=new AbortController();stop.abort();await assert.rejects(()=>core.buildVoiceIndexAsync([...items],stop.signal));
+});
+test('Previously resolved movie starts without a metadata network request',async()=>{
+ const original=global.fetch;global.fetch=()=>{throw Error('unexpected network')};
+ try{const item={...base,streamFormat:'mkv',playbackResolved:true};assert.equal(await core.resolvePlayback(item,{id:'p',type:'xtream',url:'https://example.invalid',username:'u',password:'p'}),item);}
+ finally{global.fetch=original;}
+});

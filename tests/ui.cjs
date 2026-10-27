@@ -40,6 +40,15 @@ async function check(name, fn) { try { await fn(); passes++; console.log(`PASS $
   await waitFor(()=>assert.ok(screen.getByText(/İşlem tamamlanamadı/)));assert.equal(screen.queryByText('PROTECTED PLAYER'),null);
  });
 
+ await check('Hesap kapısı kataloğu her saniye çizmez, süre dolunca erişimi kapatır',async()=>{
+  let renders=0;const now=Date.now();
+  const client={restore:async()=>({user:{email:'test@example.invalid'}}),access:async()=>({id:'deadline',kind:'trial',active:true,serverTime:now,expiresAt:now+1600,verifiedAt:now})};
+  render(wrap(h(UI.AccountGate,{client},()=>{renders++;return h('div',null,'EXPIRING PLAYER')})));
+  await waitFor(()=>assert.ok(screen.getByText('EXPIRING PLAYER')));
+  const initial=renders;await new Promise(r=>setTimeout(r,1100));assert.equal(renders,initial);
+  await waitFor(()=>assert.ok(screen.getByText('Kullanım süren doldu')));
+  assert.equal(screen.queryByText('EXPIRING PLAYER'),null);
+ });
  await check('Şifre sıfırlama: OTP sonrası form, eşleşme kontrolü ve girişe dönüş',async()=>{
   let verified=0,updated=0,logged=0;
   const client={cancelRecovery(){},requestRecovery:async()=>{},verifyRecovery:async()=>{verified++},updateRecoveredPassword:async()=>{updated++;return {revoked:true}}};
@@ -290,14 +299,14 @@ async function check(name, fn) { try { await fn(); passes++; console.log(`PASS $
   render(wrap(h(UI.VoiceSearch,{entries:[],onResolve:async query=>{resolved=query;return {entries:[film],guide:{},metadata:{}}},onPlay:item=>played=item,onClose(){}})));
   fireEvent.change(screen.getByLabelText('Sesli arama metni'),{target:{value:'umami film adı bul'}});
   await act(async()=>fireEvent.keyDown(screen.getByLabelText('Sesli arama metni'),{key:'Enter',keyCode:13}));
-  assert.equal(resolved,'umami film adı bul');assert.equal(played.id,'film');
+  assert.equal(resolved,'umami film adı bul');await waitFor(()=>assert.equal(played?.id,'film'));
  });
  await check('İleriki maç komutu ilgili EPG programına gider, canlıymış gibi oynatılmaz',async()=>{
   let played=false,selected;const now=Date.now(),program={title:'Türkiye - İspanya',start:now+3600000,end:now+7200000};
   render(wrap(h(UI.VoiceSearch,{entries:[channel],guide:{'p:#tv':[program]},onFuture:(item,p)=>selected={item,p},onPlay:()=>played=true,onClose(){}})));
   fireEvent.change(screen.getByLabelText('Sesli arama metni'),{target:{value:'Türkiye maçını aç'}});
   await act(async()=>fireEvent.click(screen.getByRole('button',{name:'Ara ve aç'})));
-  assert.equal(played,false);assert.equal(selected.item.id,'tv');assert.equal(selected.p.title,program.title);
+  assert.equal(played,false);await waitFor(()=>assert.equal(selected?.item.id,'tv'));assert.equal(selected.p.title,program.title);
  });
  await check('Üst menüde Film ve Dizi ayrı sekmelerdir; dizi kategorileri ayrı gruplar halinde açılır',async()=>{
   let tab;const bar=render(wrap(h(UI.TopBar,{currentTab:'DIZI',onTabChange:v=>tab=v,onSearchClick(){},onOptionsClick(){}})));

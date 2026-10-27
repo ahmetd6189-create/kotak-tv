@@ -3,7 +3,7 @@ import {Pressable,Text,TextInput,View} from 'react-native';
 import {Mic,Play,Search} from 'lucide-react-native';
 import {ExpoSpeechRecognitionModule,useSpeechRecognitionEvent} from 'expo-speech-recognition';
 import type {Entry,Guide,Program} from '../native/iptv';
-import {buildVoiceIndex} from '../native/catalog-tools';
+import {buildVoiceIndex,buildVoiceIndexAsync} from '../native/catalog-tools';
 import {assistantAnswer,type AssistantResult} from '../native/assistant';
 import type {ImdbInfo} from '../native/imdb';
 import {Pill,Sheet,clock,d} from './Design';
@@ -11,9 +11,11 @@ import {colors as c} from '../theme';
 export type AssistantData={entries:Entry[];guide:Guide;metadata:Record<string,ImdbInfo>};
 export function VoiceSearch({entries,guide={},metadata={},onResolve,onFuture,onReminder,onDetails,onFollowTeam,onPlay,onClose}:{entries:Entry[];guide?:Guide;metadata?:Record<string,ImdbInfo>;onResolve?:(query:string,signal:AbortSignal)=>Promise<AssistantData>;onFuture?:(item:Entry,p:Program)=>void;onReminder?:(item:Entry,p:Program)=>void;onFollowTeam?:(team:string)=>void;onDetails?:(item:Entry)=>void;onPlay:(item:Entry)=>void;onClose:()=>void}){
  const [text,setText]=useState(''),[listening,setListening]=useState(false),[error,setError]=useState(''),[busy,setBusy]=useState(false),[resolved,setResolved]=useState<AssistantResult|null>(null);const delivered=useRef(false),job=useRef<AbortController|null>(null),submitRef=useRef<(s:string)=>void>(()=>{});
- const index=useMemo(()=>buildVoiceIndex(entries),[entries]),deferredText=useDeferredValue(text);const preview=useMemo(()=>assistantAnswer(index,deferredText,guide,metadata),[index,deferredText,guide,metadata]);const answer=resolved||preview,results=answer.entries;
+ const [index,setIndex]=useState<ReturnType<typeof buildVoiceIndex>>([]);
+ useEffect(()=>{const controller=new AbortController();void buildVoiceIndexAsync(entries,controller.signal).then(setIndex).catch(()=>{});return()=>controller.abort();},[entries]);
+ const deferredText=useDeferredValue(text);const preview=useMemo(()=>assistantAnswer(index,deferredText,guide,metadata),[index,deferredText,guide,metadata]);const answer=resolved||preview,results=answer.entries;
  async function submit(spoken=text){if(!spoken.trim())return;job.current?.abort();const controller=new AbortController();job.current=controller;setBusy(true);setError('');setText(spoken);delivered.current=false;
-  try{const data=onResolve?await onResolve(spoken,controller.signal):{entries,guide,metadata};if(controller.signal.aborted)return;const value=assistantAnswer(onResolve?buildVoiceIndex(data.entries):index,spoken,data.guide,data.metadata);setResolved(value);if(value.autoPlay&&!delivered.current){delivered.current=true;ExpoSpeechRecognitionModule.stop();onClose();onPlay(value.autoPlay);}else if(value.future&&onFuture){onClose();onFuture(value.future.channel,value.future.program);}}
+  try{const data=onResolve?await onResolve(spoken,controller.signal):{entries,guide,metadata};if(controller.signal.aborted)return;const value=assistantAnswer(await buildVoiceIndexAsync(data.entries,controller.signal),spoken,data.guide,data.metadata);setResolved(value);if(value.autoPlay&&!delivered.current){delivered.current=true;ExpoSpeechRecognitionModule.stop();onClose();onPlay(value.autoPlay);}else if(value.future&&onFuture){onClose();onFuture(value.future.channel,value.future.program);}}
   catch(e){if(!controller.signal.aborted)setError(e instanceof Error?e.message:'Arama tamamlanamadı.');}finally{if(!controller.signal.aborted)setBusy(false);}
  }
  submitRef.current=query=>void submit(query);
@@ -29,3 +31,4 @@ export function VoiceSearch({entries,guide={},metadata={},onResolve,onFuture,onR
  {!busy&&(answer.mode==='schedule'?[]:results).map(item=><Pressable accessibilityRole="button" accessibilityLabel={`${item.name} arama sonucunu aç`} key={item.id} onPress={()=>{onClose();if(answer.mode==='recommend'&&onDetails)onDetails(item);else onPlay(item);}} style={{paddingVertical:16,borderBottomWidth:1,borderBottomColor:'#ffffff18',flexDirection:'row',alignItems:'center',gap:12}}><View style={{flex:1}}><Text style={d.name}>{item.name}</Text><Text style={d.secondary}>{item.group}</Text></View><Play color={c.blue} size={20}/></Pressable>)}
  </Sheet>;
 }
+

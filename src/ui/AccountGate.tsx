@@ -21,7 +21,9 @@ export function AccountGate({children,client=account}:{children:(props:AccountPr
    setAccess(value);setReady(true);if(value){anchor.current={server:value.serverTime,mono:performance.now()};setClock(value.serverTime);}
   }catch(e){if(job===generation.current){setReady(false);setError(accountMessage(e));}}finally{flight.current=false;if(job===generation.current){setBusy(false);setBooted(true);}}
  };
- useEffect(()=>{void sync();const sub=AppState.addEventListener('change',state=>{if(state==='active')void sync();});const timer=setInterval(()=>setClock(serverNow()),1000);return()=>{generation.current++;sub.remove();clearInterval(timer);};},[]);
+ useEffect(()=>{void sync();const sub=AppState.addEventListener('change',state=>{if(state==='active')void sync();});return()=>{generation.current++;sub.remove();};},[]);
+ // One expiry deadline: a ticking gate otherwise rerenders the entire catalog every second.
+ useEffect(()=>{if(!access?.active)return;const delay=Math.max(0,access.expiresAt-serverNow());const timer=setTimeout(()=>setClock(serverNow()),Math.min(Math.ceil(delay)+10,2147483647));return()=>clearTimeout(timer);},[access]);
  // Schedule only when the entitlement changes, not once per progress/clock update.
  useEffect(()=>{if(!ready)return;const offset=access?access.serverTime-Date.now():0;
   void scheduleExpiryNotices(access,offset).catch(()=>setNotice('Süre bildirimleri planlanamadı. Bildirim iznini kontrol et.'));

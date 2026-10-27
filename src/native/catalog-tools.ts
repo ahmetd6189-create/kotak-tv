@@ -1,5 +1,5 @@
 import type { Entry, Guide, Program } from './iptv';
-export function normalized(value:string){return value.toLocaleLowerCase('tr-TR').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/ı/g,'i').replace(/[^a-z0-9]+/g,' ').trim();}
+export function normalized(value:string){return value.replace(/İ/g,'i').replace(/I/g,'ı').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/ı/g,'i').replace(/[^a-z0-9]+/g,' ').trim();}
 export function mediaTitle(name:string){return name.replace(/\bS\d+\s*E\d+\b.*$/i,'').replace(/\b\d+\s*\.\s*(sezon|bolum|bölüm).*$/i,'').replace(/\((?:TR|EN|DE|FHD|HD|4K|\d{4})\)/gi,'').replace(/\b(?:2160p|1080p|720p|4K|FHD|UHD)\b/gi,'').trim();}
 export function rankedMedia(entries:Entry[],kind:'movie'|'series',limit=20){
  const seen=new Set<string>();
@@ -12,9 +12,18 @@ export function candidateMedia(entries:Entry[],limit=40){
  for(const kind of ['movie','series'] as const){let count=0;for(const e of entries){if(kind==='movie'?e.kind!=='movie':e.kind!=='series'&&e.kind!=='episode')continue;const key=kind+normalized(mediaTitle(e.name));if(seen.has(key))continue;seen.add(key);out.push(e);if(++count>=limit/2)break;}}
  return out;
 }
+type VoiceIndex={entry:Entry;name:string}[];
+const voiceIndexes=new WeakMap<Entry[],VoiceIndex>();
 export function buildVoiceIndex(entries:Entry[]){
- const seen=new Set<string>();return entries.map(entry=>({entry,name:normalized(mediaTitle(entry.name))})).filter(item=>{const key=(item.entry.kind==='episode'?'series':item.entry.kind)+':'+item.name;if(seen.has(key))return false;seen.add(key);return true;});
+ const cached=voiceIndexes.get(entries);if(cached)return cached;
+ const seen=new Set<string>();const result=entries.map(entry=>({entry,name:normalized(mediaTitle(entry.name))})).filter(item=>{const key=(item.entry.kind==='episode'?'series':item.entry.kind)+':'+item.name;if(seen.has(key))return false;seen.add(key);return true;});voiceIndexes.set(entries,result);return result;
 }
+export async function buildVoiceIndexAsync(entries:Entry[],signal?:AbortSignal):Promise<VoiceIndex>{
+ const cached=voiceIndexes.get(entries);if(cached)return cached;const seen=new Set<string>(),result:VoiceIndex=[];
+ for(let start=0;start<entries.length;start+=200){await new Promise<void>(r=>setTimeout(r,0));if(signal?.aborted)throw new Error('İşlem iptal edildi.');for(const entry of entries.slice(start,start+200)){const name=normalized(mediaTitle(entry.name)),key=(entry.kind==='episode'?'series':entry.kind)+':'+name;if(!seen.has(key)){seen.add(key);result.push({entry,name});}}}
+ voiceIndexes.set(entries,result);return result;
+}
+export function recentProviderRanked(entries:Entry[],limit:number){return [...entries].sort((a,b)=>(b.added||0)-(a.added||0)).slice(0,limit).sort((a,b)=>(b.rating||0)-(a.rating||0)||(b.added||0)-(a.added||0));}
 export function matchVoice(index:ReturnType<typeof buildVoiceIndex>,spoken:string){
  const query=normalized(spoken).replace(/\b(?:bana|ac|oynat|izle|istiyorum|lutfen|kanalini|kanali|kanal|filmini|filmi|film|dizisini|dizisi|dizi|adli|adindaki|adi|adini|bul|getir|goster|acarmisin|acar|misin)\b/g,' ').replace(/\s+/g,' ').trim();
  if(!query)return [];
@@ -39,3 +48,4 @@ export function releaseTime(item:Entry){const value=item.released||item.name.mat
 export function sortedCatalog(entries:Entry[],sort:'imdb'|'release'|'name'|'added'){
  return [...entries].sort((a,b)=>sort==='imdb'?catalogScore(b)-catalogScore(a):sort==='release'?releaseTime(b)-releaseTime(a):sort==='added'?(b.added||0)-(a.added||0):a.name.localeCompare(b.name,'tr'));
 }
+

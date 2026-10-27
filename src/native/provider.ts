@@ -5,13 +5,17 @@ import {guideKey} from './catalog-tools';
 export function accountFor(config:PlaylistConfig){return config.type==='xtream'?config:xtreamFromM3u(config);}
 export function streamId(item:Entry){return item.providerId||item.id.match(/-(?:live|movie|episode)-(\d+)$/)?.[1]||item.uri?.match(/\/(\d+)\.[a-z0-9]+(?:[?#]|$)/i)?.[1];}
 const format=(value:unknown)=>typeof value==='string'&&/^(mp4|mkv|avi|mov|m3u8|ts|webm)$/i.test(value)?value.toLowerCase():undefined;
+const playbackCache=new WeakMap<PlaylistConfig,Map<string,Entry>>();
 export async function resolvePlayback(item:Entry,config?:PlaylistConfig,signal?:AbortSignal):Promise<Entry>{
- if(item.kind!=='movie'||!config)return item;const account=accountFor(config),id=streamId(item);if(!account||!id)return item;
- const result=await providerApi(account,'get_vod_info',signal,{vod_id:id},7000) as {movie_data?:Record<string,unknown>;info?:Record<string,unknown>};
+ if(signal?.aborted)throw new Error('İşlem iptal edildi.');
+ if(item.kind!=='movie'||!config)return item;
+ if(item.uri&&item.playbackResolved)return item;const account=accountFor(config),id=streamId(item);if(!account||!id)return item;
+ const cached=playbackCache.get(config)?.get(id);if(cached)return {...item,uri:cached.uri,streamFormat:cached.streamFormat,playbackResolved:true};
+ const result=await providerApi(account,'get_vod_info',signal,{vod_id:id},1500) as {movie_data?:Record<string,unknown>;info?:Record<string,unknown>};
  const row=result.movie_data||{},info=result.info||{};const ext=format(row.container_extension)||format(info.container_extension)||item.streamFormat||format(item.uri?.match(/\.([a-z0-9]+)(?:[?#]|$)/i)?.[1]);
  const direct=typeof row.direct_source==='string'&&/^https?:\/\//i.test(row.direct_source)?httpUrl(row.direct_source):undefined;
  const uri=direct||(ext?`${httpUrl(account.url).replace(/\/$/,'')}/movie/${encodeURIComponent(account.username||'')}/${encodeURIComponent(account.password||'')}/${id}.${ext}`:item.uri);
- return {...item,uri,streamFormat:ext,playbackResolved:true};
+ const resolved={...item,uri,streamFormat:ext,playbackResolved:true};let cache=playbackCache.get(config);if(!cache){cache=new Map();playbackCache.set(config,cache);}cache.set(id,resolved);if(cache.size>200)cache.delete(cache.keys().next().value!);return resolved;
 }
 export function movieSourceCandidates(item:Entry){
  const uri=item.uri;if(!uri)return [];
@@ -54,3 +58,4 @@ export async function requestGuideText(url:string,signal?:AbortSignal,timeoutMs=
  let timer:ReturnType<typeof setTimeout>;const deadline=new Promise<never>((_,reject)=>{timer=setTimeout(()=>{controller.abort();reject(new Error('EPG sunucusu zamanında yanıt vermedi.'));},timeoutMs);});
  try{return await Promise.race([deadline,(async()=>{const response=await fetch(httpUrl(url),{signal:controller.signal});if(!response.ok)throw new Error(`EPG HTTP ${response.status}`);if(Number(response.headers.get('content-length'))>32*1024*1024)throw new Error('EPG dosyası çok büyük.');let data:Uint8Array<ArrayBufferLike>=new Uint8Array(await response.arrayBuffer());if(data.length>32*1024*1024)throw new Error('EPG dosyası çok büyük.');if(data[0]===31&&data[1]===139){const size=new DataView(data.buffer,data.byteOffset,data.byteLength).getUint32(data.length-4,true);if(size>64*1024*1024)throw new Error('Açılmış EPG verisi çok büyük.');data=gunzipSync(data);if(data.length>64*1024*1024)throw new Error('EPG verisi çok büyük.');}if(controller.signal.aborted)throw new Error('İşlem iptal edildi.');return strFromU8(data).replace(/^\uFEFF/,'');})()]);}finally{clearTimeout(timer!);signal?.removeEventListener('abort',abort);}
 }
+

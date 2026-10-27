@@ -24,9 +24,10 @@ export function assistantAnswer(index:ReturnType<typeof buildVoiceIndex>,spoken:
  }
  if(intent==='match'){
   const wanted=teamName(q.replace(/\b(bana|bugun|bu|aksam|mac|maci|macini|ac|oynat|izle|lutfen|hangi|kanalda|kanal|saat|kacta|ne|zaman)\b/g,' ')),terms=wanted.split(/\s+/).filter(Boolean);
-  const schedule=distinctChannels(index.filter(x=>x.entry.kind==='live').map(x=>({channel:x.entry,programs:scheduleFor(x.entry,guide).filter(p=>p.end>now&&terms.length&&terms.every(t=>guideKey(teamName(p.title)).includes(guideKey(t))))})).filter(x=>x.programs.length)).sort((a,b)=>a.programs[0].start-b.programs[0].start).slice(0,20);
+  const schedule=distinctChannels(index.filter(x=>x.entry.kind==='live').map(x=>({channel:x.entry,programs:scheduleFor(x.entry,guide).filter(p=>p.end>now&&!/\b(arsiv|tekrar|ozet|nostalji|replay|highlights)\b/.test(normalized(p.title))&&terms.length&&terms.every(t=>guideKey(teamName(p.title)).includes(guideKey(t))))})).filter(x=>x.programs.length)).sort((a,b)=>a.programs[0].start-b.programs[0].start).slice(0,20);
   const live=schedule.filter(x=>x.programs.some(p=>p.start<=now&&p.end>now)).map(x=>x.channel);const shouldOpen=/\b(ac|oynat|izle)\b/.test(q);const future=schedule.flatMap(x=>x.programs.filter(p=>p.start>now).map(program=>({channel:x.channel,program}))).sort((a,b)=>a.program.start-b.program.start)[0];
   return {mode:'match',schedule,entries:live,teamQuery:wanted,message:live.length?'Maç şu anda bu kanalda.':future?'Maçın kanalı ve saati aşağıda. Takibe alalım mı?':'Maç mevcut EPG’de bulunamadı. Sağlayıcı bu programı göndermemiş olabilir.',autoPlay:live.length&&shouldOpen?live[0]:undefined,future:!live.length&&shouldOpen?future:undefined};
  }
  const entries=matchVoice(index,spoken);return {mode:'search',entries,message:entries.length?'Bulduğum içerikler':'Listende eşleşen içerik bulunamadı.',autoPlay:entries.length===1?entries[0]:undefined};
 }
+
