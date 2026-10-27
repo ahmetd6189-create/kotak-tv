@@ -82,7 +82,7 @@ test("XMLTV: real progress timestamps, timezone, CDATA, entity decoding and expi
   );
   assert.equal(guide["ch&1"][0].title, "Maç & Haber");
   assert.equal(guide["ch&1"][0].start, now - 3600000);
-  assert.equal(guide.expired, undefined);
+  assert.equal(guide.expired[0].title, "Eski");
 });
 test("HTTP integration: Xtream auth, live/VOD/series, episodes, categories and credential escaping", async () => {
   const server = createServer((req, res) => {
@@ -285,3 +285,4 @@ test('Channel group labels never turn extensionless live channels into movie or 
  const result=parsePlaylist('#EXTM3U\n#EXTINF:-1 group-title="Film & Dizi",beIN Movies\nhttps://host/user/pass/200\n#EXTINF:-1 group-title="Dizi",beIN Series\nhttps://host/user/pass/201',config);
  assert.deepEqual(result.entries.map(e=>e.kind),['live','live']);
 });
+

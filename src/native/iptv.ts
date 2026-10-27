@@ -492,8 +492,8 @@ function* guideSteps(xml: string, now = Date.now()): Generator<void, Guide, void
       !Number.isFinite(start) ||
       !Number.isFinite(end) ||
       end <= start ||
-      end <= now ||
-      start > now + 86400000
+      end <= now - 86400000 ||
+      start > now + 7 * 86400000
     )
       continue;
     const title =
@@ -530,7 +530,7 @@ export async function parseGuideAsync(xml: string, now = Date.now(), signal?: Ab
 }
 
 export function providerRating(value:unknown){if(typeof value!=='number'&&typeof value!=='string')return undefined;const n=Number(String(value).trim().replace(',','.'));return Number.isFinite(n)&&n>0&&n<=10?n:undefined;}
-export type ProviderInfo={title?:string;poster?:string;backdrops:string[];plot?:string;released?:string;genre?:string;cast?:string;director?:string;duration?:string;rating?:number;imdbRating?:number;imdbId?:string};
+export type ProviderInfo={actors?:{name:string;photo?:string}[];trailer?:string;title?:string;poster?:string;backdrops:string[];plot?:string;released?:string;genre?:string;cast?:string;director?:string;duration?:string;rating?:number;imdbRating?:number;imdbId?:string};
 /** Read only the selected title, using the user's existing provider account. */
 export async function loadMediaInfo(config:PlaylistConfig,item:Entry,signal?:AbortSignal):Promise<ProviderInfo|null>{
  config=xtreamFromM3u(config)||config;if(config.type!=="xtream")return null;
@@ -538,8 +538,12 @@ export async function loadMediaInfo(config:PlaylistConfig,item:Entry,signal?:Abo
  const result=await api(config,series?'get_series_info':'get_vod_info',signal,series?{series_id:id}:{vod_id:id},8000) as {info?:Record<string,unknown>};const data=result.info;if(!data)return null;
  const str=(v:unknown)=>typeof v==='string'&&v!=='N/A'?v:undefined;
  const image=(v:unknown)=>typeof v==='string'&&/^https?:\/\//i.test(v)?v:undefined;
+ const actorRows=Array.isArray(data.cast)?data.cast:Array.isArray(data.actors)?data.actors:Array.isArray(data.credits)?data.credits:[];
+ const actors=actorRows.filter((v:any)=>v&&typeof v.name==='string').slice(0,20).map((v:any)=>({name:v.name,photo:image(v.profile_path)||image(v.photo)||image(v.image)}));
+ const trailerRaw=str(data.youtube_trailer)||str(data.trailer);const trailer=trailerRaw&&(/^[a-zA-Z0-9_-]{11}$/.test(trailerRaw)?'https://www.youtube.com/watch?v='+trailerRaw:/^https?:\/\//i.test(trailerRaw)?trailerRaw:undefined);
  const imdb=Number(data.imdb_rating);const rating=providerRating(data.rating);
- return {title:str(data.name),poster:image(data.movie_image)||image(data.cover),backdrops:(Array.isArray(data.backdrop_path)?data.backdrop_path:[]).map(image).filter((v):v is string=>!!v).slice(0,8),plot:str(data.plot)||str(data.description),released:str(data.releasedate)||str(data.releaseDate)||str(data.release_date),genre:str(data.genre),cast:str(data.cast)||str(data.actors),director:str(data.director),duration:str(data.duration),rating,imdbRating:imdb>0&&imdb<=10?imdb:undefined,imdbId:/^tt\d+$/.test(String(data.imdb_id||''))?String(data.imdb_id):undefined};
+ return {actors,trailer,title:str(data.name),poster:image(data.movie_image)||image(data.cover),backdrops:(Array.isArray(data.backdrop_path)?data.backdrop_path:[]).map(image).filter((v):v is string=>!!v).slice(0,8),plot:str(data.plot)||str(data.description),released:str(data.releasedate)||str(data.releaseDate)||str(data.release_date),genre:str(data.genre),cast:str(data.cast)||str(data.actors),director:str(data.director),duration:str(data.duration),rating,imdbRating:imdb>0&&imdb<=10?imdb:undefined,imdbId:/^tt\d+$/.test(String(data.imdb_id||''))?String(data.imdb_id):undefined};
 }
 
 export {api as providerApi};
+

@@ -231,6 +231,10 @@ export function KotakApp({entitlement,accountEmail,onSignOut,onEnableNotices}:Ac
     }));
   }, [live]);
 
+  const channelLoader=useRef<(items:Entry[])=>void>(()=>{});
+  channelLoader.current=items=>{void ensureChannelEpg(items);};
+  const channelVisibility=useRef({itemVisiblePercentThreshold:50});
+  const channelViewable=useRef(({viewableItems}:{viewableItems:{item:Entry}[]})=>channelLoader.current(viewableItems.map(v=>v.item)));
   const epgChannels=useMemo(()=>homeCategories===null?live:live.filter(e=>homeCategories.includes(e.group)),[live,homeCategories]);
   const homeGroups=useMemo(()=>{const index=new Map(groups.map(g=>[g.name,g]));return homeCategories===null?groups:homeCategories.map(name=>index.get(name)).filter((g):g is typeof groups[number]=>!!g)},[groups,homeCategories]);
   const topMovies=useMemo(()=>displayRanked(movies.map(e=>({...e,rating:providerDetails[e.id]?.rating??e.rating})),"movie"),[movies,providerDetails]);
@@ -243,14 +247,14 @@ export function KotakApp({entitlement,accountEmail,onSignOut,onEnableNotices}:Ac
   function mergeGuide(value:Guide){
     // Keep assistant lookups current immediately; publish one immutable UI snapshot per burst.
     Object.assign(guidesRef.current,value);
-    if(!guidePublishTimer.current)guidePublishTimer.current=setTimeout(()=>{guidePublishTimer.current=null;setGuides({...guidesRef.current});},120);
+    if(!guidePublishTimer.current)guidePublishTimer.current=setTimeout(()=>{guidePublishTimer.current=null;setGuides({...guidesRef.current});},500);
     return guidesRef.current;
   }
   function publishCatalog(config:PlaylistConfig,incoming:Entry[],kinds:import("./src/native/iptv").Kind[]){const next={...catalogsRef.current,[config.id]:mergeCatalog(catalogsRef.current[config.id]||[],incoming,kinds)};catalogsRef.current=next;setCatalogs(next);}
   function rememberEpg(config:PlaylistConfig,url?:string){if(!url||config.epgUrl||epgAddresses.current.has(config.id))return;epgAddresses.current.set(config.id,url);const updated={...config,epgUrl:url};setConfigs(prev=>prev.map(c=>c.id===config.id?updated:c));void savePlaylist(updated).catch(()=>{});}
   async function ensureChannelEpg(items:Entry[],parent?:AbortSignal):Promise<Guide>{
     if(AppState.currentState==="background"||AppState.currentState==="inactive"||parent?.aborted)return {};
-    const missing=items.filter(e=>e.kind==="live"&&!scheduleFor(e,guidesRef.current).some(p=>p.end>Date.now()));if(!missing.length)return {};setGuideNotice("Görünür kanalların programları kontrol ediliyor…");
+    const missing=items.filter(e=>e.kind==="live");if(!missing.length)return {};setGuideNotice("Görünür kanalların programları kontrol ediliyor…");
     const controller=new AbortController();epgJobs.current.add(controller);const abort=()=>controller.abort();parent?.addEventListener("abort",abort);if(parent?.aborted)abort();const timer=setTimeout(abort,18000);let index=0;const collected:Guide={};
     try{await Promise.all(Array.from({length:Math.min(3,missing.length)},async()=>{while(index<missing.length&&!controller.signal.aborted){const item=missing[index++],config=configs.find(c=>c.id===item.playlistId);if(!config||!accountFor(config))continue;const key=item.id;let flight=channelFlights.current.get(key);if(!flight||flight.signal.aborted){const promise=loadChannelGuide(config,item,controller.signal);flight={signal:controller.signal,promise};channelFlights.current.set(key,flight);void promise.finally(()=>{if(channelFlights.current.get(key)?.promise===promise)channelFlights.current.delete(key)}).catch(()=>{});}try{const data=await flight.promise;if(!controller.signal.aborted&&Object.keys(data).length){Object.assign(collected,data);mergeGuide(data);}}catch{}}}));
     if(Object.keys(collected).length){setGuideNotice("Kanal sunucusundan program akışı alındı.");if(epgCacheTimer.current)clearTimeout(epgCacheTimer.current);epgCacheTimer.current=setTimeout(()=>{for(const config of configs){const data=Object.fromEntries(Object.entries(guidesRef.current).filter(([key])=>key.startsWith(config.id+":")));void cacheGuide(config.id,data).catch(()=>{});}},3000);}
@@ -453,6 +457,16 @@ export function KotakApp({entitlement,accountEmail,onSignOut,onEnableNotices}:Ac
   useEffect(()=>{if(top==="FILM"||top==="DIZI"||imdbOpen||catalogPage)void ensureVod();},[top,imdbOpen,catalogPage,configs,loadingLists,child]);
   // Let the first live screen paint before fetching the two VOD catalogs. Playback cancels this work.
   useEffect(()=>{if(boot||loadingLists||playing.length||voiceOpen||child||!configs.length||tab!=="ANASAYFA")return;const timer=setTimeout(()=>void ensureVod(),1200);return()=>clearTimeout(timer);},[boot,loadingLists,configs,child,playing.length,tab,voiceOpen]);
+  useEffect(()=>{
+    if(boot||loadingLists||playing.length||!epgChannels.length)return;
+    const controller=new AbortController();
+    const timer=setTimeout(()=>{void (async()=>{for(let i=0;i<epgChannels.length&&!controller.signal.aborted;i+=3){
+      if(AppState.currentState!=="active")break;
+      await ensureChannelEpg(epgChannels.slice(i,i+3),controller.signal);
+      await new Promise<void>(resolve=>setTimeout(resolve,250));
+    }})();},1500);
+    return()=>{clearTimeout(timer);controller.abort();};
+  },[epgChannels,boot,loadingLists,playing.length]);
   useEffect(()=>{if(!configs.length||loadingLists||!(tab==="EPG"||details))return;const controller=new AbortController();guideJob.current=controller;for(const config of configs){if(accountFor(config))void ensureChannelEpg(epgChannels.filter(e=>e.playlistId===config.id).slice(0,8),controller.signal);else void readGuide(config,inferredEpgUrl(config),controller.signal);}return()=>controller.abort();},[tab,details,configs,loadingLists]);
   async function observeNewContent(config:PlaylistConfig,items:Entry[],signal:AbortSignal){
     try{const rules=await savedFollows();if(!rules.some(r=>r.kind!=="team"))return;let snapshot=items;for(const rule of rules.filter(r=>r.kind==="series"&&r.playlistId===config.id&&r.seriesId)){
@@ -875,6 +889,8 @@ export function KotakApp({entitlement,accountEmail,onSignOut,onEnableNotices}:Ac
               ) : channelView ? (
                 <FlatList
                   key="channels"
+                  onViewableItemsChanged={channelViewable.current}
+                  viewabilityConfig={channelVisibility.current}
                   data={listing}
                   keyExtractor={(e) => e.id}
                   initialNumToRender={12}
@@ -1065,7 +1081,7 @@ export function KotakApp({entitlement,accountEmail,onSignOut,onEnableNotices}:Ac
           {details?.group}
         </Text>
         <ProgramBar program={recentProgram} now={now} />
-        {details&&scheduleFor(details,guides).filter(p=>p.end>now).map(p=><View key={p.start} style={{flexDirection:'row',alignItems:'center',gap:12,paddingVertical:12}}><Text style={d.micro}>{clock(p.start)}</Text><Text style={[d.secondary,{flex:1}]}>{p.title}</Text>{p.start>now&&<Pill label={reminders.includes(`kotak-${details.id}-${p.start}`)?"Hatırlatmayı kaldır":"Hatırlat"} onPress={()=>{const channel=details;setDetails(null);void reminder(channel,p);}}/>}</View>)}
+        {details&&scheduleFor(details,guides).map(p=><View key={p.start} style={{flexDirection:'row',alignItems:'center',gap:12,paddingVertical:12}}><Text style={d.micro}>{clock(p.start)}</Text><Text style={[d.secondary,{flex:1}]}>{p.title}</Text>{p.start>now&&<Pill label={reminders.includes(`kotak-${details.id}-${p.start}`)?"Hatırlatmayı kaldır":"Hatırlat"} onPress={()=>{const channel=details;setDetails(null);void reminder(channel,p);}}/>}</View>)}
         <View style={{ marginTop: 24 }}>
           <Pill
             active
@@ -1117,7 +1133,7 @@ export function KotakApp({entitlement,accountEmail,onSignOut,onEnableNotices}:Ac
               style={[d.secondary, { textAlign: "center", lineHeight: 22 }]}
             >
               {info === "Hakkında"
-                ? "Kotak TV\nKendi IPTV listenizle canlı TV, film ve dizi deneyimi.\nSürüm 1.0.12 · defsearchtv@gmail.com"
+                ? "Kotak TV\nKendi IPTV listenizle canlı TV, film ve dizi deneyimi.\nSürüm 1.0.13 · defsearchtv@gmail.com"
                 : info === "İletişim"
                   ? "defsearchtv@gmail.com"
                   : info?.includes("EPG")

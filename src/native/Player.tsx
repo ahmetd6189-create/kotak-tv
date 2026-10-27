@@ -12,6 +12,8 @@ import {
   StyleSheet,
   Text,
   View,
+  useWindowDimensions,
+  StatusBar,
 } from "react-native";
 import { useEvent } from "expo";
 import { setAudioModeAsync } from "expo-audio";
@@ -423,6 +425,8 @@ export function PlaybackPanel({
 }) {
   const [engine,setEngine]=useState<"vlc"|"system">(Platform.OS==="android"?"vlc":"system");
   const [wide,setWide]=useState(false);
+  const dimensions=useWindowDimensions();const landscape=!mini&&dimensions.width>dimensions.height;
+  useEffect(()=>{setEngine(Platform.OS==="android"?"vlc":"system");},[items[0]?.id]);
   useEffect(()=>()=>{void ScreenOrientation.unlockAsync().catch(()=>{});},[]);
   useEffect(()=>{if(mini){setWide(false);void ScreenOrientation.unlockAsync().catch(()=>{});}},[mini]);
   const [audio, setAudio] = useState(0);
@@ -430,7 +434,7 @@ export function PlaybackPanel({
   const multi = items.length > 1;
   return (
     <View style={[s.panel, mini && s.mini]}>
-      <View style={s.header}>
+      <StatusBar hidden={landscape}/><View style={[s.header,landscape&&{position:"absolute",top:0,left:0,right:0,zIndex:10,backgroundColor:"#0008"}]}>
         <IconButton icon={X} small label="Oynatıcıyı kapat" onPress={onClose} />
         <View style={{ flex: 1, gap: 3 }}>
           <Text style={s.title} numberOfLines={1}>
@@ -466,7 +470,7 @@ export function PlaybackPanel({
           onPress={onMini}
         />}
       </View>
-      {!mini&&<View style={{paddingHorizontal:12,paddingBottom:8}}><ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{gap:8}}><Pill label="Yayını paylaş" onPress={()=>onFeature?.("Yayını paylaş")}/>{Platform.OS==="android"&&<Pill label={engine==="vlc"?"Oynatıcı: Uyumlu VLC":"Oynatıcı: Sistem"} onPress={()=>setEngine(v=>v==="vlc"?"system":"vlc")}/>}</ScrollView></View>}
+      {!mini&&!landscape&&items[0]?.kind!=="live"&&<Pill label="Yayını paylaş" onPress={()=>onFeature?.("Yayını paylaş")}/>}
       <View style={s.grid}>
         {items.map((item, index) => (
           <View
@@ -476,7 +480,7 @@ export function PlaybackPanel({
               height: items.length === 4 ? "50%" : "100%",
             }}
           >
-            {engine==="vlc"&&!needsSystemPlayer(item)?<VlcTile item={item} multi={multi} audible={index===audio} onAudio={()=>setAudio(index)} seekSeconds={seekSeconds} initialPosition={positions[item.id]?.position||0} onProgress={onProgress} onSystemPlayer={()=>setEngine("system")} onFullscreen={()=>{setWide(v=>!v);void (wide?ScreenOrientation.unlockAsync():ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE)).catch(()=>{});}}/>:<Tile
+            {engine==="vlc"&&!needsSystemPlayer(item)?<VlcTile fullscreen={landscape} item={item} multi={multi} audible={index===audio} onAudio={()=>setAudio(index)} seekSeconds={seekSeconds} initialPosition={positions[item.id]?.position||0} onProgress={onProgress} onSystemPlayer={()=>setEngine("system")} onFullscreen={()=>{setWide(v=>!v);void (landscape?ScreenOrientation.unlockAsync():ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE)).catch(()=>{});}}/>:<Tile
               item={item}
               initialPosition={positions[item.id]?.position||0}
               onProgress={onProgress}
@@ -573,3 +577,4 @@ const s = StyleSheet.create({
     borderBottomColor: "#ffffff0a",
   },
 });
+

@@ -49,6 +49,19 @@ async function check(name, fn) { try { await fn(); passes++; console.log(`PASS $
   await waitFor(()=>assert.ok(screen.getByText('Kullanım süren doldu')));
   assert.equal(screen.queryByText('EXPIRING PLAYER'),null);
  });
+ await check('Canlı oynatıcı paylaşım ve motor seçimini gizler; VLC hatasında otomatik geçer',async()=>{
+  const live={id:'live-auto',playlistId:'p',name:'Canlı',group:'TV',logo:'',kind:'live',uri:'https://example.invalid/live.ts'};
+  const panel=render(wrap(h(UI.PlaybackPanel,{items:[live],mini:false,onClose(){}})));
+  assert.equal(screen.queryByText('Yayını paylaş'),null);
+  assert.equal(screen.queryByText(/Oynatıcı: /),null);
+  panel.unmount();let fallback=false;render(wrap(h(UI.VlcTile,{item:live,multi:false,audible:true,seekSeconds:15,onAudio(){},onFullscreen(){},onSystemPlayer(){fallback=true;}})));
+  await act(async()=>UI.vlcMock.props.onError({}));assert.equal(fallback,true);
+ });
+ await check('Sağlayıcı kadro fotoğrafı ve fragmanı detayda gösterilir',async()=>{
+  const item={id:'cast-test',playlistId:'p',name:'Film',kind:'movie',group:'Film',logo:''};
+  render(wrap(h(UI.MediaDetails,{item,provider:{backdrops:[],actors:[{name:'Oyuncu',photo:'https://example.invalid/actor.jpg'}],trailer:'https://www.youtube.com/watch?v=abcdefghijk',plot:'Detaylı özet',genre:'Dram'},onPlay(){},onClose(){}})));
+  assert.ok(screen.getByLabelText('Oyuncu'));assert.ok(screen.getByRole('button',{name:'Fragmanı izle'}));assert.ok(screen.getByText('Tür Dram'));
+ });
  await check('Şifre sıfırlama: OTP sonrası form, eşleşme kontrolü ve girişe dönüş',async()=>{
   let verified=0,updated=0,logged=0;
   const client={cancelRecovery(){},requestRecovery:async()=>{},verifyRecovery:async()=>{verified++},updateRecoveredPassword:async()=>{updated++;return {revoked:true}}};
