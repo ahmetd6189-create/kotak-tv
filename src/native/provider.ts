@@ -36,7 +36,7 @@ function epgTime(value:unknown){
 function firstEpgTime(...values:unknown[]){for(const value of values){const time=epgTime(value);if(Number.isFinite(time)&&time>0)return time;}return NaN;}
 export function parseProviderEpg(result:unknown,now=Date.now()):Program[]{
  const data=result as {epg_listings?:unknown};const rows=Array.isArray(result)?result:Array.isArray(data?.epg_listings)?data.epg_listings:[];
- return rows.map((r:any)=>({title:decodeEpgText(r.title)||'Program',description:decodeEpgText(r.description),start:firstEpgTime(r.start_timestamp,r.start),end:firstEpgTime(r.stop_timestamp,r.end_timestamp,r.end,r.stop)})).filter(p=>Number.isFinite(p.start)&&Number.isFinite(p.end)&&p.end>p.start&&p.end>now-86400000&&p.start<now+7*86400000).sort((a,b)=>a.start-b.start);
+ return rows.map((r:any)=>({title:decodeEpgText(r.title)||'Program',description:decodeEpgText(r.description),category:typeof r.category==='string'?r.category:undefined,guests:typeof r.cast==='string'?r.cast:undefined,start:firstEpgTime(r.start_timestamp,r.start),end:firstEpgTime(r.stop_timestamp,r.end_timestamp,r.end,r.stop)})).filter(p=>Number.isFinite(p.start)&&Number.isFinite(p.end)&&p.end>p.start&&p.end>now-86400000&&p.start<now+7*86400000).sort((a,b)=>a.start-b.start);
 }
 export function scopeChannelGuide(item:Entry,programs:Program[]):Guide{const keys=[`${item.playlistId}:#${item.id}`,`${item.playlistId}:@${guideKey(item.name)}`];if(item.epgId)keys.push(`${item.playlistId}:${item.epgId}`,`${item.playlistId}:@${guideKey(item.epgId)}`);return Object.fromEntries(keys.map(k=>[k,programs]));}
 const epgCache=new Map<string,{at:number;programs:Program[]}>();

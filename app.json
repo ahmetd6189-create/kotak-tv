@@ -2,7 +2,7 @@
   "expo": {
     "name": "Kotak TV",
     "slug": "kotak-tv",
-    "version": "1.0.14",
+    "version": "1.0.15",
     "orientation": "default",
     "userInterfaceStyle": "dark",
     "newArchEnabled": true,
@@ -31,7 +31,8 @@
         "android.permission.WAKE_LOCK",
         "android.permission.POST_NOTIFICATIONS",
         "android.permission.SCHEDULE_EXACT_ALARM"
-      ]
+      ],
+      "versionCode": 22
     },
     "plugins": [
       [

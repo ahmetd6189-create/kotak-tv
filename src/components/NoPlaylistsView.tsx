@@ -1,5 +1,5 @@
 import React from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { Pressable, StyleSheet, Text, View } from '../ui/Native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Plus, MoreHorizontal, Sparkles, Inbox } from 'lucide-react-native';
 import { BottomNavTab } from '../types/iptv';
@@ -74,3 +74,4 @@ const styles = StyleSheet.create({
   demo: { marginTop: 20, flexDirection: 'row', alignItems: 'center', gap: 6, backgroundColor: colors.card2, paddingHorizontal: 12, paddingVertical: 8, borderRadius: 999 },
   demoText: { color: colors.zinc300, fontSize: 12, fontWeight: '600' },
 });
+

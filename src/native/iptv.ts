@@ -32,7 +32,7 @@ export type PlaylistConfig = {
   epgUrl?: string;
 };
 export type Catalog = { entries: Entry[]; epgUrl?: string; warnings: string[] };
-export type Program = { title: string; start: number; end: number; description?:string };
+export type Program = { title: string; start: number; end: number; description?:string; category?:string; guests?:string };
 export type Guide = Record<string, Program[]>;
 
 export function httpUrl(input: string, base?: string): string {
@@ -500,6 +500,8 @@ function* guideSteps(xml: string, now = Date.now()): Generator<void, Guide, void
       m[2].match(/<title\b[^>]*>([\s\S]*?)<\/title>/i)?.[1] || "Program";
     (guide[xmlText(a.channel)] ||= []).push({
       title: xmlText(title),
+      category:m[2].match(/<category\b[^>]*>([\s\S]*?)<\/category>/i)?.[1]?.replace(/<[^>]+>/g,'').trim(),
+      guests:[...m[2].matchAll(/<(?:guest|presenter|actor)\b[^>]*>([\s\S]*?)<\/(?:guest|presenter|actor)>/gi)].map(v=>xmlText(v[1])).join(', ')||undefined,
       ...(m[2].match(/<desc\b[^>]*>([\s\S]*?)<\/desc>/i)?.[1]?{description:xmlText(m[2].match(/<desc\b[^>]*>([\s\S]*?)<\/desc>/i)![1]).slice(0,8000)}:{}),
       start,
       end,

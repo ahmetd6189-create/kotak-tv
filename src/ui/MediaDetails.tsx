@@ -1,6 +1,6 @@
 import React,{useState} from 'react';
 import {TrailerPlayer} from './TrailerPlayer';
-import {ActivityIndicator,Image,Modal,Pressable,ScrollView,StyleSheet,Text,View,useWindowDimensions} from 'react-native';
+import {ActivityIndicator,Image,Modal,Pressable,ScrollView,StyleSheet,Text,View,useWindowDimensions} from './Native';
 import {ChevronLeft,Play,Plus} from 'lucide-react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import type {Entry,ProviderInfo} from '../native/iptv';

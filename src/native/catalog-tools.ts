@@ -1,3 +1,4 @@
+import {cleanSchedule} from './schedule';
 import type { Entry, Guide, Program } from './iptv';
 export function normalized(value:string){return value.replace(/İ/g,'i').replace(/I/g,'ı').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/ı/g,'i').replace(/[^a-z0-9]+/g,' ').trim();}
 export function mediaTitle(name:string){return name.replace(/\bS\d+\s*E\d+\b.*$/i,'').replace(/\b\d+\s*\.\s*(sezon|bolum|bölüm).*$/i,'').replace(/\((?:TR|EN|DE|FHD|HD|4K|\d{4})\)/gi,'').replace(/\b(?:2160p|1080p|720p|4K|FHD|UHD)\b/gi,'').trim();}
@@ -31,7 +32,8 @@ export function matchVoice(index:ReturnType<typeof buildVoiceIndex>,spoken:strin
 }
 export function voiceMatches(entries:Entry[],spoken:string){return matchVoice(buildVoiceIndex(entries),spoken);}
 export function guideKey(s:string){return normalized(s).replace(/\b(?:sd|hd|fhd|uhd|4k)\b/g,'').replace(/\s+/g,'').replace(/(?:uhd|fhd|hd|sd|4k)$/,'');}
-export function scheduleFor(item:Entry,guide:Guide):Program[]{return guide[`${item.playlistId}:#${item.id}`] || guide[`${item.playlistId}:${item.epgId}`] || guide[`${item.playlistId}:@${guideKey(item.epgId||'')}`] || guide[`${item.playlistId}:@${guideKey(item.name)}`] || [];}
+const cleanedSchedules=new WeakMap<Program[],Program[]>();
+export function scheduleFor(item:Entry,guide:Guide):Program[]{const list=guide[`${item.playlistId}:#${item.id}`] || guide[`${item.playlistId}:${item.epgId}`] || guide[`${item.playlistId}:@${guideKey(item.epgId||'')}`] || guide[`${item.playlistId}:@${guideKey(item.name)}`] || [];let result=cleanedSchedules.get(list);if(!result){result=cleanSchedule(list);cleanedSchedules.set(list,result);}return result;}
 export function programWindow(list:Program[],now:number,window:'now'|'tonight'|'day'){
  if(window==='now')return list.filter(p=>p.start<=now&&p.end>now);
  if(window==='day')return list.filter(p=>p.end>now&&p.start<now+86400000);

@@ -1,3 +1,4 @@
+import teamDirectory from './team-directory.json';
 import type {Entry,Guide,Program} from './iptv';
 import {normalized,mediaTitle,scheduleFor,guideKey} from './catalog-tools';
 export type FollowRule={id:string;kind:'team'|'series'|'movies';label:string;playlistId?:string;seriesId?:string;leadMinutes:number;createdAt:number};
@@ -11,10 +12,10 @@ export function newFollowItems(previous:Entry[]|null,current:Entry[],rules:Follo
 export function followedMatches(entries:Entry[],guide:Guide,rules:FollowRule[],now=Date.now()){
  const out:{rule:FollowRule;channel:Entry;program:Program;id:string}[]=[];const seen=new Set<string>();
  for(const rule of rules.filter(r=>r.kind==='team')){
-  const wanted=guideKey(teamName(rule.label));if(wanted.length<3)continue;
+  const wanted=guideKey(teamName(rule.label));if(wanted.length<3)continue;const team=teamDirectory.teams.find(t=>guideKey(teamName(t.name))===wanted||t.aliases.some(a=>guideKey(teamName(a))===wanted));const aliases=[wanted,...(team?.aliases||[]).map(a=>guideKey(teamName(a)))].filter(a=>a.length>=3);
   for(const channel of entries){if(channel.kind!=='live')continue;for(const program of scheduleFor(channel,guide)){
    if(/ozet|tekrar|highlight|antrenman|analiz|studyo/.test(normalized(program.title)))continue;
-   if(program.start<=now||program.start>now+86400000||!guideKey(teamName(program.title)).includes(wanted))continue;
+   if(program.start<=now||program.start>now+86400000||!aliases.some(a=>guideKey(teamName(program.title)).includes(a)))continue;
    // HD/SD variants often repeat the same EPG. Send one reminder for the same fixture/start time.
    const id=`kotak-follow-${rule.id}-${program.start}-${guideKey(program.title)}`;
    if(seen.has(id))continue;seen.add(id);out.push({rule,channel,program,id});
@@ -22,3 +23,4 @@ export function followedMatches(entries:Entry[],guide:Guide,rules:FollowRule[],n
  }
  return out.sort((a,b)=>a.program.start-b.program.start);
 }
+

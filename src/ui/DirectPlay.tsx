@@ -1,5 +1,5 @@
 import React,{useState} from 'react';
-import {Pressable,Text,TextInput,View} from 'react-native';
+import {Pressable,Text,TextInput,View} from './Native';
 import {Play} from 'lucide-react-native';
 import {httpUrl,type Entry} from '../native/iptv';
 import {Pill,d} from './Design';
@@ -7,3 +7,4 @@ export function DirectPlay({recent,onPlay,onAddList}:{recent:Entry[];onPlay:(ite
  const [url,setUrl]=useState('');const [error,setError]=useState('');
  return <View style={{flex:1,padding:16}}><Text style={[d.h2,{textAlign:'center',marginBottom:24}]}>Kanalı oynat</Text><TextInput accessibilityLabel="Doğrudan yayın adresi" autoCapitalize="none" autoCorrect={false} placeholder="Adres: https://…/stream.m3u8" placeholderTextColor="#71717a" value={url} onChangeText={setUrl} style={{color:'#fff',backgroundColor:'#1c1c1e',padding:14,borderRadius:24}}/><Text style={[d.micro,{marginTop:8,marginBottom:18}]}>HLS, MP4 ve cihazın desteklediği diğer HTTP/HTTPS yayınları.</Text>{!!error&&<Text style={{color:'#f87171',marginBottom:16}}>{error}</Text>}<Pill active icon={Play} label="Yayını aç" onPress={()=>{try{const uri=httpUrl(url);if(/\/(?:get\.php)(?:\?|$)|\.m3u(?:\?|$)/i.test(uri)){setError('Bu bir oynatma listesi. Liste olarak ekle düğmesini kullan.');return;}onPlay({id:`direct-${Date.now()}`,playlistId:'direct',name:'Doğrudan yayın',group:'Doğrudan bağlantı',kind:/\.(mp4|mkv)(?:\?|$)/i.test(uri)?'movie':'live',logo:'',uri});}catch(e){setError((e as Error).message);}}}/><View style={{marginTop:12}}><Pill label="Liste olarak ekle" onPress={onAddList}/></View>{recent.slice(0,8).map(item=><Pressable key={item.id} onPress={()=>onPlay(item)} style={{paddingVertical:18,borderBottomWidth:1,borderColor:'#ffffff15'}}><Text style={d.name}>{item.name}</Text><Text numberOfLines={1} style={d.micro}>{item.group}</Text></Pressable>)}</View>;
 }
+

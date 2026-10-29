@@ -1,5 +1,5 @@
 import React,{useState} from 'react';
-import {Text,TextInput,View} from 'react-native';
+import {Text,TextInput,View} from './Native';
 import {Bell} from 'lucide-react-native';
 import type {Entry,Program} from '../native/iptv';
 import {Sheet,Pill,clock,d} from './Design';

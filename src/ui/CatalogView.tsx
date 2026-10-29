@@ -1,5 +1,5 @@
 import React,{useMemo,useState} from 'react';
-import {FlatList,Image,Pressable,StyleSheet,Text,TextInput,View,useWindowDimensions} from 'react-native';
+import {FlatList,Image,Pressable,StyleSheet,Text,TextInput,View,useWindowDimensions} from './Native';
 import {ChevronLeft,ChevronRight,Film,LayoutGrid,Search} from 'lucide-react-native';
 import type {Entry} from '../native/iptv';
 import {mediaTitle,sortedCatalog,normalized} from '../native/catalog-tools';

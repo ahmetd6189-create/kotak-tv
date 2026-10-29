@@ -1,5 +1,5 @@
 import React from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { Pressable, StyleSheet, Text, View } from '../ui/Native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { LayoutGrid, CalendarDays, Play, MoreHorizontal } from 'lucide-react-native';
 import { BottomNavTab } from '../types/iptv';
@@ -54,3 +54,4 @@ const styles = StyleSheet.create({
   itemActive: { backgroundColor: '#373739' },
   label: { fontSize: 8, fontWeight: '800', marginTop: 3, letterSpacing: 1 },
 });
+

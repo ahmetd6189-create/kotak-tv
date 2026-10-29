@@ -1,3 +1,4 @@
+import {useAppearance,languages,teams,Language} from './Appearance';
 import React from "react";
 import {
   Pressable,
@@ -7,11 +8,11 @@ import {
   Switch,
   Text,
   View,
-} from "react-native";
+} from "./Native";
 import { Check, ChevronRight, Layers, Tv } from "lucide-react-native";
 import { PageHeader, d } from "./Design";
 import { colors as c } from "../theme";
-export type Preferences = { layout: "Klasik" | "Modern"; saveHistory: boolean; seekSeconds?: number; bufferSeconds?: number };
+export type Preferences = { layout: "Klasik" | "Modern"; saveHistory: boolean; videoFit?:"cover"|"contain"; seekSeconds?: number; bufferSeconds?: number };
 export function SettingsView({
   settings,
   onChange,
@@ -25,6 +26,7 @@ export function SettingsView({
   onInfo: (title: string) => void;
   onClearHistory: () => void;
 }) {
+  const {value:appearance,change:changeAppearance}=useAppearance();
   const row = (title: string, value: string, action?: () => void) => (
     <Pressable disabled={!action} onPress={action} style={s.row}>
       <Text style={s.label}>{title}</Text>
@@ -59,11 +61,12 @@ export function SettingsView({
             </Pressable>
           ))}
         </View>
-        {row("Tema", "Saf OLED Koyu")}
+        {row("Tema",appearance.theme==="oled"?"OLED Siyah":"Gece Mavisi",()=>changeAppearance({theme:appearance.theme==="oled"?"midnight":"oled"}))}
+        {row("Takım renkleri ve logo",appearance.teamColors?"Etkin":"Kotak TV renkleri",()=>appearance.teamId?changeAppearance({teamColors:!appearance.teamColors}):onInfo("Takiplerim"))}
       </View>
       <Text style={s.section}>GENEL</Text>
       <View style={s.group}>
-        {row("Dil", "Türkçe")}
+        <Text style={[s.label,{padding:16}]}>Dil</Text><View style={{flexDirection:"row",flexWrap:"wrap",padding:12,gap:8}}>{Object.entries(languages).map(([id,label])=><Pressable key={id} onPress={()=>changeAppearance({language:id as Language})} style={[{padding:12,borderRadius:12},appearance.language===id&&s.active]}><Text style={s.label}>{label}</Text></Pressable>)}</View>
         {row("Takiplerim", "Takım, dizi, yeni film", () => onInfo("Takiplerim"))}
         {row("Bildirimler", "Cihaz ayarları", () => {void Linking.openSettings();})}
         {row("Ebeveyn Kontrolü", "Profil ve PIN", () =>
@@ -92,7 +95,8 @@ export function SettingsView({
       <Text style={s.section}>OYNATICI</Text>
       <View style={s.group}>
         {row("Ses Testi", "Cihaz sesini kontrol et", () => onInfo("Ses Testi"))}
-        {row("Video ölçekleme", "Oranı koru")}
+        {row("Video ölçekleme", settings.videoFit==="contain"?"Oranı koru":"Ekranı doldur",()=>onChange({...settings,videoFit:settings.videoFit==="contain"?"cover":"contain"}))}
+        <Text style={[d.micro,{padding:16}]}>Ekranı doldur, görüntüyü esnetmeden kenarlardan kırpar.</Text>
         {row("İleri geri sarma aralığı", `${settings.seekSeconds || 15} saniye`, () => onChange({...settings, seekSeconds:(settings.seekSeconds || 15) === 15 ? 30 : 15}))}
         {row("Ağ önbellekleme", `${settings.bufferSeconds || 15} saniye`, () => onChange({...settings, bufferSeconds:(settings.bufferSeconds || 15) === 15 ? 30 : 15}))}
         {row("Canlı yayın", "Otomatik oynat")}
@@ -145,3 +149,4 @@ const s = StyleSheet.create({
   },
   active: { backgroundColor: "#1a1f2c", borderWidth: 2, borderColor: c.blue },
 });
+

@@ -1,6 +1,6 @@
 import {AccountForm,type AuthClient} from './AccountForm';
 import React,{useEffect,useRef,useState} from 'react';
-import {ActivityIndicator,AppState,Linking,Pressable,ScrollView,StyleSheet,Text,TextInput,View} from 'react-native';
+import {ActivityIndicator,AppState,Linking,Pressable,ScrollView,StyleSheet,Text,TextInput,View} from './Native';
 import * as Notifications from 'expo-notifications';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {account} from '../native/account';

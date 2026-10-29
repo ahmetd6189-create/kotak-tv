@@ -1,6 +1,10 @@
-Kotak TV 1.0.9 doğrulama
-TypeScript kontrolü geçti.
-17 ayrıştırıcı + 37 özellik/önbellek + 45 UI + 3 sunucu testi geçti.
-Android Expo JS dışa aktarımı geçti.
-VLC testleri native kaynak/seek parametrelerini taklit eder; gerçek telefon video/ses/seek doğrulaması değildir.
-Mağaza ödemesi veya gerçek cihaz deneme engeli testi yapılmadı; ilgili entegrasyonlar etkin değil.
+Kotak TV 1.0.15 — 29.10.2026
+TypeScript: başarılı.
+IPTV ayrıştırma: 17 test başarılı.
+Özellik/önbellek: 46 test başarılı.
+Arayüz etkileşimi: 60 test başarılı.
+Hesap: 10 test başarılı.
+Android JavaScript export: başarılı.
+Native Gradle APK derlemesi ve fiziksel cihaz testi bu ortamda yapılmadı.
+Tam ekran VLC kırpma, bildirim teslimi, arka plan yaşam döngüsü ve cihaz performansı telefonda doğrulanmalı.
+Windows APK-OLUSTUR.ps1: kaynak incelemesi yapıldı; bu Linux ortamında PowerShell/Android SDK olmadığından çalıştırılmadı.

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { FlatList, Pressable, StyleSheet, Text, View, useWindowDimensions } from "react-native";
+import { FlatList, Pressable, StyleSheet, Text, View, useWindowDimensions } from "../ui/Native";
 import { ChevronRight, Glasses, ChevronsUpDown } from "lucide-react-native";
 import { CategoryItem } from "../types/iptv";
 import { colors } from "../theme";
@@ -115,3 +115,4 @@ const styles = StyleSheet.create({
   badgeText: { color: colors.zinc300, fontSize: 9, fontWeight: "800" },
   num: { color: colors.blue, fontWeight: "800", fontSize: 21 },
 });
+

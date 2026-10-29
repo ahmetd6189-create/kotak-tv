@@ -1,5 +1,5 @@
 import React,{useMemo,useState} from 'react';
-import {FlatList,Modal,Pressable,StyleSheet,Text,TextInput,View} from 'react-native';
+import {FlatList,Modal,Pressable,StyleSheet,Text,TextInput,View} from './Native';
 import {Bell,Check,Mic,RefreshCw,X} from 'lucide-react-native';
 import {IconButton,Pill,d} from './Design';
 import {colors as c} from '../theme';
@@ -20,3 +20,4 @@ export function CategoryPicker({groups,selected,onSave,onClose}:{groups:Category
  </View></View></Modal>;
 }
 const s=StyleSheet.create({actions:{flexDirection:'row',alignItems:'center',gap:10,paddingHorizontal:16,marginBottom:14},voice:{flex:1,flexDirection:'row',alignItems:'center',gap:8,padding:9,backgroundColor:'#101a29',borderWidth:1,borderColor:'#007aff55',borderRadius:16},backdrop:{flex:1,justifyContent:'flex-end',backgroundColor:'#0009'},panel:{height:'87%',backgroundColor:'#1c1c1e',borderTopLeftRadius:28,borderTopRightRadius:28,padding:20,paddingBottom:30},input:{backgroundColor:'#2c2c2e',borderRadius:12,color:c.white,padding:14,fontSize:16},row:{flexDirection:'row',alignItems:'center',gap:12,paddingVertical:16,borderBottomColor:'#ffffff12',borderBottomWidth:1}});
+

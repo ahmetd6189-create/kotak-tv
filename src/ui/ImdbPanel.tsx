@@ -1,5 +1,5 @@
 import React,{useEffect,useRef,useState} from 'react';
-import {Linking,Text,TextInput,View} from 'react-native';
+import {Linking,Text,TextInput,View} from './Native';
 import * as SecureStore from 'expo-secure-store';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {candidateMedia} from '../native/catalog-tools';
@@ -38,3 +38,4 @@ export function ImdbPanel({entries,cache,onUpdate,onClose}:{entries:Entry[];cach
   {!!notice&&<Text style={d.secondary}>{notice}</Text>}
  </Sheet>;
 }
+

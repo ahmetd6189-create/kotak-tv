@@ -15,7 +15,7 @@ import {
   useWindowDimensions,
   type StyleProp,
   type ViewStyle,
-} from "react-native";
+} from "./Native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import {
   ArrowRight,
@@ -464,14 +464,14 @@ export function FeatureCards({
     bg: readonly [string, string];
   }[] = [
     {
-      title: "Akış Ön Yükleme",
-      description: "Kanal geçiş deneyimi",
+      title: "Oynatıcı Ayarları",
+      description: "Görüntü ölçeği ve ağ önbelleği",
       icon: Zap,
       tint: c.blue,
       bg: ["#121824", "#121316"],
     },
     {
-      title: "Çift Ses & Subwoofer",
+      title: "Ses ve Altyazı",
       description: "Ses parçaları ve oynatıcı",
       icon: Volume2,
       tint: c.purple,
@@ -747,7 +747,7 @@ export function MoreScreen({
         );
       })}
       <Text style={[d.micro, { textAlign: "center", marginTop: 24 }]}>
-        Kotak TV · 1.0.4
+        Kotak TV · 1.0.15
       </Text>
       <FeatureCards onOpen={onOpen}/>
     </ScrollView>
@@ -1094,3 +1094,4 @@ export const d = StyleSheet.create({
     borderColor: "#ffffff0d",
   },
 });
+

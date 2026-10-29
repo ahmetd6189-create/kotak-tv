@@ -1,5 +1,5 @@
 import React,{useState} from 'react';
-import {Text,TextInput,View} from 'react-native';
+import {Text,TextInput,View} from './Native';
 import {httpUrl,inferredEpgUrl,type PlaylistConfig} from '../native/iptv';
 import {Pill,Sheet,d} from './Design';
 import {colors as c} from '../theme';
@@ -18,3 +18,4 @@ export function EpgSettings({configs,onSave,onClose}:{configs:PlaylistConfig[];o
   {!!error&&<Text style={{color:c.red}}>{error}</Text>}
  </Sheet>;
 }
+

@@ -1,5 +1,5 @@
 import React,{useEffect,useRef,useState} from 'react';
-import {ActivityIndicator,Pressable,Text,TextInput,View,StyleSheet} from 'react-native';
+import {ActivityIndicator,Pressable,Text,TextInput,View,StyleSheet} from './Native';
 import {AccountClient,AccountError,accountMessage} from '../native/account-core';
 export type AuthClient=Pick<AccountClient,'signIn'|'signUp'|'verify'|'resend'|'requestRecovery'|'verifyRecovery'|'updateRecoveredPassword'|'cancelRecovery'>;
 type Mode='login'|'signup'|'confirm'|'recover'|'recovery-code'|'new-password';

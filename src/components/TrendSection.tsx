@@ -7,7 +7,7 @@ import {
   Text,
   View,
   useWindowDimensions,
-} from "react-native";
+} from "../ui/Native";
 import { ChevronRight, LayoutGrid } from "lucide-react-native";
 import { MediaItem } from "../types/iptv";
 import { colors } from "../theme";
@@ -95,3 +95,4 @@ const styles = StyleSheet.create({
   name: { color: colors.white, fontWeight: "500", fontSize: 14, marginTop: 5 },
   meta: { color: colors.zinc400, fontSize: 12, marginTop: 2 },
 });
+

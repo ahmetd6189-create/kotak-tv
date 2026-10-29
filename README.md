@@ -1,3 +1,15 @@
+# Kotak TV 1.0.15 (22)
+
+Yerel Windows APK derlemesi: `APK-OLUSTUR.cmd`.
+Eski projenizdeki `credentials.json` ve `credentials/` klasörünü bu projenin köküne kopyalayın. İmzalama dosyalarını paylaşmayın.
+Komut paketleri kurar, TypeScript kontrolünü yapar, Android projesini hazırlar ve aynı anahtarla release APK üretir.
+Sonuç: `KotakTV-1.0.15.apk`. Kurulu uygulamayı silmeden güncelleyin.
+
+Değişiklikler ve açık kalan maddeler: [SURUM-1.0.15.txt](SURUM-1.0.15.txt).
+Fiziksel Android testi bu ortamda yapılmadı. Tam dil çevirisi ve telefon ana ekranı simgesinin takım logosuna dönüşmesi henüz tamamlanmadı.
+
+---
+
 # Kotak TV 1.0.9
 
 Expo SDK 54 / React Native / VLC + expo-video mobil IPTV oynatıcı (Android 8+).
@@ -112,3 +124,4 @@ gerektirir. Bu sürüm için gerçek IPTV hesabınızda ses/video dinleme testi 
 ## 1.0.9: EPG, trend ve sarma düzeltmeleri
 
 Güncel davranış ve gerçek test sınırları SURUM-1.0.9.txt içindedir. Ödeme ve 24 saat demo sunucu temeli billing-service/README.md içinde açıklanır. Bu APK gerçek ödeme veya zorunlu demo kilidi açmaz; mağaza/giriş/servis bağlantıları beklemektedir. IBAN ya da gizli anahtarları sohbete veya GitHub’a koymayın.
+

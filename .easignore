@@ -19,3 +19,9 @@ src/data/
 billing-service/
 
 supabase/
+
+
+credentials.json
+credentials/
+*.jks
+*.keystore

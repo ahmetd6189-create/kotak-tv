@@ -1,7 +1,7 @@
 @echo off
 setlocal
 cd /d "%~dp0"
-title Kotak TV - UX Guncellemesi 1.0.14
+title Kotak TV - UX Guncellemesi 1.0.15
 if not exist "App.tsx" (
   echo HATA: Bu dosya KotakTV proje klasorunde calistirilmalidir.
   pause

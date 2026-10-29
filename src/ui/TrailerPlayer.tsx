@@ -1,5 +1,5 @@
 import React,{useMemo,useState} from 'react';
-import {Modal,View,Text} from 'react-native';
+import {Modal,View,Text} from './Native';
 import {WebView} from 'react-native-webview';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {X} from 'lucide-react-native';

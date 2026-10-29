@@ -1,5 +1,5 @@
 import React,{useDeferredValue,useEffect,useMemo,useRef,useState} from 'react';
-import {Pressable,Text,TextInput,View} from 'react-native';
+import {Pressable,Text,TextInput,View} from './Native';
 import {Mic,Play,Search} from 'lucide-react-native';
 import {ExpoSpeechRecognitionModule,useSpeechRecognitionEvent} from 'expo-speech-recognition';
 import type {Entry,Guide,Program} from '../native/iptv';

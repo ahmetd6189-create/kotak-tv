@@ -62,11 +62,11 @@ const Tile = memo(function Tile({
   seekSeconds,
   bufferSeconds,
   initialPosition=0,
-  fullscreen=false, controlsVisible=true, onToggleControls, onFullscreen, onFailure,
+  videoFit="cover", fullscreen=false, controlsVisible=true, onToggleControls, onFullscreen, onFailure,
   onProgress,
 }: {
   item: Entry;
-  fullscreen?:boolean; controlsVisible?:boolean; onToggleControls?:()=>void; onFullscreen?:()=>void; onFailure?:()=>void;
+  videoFit?:"contain"|"cover"; fullscreen?:boolean; controlsVisible?:boolean; onToggleControls?:()=>void; onFullscreen?:()=>void; onFailure?:()=>void;
   initialPosition?:number;
   onProgress?:(id:string,position:number,duration:number)=>void;
   multi: boolean;
@@ -209,7 +209,8 @@ const Tile = memo(function Tile({
           ref={view}
           player={player}
           style={StyleSheet.absoluteFill}
-          contentFit="contain"
+          contentFit={fullscreen?videoFit:"contain"}
+          surfaceType="textureView"
           nativeControls={false}
           fullscreenOptions={{ enable: true, orientation: "landscape" }}
           allowsPictureInPicture={pip}
@@ -409,6 +410,7 @@ export function PlaybackPanel({
   onFeature,
   seekSeconds = 15,
   bufferSeconds = 15,
+  videoFit="cover",
   positions={},
   onProgress,
 }: {
@@ -422,6 +424,7 @@ export function PlaybackPanel({
   onFeature?: (name: string) => void;
   seekSeconds?: number;
   bufferSeconds?: number;
+  videoFit?:"contain"|"cover";
 }) {
   const [engine,setEngine]=useState<"vlc"|"system">("system");
   const [wide,setWide]=useState(false);
@@ -485,8 +488,9 @@ export function PlaybackPanel({
               height: items.length === 4 ? "50%" : "100%",
             }}
           >
-            {engine==="vlc"&&!needsSystemPlayer(item)?<VlcTile controlsVisible={controlsVisible} onToggleControls={toggleControls} fullscreen={landscape} item={item} multi={multi} audible={index===audio} onAudio={()=>setAudio(index)} seekSeconds={seekSeconds} initialPosition={positions[item.id]?.position||0} onProgress={onProgress} onSystemPlayer={()=>{}} onFullscreen={()=>{setWide(v=>!v);void (landscape?ScreenOrientation.unlockAsync():ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE)).catch(()=>{});}}/>:<Tile
+            {engine==="vlc"&&!needsSystemPlayer(item)?<VlcTile videoFit={videoFit} controlsVisible={controlsVisible} onToggleControls={toggleControls} fullscreen={landscape} item={item} multi={multi} audible={index===audio} onAudio={()=>setAudio(index)} seekSeconds={seekSeconds} initialPosition={positions[item.id]?.position||0} onProgress={onProgress} onSystemPlayer={()=>{}} onFullscreen={()=>{setWide(v=>!v);void (landscape?ScreenOrientation.unlockAsync():ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE)).catch(()=>{});}}/>:<Tile
               item={item}
+              videoFit={videoFit}
               fullscreen={landscape}
               controlsVisible={controlsVisible}
               onToggleControls={toggleControls}
