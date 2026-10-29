@@ -4,7 +4,7 @@ import {ActivityIndicator,AppState,Linking,Pressable,ScrollView,StyleSheet,Text,
 import * as Notifications from 'expo-notifications';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {account} from '../native/account';
-import {accountMessage,type Access} from '../native/account-core';
+import {accountMessage,AccountError,type Access} from '../native/account-core';
 import {scheduleExpiryNotices,type Entitlement} from '../native/entitlement';
 export type AccountProps={entitlement:Entitlement;accountEmail:string;onSignOut:()=>void;onEnableNotices?:()=>Promise<string>};
 export function AccountGate({children,client=account}:{children:(props:AccountProps)=>React.ReactNode;client?:Pick<typeof account,'restore'|'access'|'signOut'>&AuthClient}){
@@ -12,16 +12,19 @@ export function AccountGate({children,client=account}:{children:(props:AccountPr
  const [signed,setSigned]=useState(false),[busy,setBusy]=useState(true),[error,setError]=useState(''),[notice,setNotice]=useState('');
  const [access,setAccess]=useState<Access|null>(null),[ready,setReady]=useState(false);
  const recoveryMode=useRef(false);
+ const verified=useRef<Access|null>(null);
  const anchor=useRef({server:0,mono:0});const [clock,setClock]=useState(0);const flight=useRef(false);const generation=useRef(0);
  const serverNow=()=>anchor.current.server+Math.max(0,performance.now()-anchor.current.mono);
  const sync=async(start=false)=>{
   if(flight.current||recoveryMode.current)return;flight.current=true;const job=generation.current;setBusy(true);setError('');
-  try{const s=await client.restore();if(job!==generation.current)return;setSigned(!!s);if(!s){setAccess(null);setReady(false);return;}setEmail(s.user.email||'');
+  try{const s=await client.restore();if(job!==generation.current)return;setSigned(!!s);if(!s){verified.current=null;setAccess(null);setReady(false);return;}setEmail(s.user.email||'');
    const value=await client.access(start);if(job!==generation.current)return;
-   setAccess(value);setReady(true);if(value){anchor.current={server:value.serverTime,mono:performance.now()};setClock(value.serverTime);}
-  }catch(e){if(job===generation.current){setReady(false);setError(accountMessage(e));}}finally{flight.current=false;if(job===generation.current){setBusy(false);setBooted(true);}}
+   verified.current=value;setAccess(value);setReady(true);if(value){anchor.current={server:value.serverTime,mono:performance.now()};setClock(value.serverTime);}
+  }catch(e){if(job===generation.current){const transient=e instanceof AccountError&&(e.code==='NETWORK_ERROR'||e.status===429||e.status>=500);const prior=verified.current;const current=serverNow();
+    const keep=transient&&prior?.active&&current<prior.expiresAt&&current-prior.serverTime<300000;
+    setClock(current);if(!keep){verified.current=null;setReady(false);}setError(accountMessage(e));}}finally{flight.current=false;if(job===generation.current){setBusy(false);setBooted(true);}}
  };
- useEffect(()=>{void sync();const sub=AppState.addEventListener('change',state=>{if(state==='active')void sync();});return()=>{generation.current++;sub.remove();};},[]);
+ useEffect(()=>{void sync();const sub=AppState.addEventListener('change',state=>{if(state==='active'){if(anchor.current.server)setClock(serverNow());void sync();}});return()=>{generation.current++;sub.remove();};},[]);
  // One expiry deadline: a ticking gate otherwise rerenders the entire catalog every second.
  useEffect(()=>{if(!access?.active)return;const delay=Math.max(0,access.expiresAt-serverNow());const timer=setTimeout(()=>setClock(serverNow()),Math.min(Math.ceil(delay)+10,2147483647));return()=>clearTimeout(timer);},[access]);
  // Schedule only when the entitlement changes, not once per progress/clock update.
@@ -34,7 +37,7 @@ export function AccountGate({children,client=account}:{children:(props:AccountPr
   const permission=await Notifications.requestPermissionsAsync();if(!permission.granted)return 'Bildirim izni verilmedi. Telefon ayarlarından açabilirsin.';
   await scheduleExpiryNotices(access,serverNow()-Date.now());return 'Süre bildirimleri açıldı.';
  };
- const signOut=async()=>{generation.current++;setAccess(null);setReady(false);setSigned(false);setBusy(true);setNotice('');try{await client.signOut();await scheduleExpiryNotices(null);}catch(e){setError(accountMessage(e));}finally{setBusy(false);}};
+ const signOut=async()=>{generation.current++;verified.current=null;setAccess(null);setReady(false);setSigned(false);setBusy(true);setNotice('');try{await client.signOut();await scheduleExpiryNotices(null);}catch(e){setError(accountMessage(e));}finally{setBusy(false);}};
  const active=ready&&access?.active&&clock<access.expiresAt;
  if(active)return <>{children({entitlement:access,accountEmail:email,onSignOut:()=>void signOut(),onEnableNotices:enableNotices})}</>;
  const button=(label:string,fn:()=>void,secondary=false)=><Pressable accessibilityRole="button" disabled={busy} onPress={fn} style={[s.button,secondary&&s.secondary,busy&&{opacity:0.5}]}><Text style={s.buttonText}>{label}</Text></Pressable>;

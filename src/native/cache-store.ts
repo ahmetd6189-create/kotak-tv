@@ -48,13 +48,13 @@ export function createCacheStore(store:KeyValueStore,ttlMs=86400000) {
    for(let i=0;i<entries.length;i++){
     const e=entries[i];
     // No uri, headers or logo URL in the browsing cache.
-    const entry:Entry={id:e.id,playlistId:e.playlistId,name:e.name.slice(0,512),group:e.group.slice(0,256),logo:'',kind:e.kind,epgId:e.epgId?.slice(0,256),seriesId:e.seriesId?.slice(0,256),imdbRating:e.imdbRating,imdbId:e.imdbId,rating:e.rating,streamFormat:e.streamFormat||e.uri?.match(/\.(m3u8|ts|mp4|mkv)(?:[?#]|$)/i)?.[1]?.toLowerCase()};
+    const entry:Entry={id:e.id,playlistId:e.playlistId,name:e.name.slice(0,512),group:e.group.slice(0,256),logo:'',kind:e.kind,providerId:e.providerId,epgId:e.epgId?.slice(0,256),seriesId:e.seriesId?.slice(0,256),imdbRating:e.imdbRating,imdbId:e.imdbId,rating:e.rating,added:e.added,released:e.released,genre:e.genre,streamFormat:e.streamFormat||e.uri?.match(/\.(m3u8|ts|mp4|mkv)(?:[?#]|$)/i)?.[1]?.toLowerCase()};
     await append({entry});if(i%300===0)await pause();
    }
    let channelCount=0;const sharedPrograms=new Map<Guide[string],string>();
    for(const [channel,programs] of Object.entries(source)){
     const alias=sharedPrograms.get(programs);if(alias){await append({alias:channel,target:alias});continue;}sharedPrograms.set(programs,channel);
-    const current=programs.filter(p=>p.end>savedAt&&p.start<savedAt+86400000).map(p=>({...p,title:p.title.slice(0,512)}));
+    const current=programs.filter(p=>p.end>savedAt-86400000&&p.start<savedAt+7*86400000).map(p=>({...p,title:p.title.slice(0,512)}));
     for(let i=0;i<current.length;i+=50)await append({channel,programs:current.slice(i,i+50)});
     if(++channelCount%100===0)await pause();
    }
@@ -74,3 +74,4 @@ export function createCacheStore(store:KeyValueStore,ttlMs=86400000) {
  }
  return {save,read,remove};
 }
+

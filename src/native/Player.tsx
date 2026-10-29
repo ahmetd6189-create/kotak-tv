@@ -62,9 +62,11 @@ const Tile = memo(function Tile({
   seekSeconds,
   bufferSeconds,
   initialPosition=0,
+  fullscreen=false, controlsVisible=true, onToggleControls, onFullscreen, onFailure,
   onProgress,
 }: {
   item: Entry;
+  fullscreen?:boolean; controlsVisible?:boolean; onToggleControls?:()=>void; onFullscreen?:()=>void; onFailure?:()=>void;
   initialPosition?:number;
   onProgress?:(id:string,position:number,duration:number)=>void;
   multi: boolean;
@@ -193,6 +195,7 @@ const Tile = memo(function Tile({
     return () => sub.remove();
   }, [player, multi]);
   const failed = loadError || status === "error";
+  useEffect(()=>{if(failed)onFailure?.();},[failed,onFailure]);
   const duration = player.duration;
   const live = item.kind === "live";
   const progress =
@@ -213,6 +216,7 @@ const Tile = memo(function Tile({
           startsPictureInPictureAutomatically={pip}
           allowsVideoFrameAnalysis={false}
         />
+        <Pressable accessibilityLabel="Oynatıcı denetimlerini göster veya gizle" style={StyleSheet.absoluteFill} onPress={onToggleControls}/>
         {(status === "loading" || failed || !!recovery) && (
           <View pointerEvents="none" style={s.overlay}>
             <RecoveryStar/>
@@ -228,6 +232,7 @@ const Tile = memo(function Tile({
           </View>
         )}
       </View>
+      {controlsVisible&&<View style={fullscreen?{position:"absolute",bottom:0,left:0,right:0,backgroundColor:"#0008"}:undefined}>
       {!!recovery && <Text style={[d.micro,{color:c.blue,padding:8}]}>{recovery}</Text>}
       {!multi&&true&&<View style={{paddingHorizontal:8,paddingTop:8,flexDirection:"row",justifyContent:"space-between"}}><CastControls item={item} position={currentTime} onTransferred={()=>{watchdog.current.paused=true;player.pause();}}/>{Platform.OS==="ios"&&<VideoAirPlayButton style={{width:36,height:36}} tint={c.blue}/>}</View>}
       <View style={s.transport}>
@@ -332,17 +337,12 @@ const Tile = memo(function Tile({
               small
               icon={Maximize2}
               label="Tam ekran"
-              onPress={() => {
-                void view.current
-                  ?.enterFullscreen()
-                  .catch(() =>
-                    Alert.alert("Tam Ekran", "Tam ekran açılamadı."),
-                  );
-              }}
+              onPress={()=>onFullscreen?.()}
             />
           </View>
         </View>
       </View>
+      </View>}
       <Sheet
         visible={tracksOpen}
         title="Ses ve Altyazı"
@@ -423,18 +423,24 @@ export function PlaybackPanel({
   seekSeconds?: number;
   bufferSeconds?: number;
 }) {
-  const [engine,setEngine]=useState<"vlc"|"system">(Platform.OS==="android"?"vlc":"system");
+  const [engine,setEngine]=useState<"vlc"|"system">("system");
   const [wide,setWide]=useState(false);
+  const [controlsVisible,setControlsVisible]=useState(true);
+  const [touchSerial,setTouchSerial]=useState(0);
+  const touch=()=>setTouchSerial(v=>v+1);
+  useEffect(()=>{if(!controlsVisible)return;const timer=setTimeout(()=>setControlsVisible(false),3500);return()=>clearTimeout(timer);},[controlsVisible,touchSerial,items[0]?.id]);
+  useEffect(()=>setControlsVisible(true),[items[0]?.id]);
+  const toggleControls=()=>{setControlsVisible(v=>!v);touch();};
   const dimensions=useWindowDimensions();const landscape=!mini&&dimensions.width>dimensions.height;
-  useEffect(()=>{setEngine(Platform.OS==="android"?"vlc":"system");},[items[0]?.id]);
+  useEffect(()=>{setEngine("system");},[items[0]?.id]);
   useEffect(()=>()=>{void ScreenOrientation.unlockAsync().catch(()=>{});},[]);
   useEffect(()=>{if(mini){setWide(false);void ScreenOrientation.unlockAsync().catch(()=>{});}},[mini]);
   const [audio, setAudio] = useState(0);
   useEffect(() => setAudio(0), [items]);
   const multi = items.length > 1;
   return (
-    <View style={[s.panel, mini && s.mini]}>
-      <StatusBar hidden={landscape}/><View style={[s.header,landscape&&{position:"absolute",top:0,left:0,right:0,zIndex:10,backgroundColor:"#0008"}]}>
+    <View style={[s.panel, mini && s.mini]} onTouchStart={touch}>
+      <StatusBar hidden={landscape}/>{controlsVisible&&<View style={[s.header,{position:"absolute",top:0,left:0,right:0,zIndex:10,backgroundColor:"#0008"},landscape&&{position:"absolute",top:0,left:0,right:0,zIndex:10,backgroundColor:"#0008"}]}>
         <IconButton icon={X} small label="Oynatıcıyı kapat" onPress={onClose} />
         <View style={{ flex: 1, gap: 3 }}>
           <Text style={s.title} numberOfLines={1}>
@@ -469,8 +475,7 @@ export function PlaybackPanel({
           label={mini ? "Büyüt" : "Küçült"}
           onPress={onMini}
         />}
-      </View>
-      {!mini&&!landscape&&items[0]?.kind!=="live"&&<Pill label="Yayını paylaş" onPress={()=>onFeature?.("Yayını paylaş")}/>}
+      </View>}
       <View style={s.grid}>
         {items.map((item, index) => (
           <View
@@ -480,8 +485,13 @@ export function PlaybackPanel({
               height: items.length === 4 ? "50%" : "100%",
             }}
           >
-            {engine==="vlc"&&!needsSystemPlayer(item)?<VlcTile fullscreen={landscape} item={item} multi={multi} audible={index===audio} onAudio={()=>setAudio(index)} seekSeconds={seekSeconds} initialPosition={positions[item.id]?.position||0} onProgress={onProgress} onSystemPlayer={()=>setEngine("system")} onFullscreen={()=>{setWide(v=>!v);void (landscape?ScreenOrientation.unlockAsync():ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE)).catch(()=>{});}}/>:<Tile
+            {engine==="vlc"&&!needsSystemPlayer(item)?<VlcTile controlsVisible={controlsVisible} onToggleControls={toggleControls} fullscreen={landscape} item={item} multi={multi} audible={index===audio} onAudio={()=>setAudio(index)} seekSeconds={seekSeconds} initialPosition={positions[item.id]?.position||0} onProgress={onProgress} onSystemPlayer={()=>{}} onFullscreen={()=>{setWide(v=>!v);void (landscape?ScreenOrientation.unlockAsync():ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE)).catch(()=>{});}}/>:<Tile
               item={item}
+              fullscreen={landscape}
+              controlsVisible={controlsVisible}
+              onToggleControls={toggleControls}
+              onFailure={Platform.OS==="android"&&!needsSystemPlayer(item)?()=>setEngine("vlc"):undefined}
+              onFullscreen={()=>{setControlsVisible(true);void (landscape?ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT_UP):ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE)).catch(()=>{});}}
               initialPosition={positions[item.id]?.position||0}
               onProgress={onProgress}
               multi={multi}

@@ -40,7 +40,7 @@ import {mediaTitle,rankedMedia,displayRanked,scheduleFor,buildVoiceIndex,buildVo
 import {metadataKey,type ImdbInfo} from "./src/native/imdb";
 import {scheduledReminders,toggleReminder} from "./src/native/reminders";
 import * as SecureStore from "expo-secure-store";
-import { cacheCatalog, cachedCatalog, cacheGuide, cachedGuide, removeCache } from "./src/native/cache";
+import { cacheCatalog, cachedCatalog, cacheVod, cachedVod, cacheGuide, cachedGuide, removeCache } from "./src/native/cache";
 import { childEntries } from "./src/native/offline";
 import { ParentPanel, PROTECTION_KEY, type Protection } from "./src/ui/ParentPanel";
 import { FeaturesPanel, ProPanel, AboutPanel, FEATURE_NAMES } from "./src/ui/KotakFeatures";
@@ -156,6 +156,7 @@ export function KotakApp({entitlement,accountEmail,onSignOut,onEnableNotices}:Ac
   const [favorites, setFavorites] = useState<string[]>([]);
   const positions=useRef<Record<string,{position:number;duration:number}>>({});
   const progressSavedAt=useRef(0);
+  useEffect(()=>{const sub=AppState.addEventListener("change",state=>{if(state!=="active")void AsyncStorage.setItem("kotak.positions",JSON.stringify(Object.fromEntries(Object.entries(positions.current).slice(-50)))).catch(()=>{});});return()=>sub.remove();},[]);
   const recordProgress=useCallback((id:string,position:number,duration:number)=>{if(!Number.isFinite(position)||position<0)return;positions.current[id]={position:duration>0&&duration-position<30?0:position,duration:Number.isFinite(duration)?duration:0};if(Date.now()-progressSavedAt.current<10000)return;progressSavedAt.current=Date.now();const recentPositions=Object.fromEntries(Object.entries(positions.current).slice(-50));void AsyncStorage.setItem("kotak.positions",JSON.stringify(recentPositions)).catch(()=>{});},[]);
   const [recent, setRecent] = useState<string[]>([]);
   const [selecting, setSelecting] = useState(false);
@@ -305,10 +306,10 @@ export function KotakApp({entitlement,accountEmail,onSignOut,onEnableNotices}:Ac
         setRecent(JSON.parse(history || "[]"));
         setBoot(false);
         setLoadingLists(saved.length > 0);
-        void (async()=>{for(const config of saved){const cache=await cachedCatalog(config.id).catch(()=>null);if(controller.signal.aborted)return;if(cache&&!liveFresh.current.has(config.id)){setCatalogs(prev=>({...prev,[config.id]:cache.entries.map(e=>restoreAddress(e,config))}));setCacheTime(cache.savedAt);}const storedGuide=await cachedGuide(config.id).catch(()=>null);if(storedGuide&&!controller.signal.aborted){mergeGuide(storedGuide.guide);setGuideNotice("Kayıtlı program rehberi gösteriliyor.");}}})().catch(()=>{});
+        void (async()=>{for(const config of saved){const cache=await cachedCatalog(config.id).catch(()=>null);if(controller.signal.aborted)return;if(cache&&!liveFresh.current.has(config.id)){publishCatalog(config,cache.entries.map(e=>restoreAddress(e,config)),["live"]);setCacheTime(cache.savedAt);}const vod=await cachedVod(config.id).catch(()=>null);if(vod&&!controller.signal.aborted&&!vodReady.current.has(config.id))publishCatalog(config,vod.entries.map(e=>restoreAddress(e,config)),["movie","series","episode"]);const storedGuide=await cachedGuide(config.id).catch(()=>null);if(storedGuide&&!controller.signal.aborted){mergeGuide(storedGuide.guide);setGuideNotice("Kayıtlı program rehberi gösteriliyor.");}}})().catch(()=>{});
         for (const config of saved) {
           try {
-            const catalog = await quickCatalog(config,controller.signal,partial=>{if(!controller.signal.aborted){liveFresh.current.add(config.id);setLoadingLists(false);setCatalogs(prev=>({...prev,[config.id]:mergeCatalog(prev[config.id]||[],partial.entries,["live"])}));}});
+            const catalog = await quickCatalog(config,controller.signal,partial=>{if(!controller.signal.aborted){liveFresh.current.add(config.id);setLoadingLists(false);publishCatalog(config,partial.entries,["live"]);}});
             if (controller.signal.aborted) return;
             void observeNewContent(config,catalog.entries,controller.signal);
       liveFresh.current.add(config.id);
@@ -438,7 +439,7 @@ export function KotakApp({entitlement,accountEmail,onSignOut,onEnableNotices}:Ac
     const controller=new AbortController();vodJob.current=controller;setLoadingVod(true);
     const task=(async()=>{try{for(const config of pending){try{
       const result=await quickCatalog(config,controller.signal,partial=>{if(!controller.signal.aborted)publishCatalog(config,partial.entries,["movie","series","episode"]);},["movie","series"],25000);if(controller.signal.aborted)return;
-      publishCatalog(config,result.entries,["movie","series","episode"]);vodReady.current.add(config.id);void observeNewContent(config,result.entries,controller.signal);
+      publishCatalog(config,result.entries,["movie","series","episode"]);vodReady.current.add(config.id);void cacheVod(config.id,result.entries).catch(()=>{});void observeNewContent(config,result.entries,controller.signal);
     }catch(e){if(controller.signal.aborted)return;setMessage((e as Error).message);}}}finally{if(vodJob.current===controller){vodJob.current=null;vodTask.current=null;setLoadingVod(false);}}})();vodTask.current=task;return task;
   }
   async function resolveAssistant(spoken:string,signal:AbortSignal){
@@ -449,7 +450,7 @@ export function KotakApp({entitlement,accountEmail,onSignOut,onEnableNotices}:Ac
     if(!ready&&(intent==="match"||intent==="schedule")){
       const lookup=new AbortController();const abort=()=>lookup.abort();signal.addEventListener("abort",abort,{once:true});
       let timer:ReturnType<typeof setTimeout>|undefined;
-      try{await Promise.race([ensureChannelEpg(assistantChannels(items,spoken).slice(0,12),lookup.signal),new Promise<void>(resolve=>{timer=setTimeout(resolve,4000);})]);}
+      try{await Promise.race([ensureChannelEpg(assistantChannels(items,spoken).slice(0,36),lookup.signal),new Promise<void>(resolve=>{timer=setTimeout(resolve,10000);})]);}
       finally{clearTimeout(timer);lookup.abort();signal.removeEventListener("abort",abort);}
     }else if(!ready){void ensureVod();}
     if(signal.aborted)throw new Error("İşlem iptal edildi.");return {entries:items,guide:guidesRef.current,metadata:imdb};
@@ -460,9 +461,10 @@ export function KotakApp({entitlement,accountEmail,onSignOut,onEnableNotices}:Ac
   useEffect(()=>{
     if(boot||loadingLists||playing.length||!epgChannels.length)return;
     const controller=new AbortController();
-    const timer=setTimeout(()=>{void (async()=>{for(let i=0;i<epgChannels.length&&!controller.signal.aborted;i+=3){
+    const sports=assistantChannels(epgChannels,"bugün maç bul");const ids=new Set(sports.map(e=>e.id));const queue=[...sports,...epgChannels.filter(e=>!ids.has(e.id))];
+    const timer=setTimeout(()=>{void (async()=>{for(let i=0;i<queue.length&&!controller.signal.aborted;i+=3){
       if(AppState.currentState!=="active")break;
-      await ensureChannelEpg(epgChannels.slice(i,i+3),controller.signal);
+      await ensureChannelEpg(queue.slice(i,i+3),controller.signal);
       await new Promise<void>(resolve=>setTimeout(resolve,250));
     }})();},1500);
     return()=>{clearTimeout(timer);controller.abort();};
@@ -1133,7 +1135,7 @@ export function KotakApp({entitlement,accountEmail,onSignOut,onEnableNotices}:Ac
               style={[d.secondary, { textAlign: "center", lineHeight: 22 }]}
             >
               {info === "Hakkında"
-                ? "Kotak TV\nKendi IPTV listenizle canlı TV, film ve dizi deneyimi.\nSürüm 1.0.13 · defsearchtv@gmail.com"
+                ? "Kotak TV\nKendi IPTV listenizle canlı TV, film ve dizi deneyimi.\nSürüm 1.0.14 · defsearchtv@gmail.com"
                 : info === "İletişim"
                   ? "defsearchtv@gmail.com"
                   : info?.includes("EPG")

@@ -1,6 +1,6 @@
 const {test}=require('node:test');const assert=require('node:assert/strict');const {mkdtempSync,rmSync}=require('node:fs');const {join}=require('node:path');const {tmpdir}=require('node:os');
 const dir=mkdtempSync(join(tmpdir(),'kotak-features-'));
-require('esbuild').buildSync({stdin:{contents:`export * from './src/native/loading'; export * from './src/native/json-array'; export * from './src/native/invites'; export * from './src/native/follow-core'; export * from './src/native/cast'; export * from './src/native/assistant'; export * from './src/native/catalog-tools'; export * from './src/native/recovery'; export * from './src/native/imdb'; export * from './src/native/iptv'; export * from './src/native/provider'; export * from './src/native/playback-tools';`,resolveDir:process.cwd()},bundle:true,platform:'node',format:'cjs',outfile:join(dir,'core.cjs'),logLevel:'error'});
+require('esbuild').buildSync({stdin:{contents:`export * from './src/native/trailer'; export * from './src/native/loading'; export * from './src/native/json-array'; export * from './src/native/invites'; export * from './src/native/follow-core'; export * from './src/native/cast'; export * from './src/native/assistant'; export * from './src/native/catalog-tools'; export * from './src/native/recovery'; export * from './src/native/imdb'; export * from './src/native/iptv'; export * from './src/native/provider'; export * from './src/native/playback-tools';`,resolveDir:process.cwd()},bundle:true,platform:'node',format:'cjs',outfile:join(dir,'core.cjs'),logLevel:'error'});
 const core=require(join(dir,'core.cjs'));rmSync(dir,{recursive:true});
 const base={id:'1',playlistId:'p',name:'Film',group:'Film',logo:'',kind:'movie',uri:'https://host/user/secret/movie.mp4'};
 test('IMDb rails exclude live TV, unknown scores and low scores; series episodes deduplicate',()=>{
@@ -170,4 +170,22 @@ test('Previously resolved movie starts without a metadata network request',async
  const original=global.fetch;global.fetch=()=>{throw Error('unexpected network')};
  try{const item={...base,streamFormat:'mkv',playbackResolved:true};assert.equal(await core.resolvePlayback(item,{id:'p',type:'xtream',url:'https://example.invalid',username:'u',password:'p'}),item);}
  finally{global.fetch=original;}
+});
+
+test('Daily match query ignores command words, repeats and tomorrow; lists real fixtures',()=>{
+ const now=Date.UTC(2026,9,29,10);const channel={...base,id:'sport',kind:'live',name:'beIN SPORTS 1',epgId:'sport'};
+ const schedule=[{title:'Spor Haberleri',start:now-1000,end:now+3600000},{title:'Fenerbahçe - Beşiktaş (Bant)',start:now+3600000,end:now+7200000},{title:'Galatasaray - Trabzonspor',start:now+7200000,end:now+14400000},{title:'Real Madrid - Barcelona',start:now+86400000,end:now+90000000}];
+ const result=core.assistantAnswer(core.buildVoiceIndex([channel]),'bugün bana maç bul',{'p:sport':schedule},{},now);
+ assert.equal(result.mode,'match');assert.deepEqual(result.schedule[0].programs.map(p=>p.title),['Galatasaray - Trabzonspor']);assert.equal(result.autoPlay,undefined);
+ assert.equal(core.assistantIntent('Bugünkü maçları göster'),'match');
+});
+test('Trailer embedding accepts YouTube only and rejects lookalike hosts and scripts',()=>{
+ assert.equal(core.trailerId('https://youtu.be/abcdefghijk'),'abcdefghijk');assert.equal(core.trailerId('https://www.youtube.com/watch?v=abcdefghijk'),'abcdefghijk');
+ assert.equal(core.trailerId('https://youtube.com.evil.invalid/watch?v=abcdefghijk'),null);assert.equal(core.trailerId('javascript:alert(1)'),null);
+ assert.ok(core.trailerDocument('abcdefghijk').includes('origin=https%3A%2F%2Fcom.kotaktv.app'));assert.throws(()=>core.trailerDocument('<script>'));
+});
+
+test('EPG empty timestamp fields fall back to the provider date strings',()=>{
+ const rows=core.parseProviderEpg({epg_listings:[{title:'Maç',start_timestamp:'',stop_timestamp:0,start:'2026-10-29 21:00:00',end:'2026-10-29 23:00:00'}]},Date.UTC(2026,9,29,10));
+ assert.equal(rows.length,1);assert.equal(rows[0].start,Date.UTC(2026,9,29,18));
 });
