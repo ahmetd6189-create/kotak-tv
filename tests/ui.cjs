@@ -408,6 +408,15 @@ async function check(name, fn) { try { await fn(); passes++; console.log(`PASS $
    render(h(UI.App));await waitFor(()=>assert.ok(started>0),{timeout:4000});await act(async()=>{Object.defineProperty(document,'visibilityState',{configurable:true,value:'hidden'});document.dispatchEvent(new window.Event('visibilitychange'));});await waitFor(()=>assert.ok(aborted>0));
   }finally{Object.defineProperty(document,'visibilityState',{configurable:true,value:'visible'});global.fetch=previous;await UI.storeMock.removeItem('kotak.playlists.v2');}
  });
+
+ await check('Protected app return preserves the series route after correct PIN',async()=>{
+ const previous=global.fetch;await UI.secureMock.setItemAsync(UI.PROTECTION_KEY,JSON.stringify({pin:'2468',groups:['Kids']}));await UI.storeMock.setItem('kotak.playlists.v2',JSON.stringify(['reentry']));await UI.secureMock.setItemAsync('kotak.reentry',JSON.stringify({id:'reentry',name:'Test',type:'xtream',url:'https://reentry.test',username:'u',password:'p'}));
+ try{global.fetch=async()=>new Response('[]');render(h(UI.App));await waitFor(()=>assert.ok(screen.getByText('Çocuk Profili · Ebeveyn PIN’i ile aç')));fireEvent.click(screen.getByText('Çocuk Profili · Ebeveyn PIN’i ile aç'));fireEvent.change(screen.getByLabelText('Ebeveyn PIN'),{target:{value:'2468'}});await act(async()=>fireEvent.click(screen.getByText('PIN ile aç')));
+ fireEvent.click(screen.getByRole('tab',{name:'DİZİ'}));assert.ok(screen.getByLabelText('Diziler içinde ara'));
+ await act(async()=>{Object.defineProperty(document,'visibilityState',{configurable:true,value:'hidden'});document.dispatchEvent(new window.Event('visibilitychange'));});assert.equal(screen.queryByLabelText('Diziler içinde ara'),null);
+ await act(async()=>{Object.defineProperty(document,'visibilityState',{configurable:true,value:'visible'});document.dispatchEvent(new window.Event('visibilitychange'));});fireEvent.change(screen.getByLabelText('Ebeveyn PIN'),{target:{value:'2468'}});await act(async()=>fireEvent.click(screen.getByText('PIN ile aç')));assert.ok(screen.getByLabelText('Diziler içinde ara'));
+ }finally{global.fetch=previous;Object.defineProperty(document,'visibilityState',{configurable:true,value:'visible'});await UI.secureMock.deleteItemAsync(UI.PROTECTION_KEY);await UI.storeMock.removeItem('kotak.playlists.v2');}
+ });
  console.log(`${passes} UI interaction tests passed`);
  require('node:fs').unlinkSync('tests/.ui-bundle.cjs'); dom.window.close();
 })().catch(error => { console.error(error); process.exitCode = 1; dom.window.close(); });

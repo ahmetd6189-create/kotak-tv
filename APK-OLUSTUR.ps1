@@ -50,9 +50,9 @@ android {
   Set-Location $PSScriptRoot
   $kotakApk = Join-Path $PSScriptRoot 'android\app\build\outputs\apk\release\app-release.apk'
   if (!(Test-Path $kotakApk)) { throw "Derleme APK uretmedi." }
-  Copy-Item $kotakApk (Join-Path $PSScriptRoot 'KotakTV-1.0.15.apk') -Force
-  Write-Host "[4/4] Hazir: $PSScriptRoot\KotakTV-1.0.15.apk"
-  Start-Process explorer.exe -ArgumentList ('/select,"' + (Join-Path $PSScriptRoot 'KotakTV-1.0.15.apk') + '"')
+  Copy-Item $kotakApk (Join-Path $PSScriptRoot 'KotakTV-1.0.16.apk') -Force
+  Write-Host "[4/4] Hazir: $PSScriptRoot\KotakTV-1.0.16.apk"
+  Start-Process explorer.exe -ArgumentList ('/select,"' + (Join-Path $PSScriptRoot 'KotakTV-1.0.16.apk') + '"')
 } catch {
   Write-Host ("HATA: " + $_.Exception.Message) -ForegroundColor Red
   exit 1

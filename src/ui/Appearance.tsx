@@ -9,7 +9,9 @@ const defaults:Appearance={language:null,theme:'oled',teamId:null,teamColors:fal
 const Context=createContext({value:{...defaults,language:'tr'} as Appearance,change:(_v:Partial<Appearance>)=>{}});
 export const useAppearance=()=>useContext(Context);
 export const teams=directory.teams;
-export function accentFor(value:Appearance){const team=teams.find(t=>t.id===value.teamId);if(!value.teamColors||!team)return '#007AFF';const color=team.color;return /^#0{6}$/i.test(color)?(team.alternateColor!=='#000000'?team.alternateColor:'#aaaaaa'):color;}
+const teamIndex=new Map(teams.map(t=>[t.id,t]));
+export function accentFor(value:Appearance){const team=teamIndex.get(value.teamId||'');if(!value.teamColors||!team)return '#007AFF';const color=team.color;return /^#0{6}$/i.test(color)?(team.alternateColor!=='#000000'?team.alternateColor:'#aaaaaa'):color;}
+export function accentText(value:Appearance){const hex=accentFor(value).slice(1);const rgb=[0,2,4].map(i=>parseInt(hex.slice(i,i+2),16)/255).map(v=>v<=0.04045?v/12.92:Math.pow((v+0.055)/1.055,2.4));return 0.2126*rgb[0]+0.7152*rgb[1]+0.0722*rgb[2]>0.179?'#000000':'#ffffff';}
 export function AppearanceProvider({children}:{children:React.ReactNode}){
  const [value,setValue]=useState<Appearance>(defaults);const [ready,setReady]=useState(false);
  useEffect(()=>{void AsyncStorage.getItem('kotak.appearance').then(raw=>{if(raw){const v=JSON.parse(raw);setValue({...defaults,...v,language:v.language in languages?v.language:null});}}).catch(()=>{}).finally(()=>setReady(true));},[]);

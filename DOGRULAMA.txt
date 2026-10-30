@@ -1,10 +1,8 @@
-Kotak TV 1.0.15 — 29.10.2026
-TypeScript: başarılı.
-IPTV ayrıştırma: 17 test başarılı.
-Özellik/önbellek: 46 test başarılı.
-Arayüz etkileşimi: 60 test başarılı.
-Hesap: 10 test başarılı.
-Android JavaScript export: başarılı.
-Native Gradle APK derlemesi ve fiziksel cihaz testi bu ortamda yapılmadı.
-Tam ekran VLC kırpma, bildirim teslimi, arka plan yaşam döngüsü ve cihaz performansı telefonda doğrulanmalı.
-Windows APK-OLUSTUR.ps1: kaynak incelemesi yapıldı; bu Linux ortamında PowerShell/Android SDK olmadığından çalıştırılmadı.
+Kotak TV 1.0.16 (23) — 30.10.2026
+TypeScript kontrolu: basarili.
+17 IPTV + 46 ozellik/onbellek + 10 hesap + 61 arayuz + 3 Android simge yapilandirmasi testi: basarili (137 toplam).
+Temiz npm VLC 1.0.98 arsivinde iki Java dosyasina yama ve ikinci calistirmada degismeme kontrolu: basarili.
+Android prebuild: basarili; 114 takim + varsayilan launcher alias, tekrar olusturmada cogalma yok.
+Android JavaScript export: basarili.
+Native Gradle APK derlemesi, emulator ve fiziksel cihaz testi YAPILMADI.
+Windows APK-OLUSTUR.ps1 bu Linux ortaminda calistirilmadi.

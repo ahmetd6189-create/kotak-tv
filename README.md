@@ -1,12 +1,16 @@
-# Kotak TV 1.0.15 (22)
+# Kotak TV 1.0.16 (23)
 
-Yerel Windows APK derlemesi: `APK-OLUSTUR.cmd`.
-Eski projenizdeki `credentials.json` ve `credentials/` klasörünü bu projenin köküne kopyalayın. İmzalama dosyalarını paylaşmayın.
-Komut paketleri kurar, TypeScript kontrolünü yapar, Android projesini hazırlar ve aynı anahtarla release APK üretir.
-Sonuç: `KotakTV-1.0.15.apk`. Kurulu uygulamayı silmeden güncelleyin.
+Windows yerel derleme: `APK-OLUSTUR.cmd`. Mevcut projenizdeki `credentials.json` ve `credentials/` klasörünü proje köküne kopyalayın. İmzalama bilgilerinizi paylaşmayın.
+Sonuç: `KotakTV-1.0.16.apk`. Önceki uygulamayı silmeden güncelleyin.
 
-Değişiklikler ve açık kalan maddeler: [SURUM-1.0.15.txt](SURUM-1.0.15.txt).
-Fiziksel Android testi bu ortamda yapılmadı. Tam dil çevirisi ve telefon ana ekranı simgesinin takım logosuna dönüşmesi henüz tamamlanmadı.
+Değişiklikler, eksikler ve cihaz test adımları: [SURUM-1.0.16.txt](SURUM-1.0.16.txt).
+Doğrulama kapsamı: [DOGRULAMA.txt](DOGRULAMA.txt).
+Bu kaynak paketi fiziksel telefonda doğrulanmış nihai sürüm olarak sunulmuyor.
+
+## Native değişiklikler
+- `scripts/patch-vlc.cjs`: kurulum sonrası VLC 1.0.98 Android yaşam döngüsü düzeltmesi.
+- `plugins/withTeamIcons.js`: Android launcher simgeleri ve React Native köprüsü.
+- `native/team-icons.json`: derlemeye gömülen takım görselleri.
 
 ---
 

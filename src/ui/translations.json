@@ -1,1 +1,933 @@
-{"ANASAYFA": {"en": "HOME", "de": "START", "fr": "ACCUEIL", "es": "INICIO", "it": "HOME"}, "CANLI": {"en": "LIVE", "de": "LIVE", "fr": "DIRECT", "es": "EN DIRECTO", "it": "DIRETTA"}, "FİLM": {"en": "FILMS", "de": "FILME", "fr": "FILMS", "es": "PELÍCULAS", "it": "FILM"}, "DİZİ": {"en": "SERIES", "de": "SERIEN", "fr": "SÉRIES", "es": "SERIES", "it": "SERIE"}, "Ayarlar": {"en": "Settings", "de": "Einstellungen", "fr": "Réglages", "es": "Ajustes", "it": "Impostazioni"}, "Tema": {"en": "Theme", "de": "Design", "fr": "Thème", "es": "Tema", "it": "Tema"}, "Dil": {"en": "Language", "de": "Sprache", "fr": "Langue", "es": "Idioma", "it": "Lingua"}, "Klasik": {"en": "Classic", "de": "Klassisch", "fr": "Classique", "es": "Clásico", "it": "Classico"}, "Modern": {"en": "Modern", "de": "Modern", "fr": "Moderne", "es": "Moderno", "it": "Moderno"}, "Ana Ekran Düzeni": {"en": "Home layout", "de": "Startseitenlayout", "fr": "Disposition de l’accueil", "es": "Diseño de inicio", "it": "Layout iniziale"}, "Takiplerim": {"en": "Following", "de": "Abonniert", "fr": "Abonnements", "es": "Siguiendo", "it": "Seguiti"}, "Filmler": {"en": "Films", "de": "Filme", "fr": "Films", "es": "Películas", "it": "Film"}, "Diziler": {"en": "Series", "de": "Serien", "fr": "Séries", "es": "Series", "it": "Serie"}, "Trend Filmler": {"en": "Top films", "de": "Top-Filme", "fr": "Films populaires", "es": "Películas populares", "it": "Film popolari"}, "Trend Diziler": {"en": "Top series", "de": "Top-Serien", "fr": "Séries populaires", "es": "Series populares", "it": "Serie popolari"}, "Yeni Eklenen Filmler": {"en": "Recently added films", "de": "Neue Filme", "fr": "Films récents", "es": "Películas añadidas", "it": "Film aggiunti"}, "Son Güncellenen Diziler": {"en": "Recently updated series", "de": "Aktualisierte Serien", "fr": "Séries actualisées", "es": "Series actualizadas", "it": "Serie aggiornate"}, "Kategoriler": {"en": "Categories", "de": "Kategorien", "fr": "Catégories", "es": "Categorías", "it": "Categorie"}, "Tümü": {"en": "All", "de": "Alle", "fr": "Tout", "es": "Todo", "it": "Tutti"}, "İzle": {"en": "Watch", "de": "Ansehen", "fr": "Regarder", "es": "Ver", "it": "Guarda"}, "Hatırlat": {"en": "Remind me", "de": "Erinnern", "fr": "Me rappeler", "es": "Recordarme", "it": "Ricordami"}, "Kaydet": {"en": "Save", "de": "Speichern", "fr": "Enregistrer", "es": "Guardar", "it": "Salva"}, "İptal": {"en": "Cancel", "de": "Abbrechen", "fr": "Annuler", "es": "Cancelar", "it": "Annulla"}, "Geri": {"en": "Back", "de": "Zurück", "fr": "Retour", "es": "Atrás", "it": "Indietro"}, "Kapat": {"en": "Close", "de": "Schließen", "fr": "Fermer", "es": "Cerrar", "it": "Chiudi"}, "Ara": {"en": "Search", "de": "Suchen", "fr": "Rechercher", "es": "Buscar", "it": "Cerca"}, "Bildirimler": {"en": "Notifications", "de": "Benachrichtigungen", "fr": "Notifications", "es": "Notificaciones", "it": "Notifiche"}, "Ebeveyn Kontrolü": {"en": "Parental controls", "de": "Kindersicherung", "fr": "Contrôle parental", "es": "Control parental", "it": "Controllo genitori"}, "Güvenli Çocuk Profili": {"en": "Child profile", "de": "Kinderprofil", "fr": "Profil enfant", "es": "Perfil infantil", "it": "Profilo bambino"}, "PIN ile aç": {"en": "Unlock with PIN", "de": "Mit PIN entsperren", "fr": "Déverrouiller avec PIN", "es": "Desbloquear con PIN", "it": "Sblocca con PIN"}, "Yayın Akışı": {"en": "Programme guide", "de": "Programmübersicht", "fr": "Programme TV", "es": "Guía de programación", "it": "Guida programmi"}, "Şimdi yayında": {"en": "On now", "de": "Jetzt live", "fr": "En cours", "es": "Ahora en directo", "it": "In onda"}, "Sona erdi": {"en": "Ended", "de": "Beendet", "fr": "Terminé", "es": "Finalizado", "it": "Terminato"}, "Program ayrıntıları": {"en": "Programme details", "de": "Programmdetails", "fr": "Détails du programme", "es": "Detalles del programa", "it": "Dettagli programma"}, "Hatırlatmayı kaldır": {"en": "Remove reminder", "de": "Erinnerung entfernen", "fr": "Supprimer le rappel", "es": "Eliminar recordatorio", "it": "Rimuovi promemoria"}, "Canlı yayını izle": {"en": "Watch live", "de": "Live ansehen", "fr": "Regarder en direct", "es": "Ver en directo", "it": "Guarda in diretta"}, "Video ölçekleme": {"en": "Video scaling", "de": "Bildskalierung", "fr": "Format vidéo", "es": "Escalado de vídeo", "it": "Formato video"}, "Ekranı doldur": {"en": "Fill screen", "de": "Bildschirm füllen", "fr": "Remplir l’écran", "es": "Llenar pantalla", "it": "Riempi schermo"}, "Oranı koru": {"en": "Fit screen", "de": "Bild einpassen", "fr": "Ajuster à l’écran", "es": "Ajustar pantalla", "it": "Adatta allo schermo"}, "GENEL": {"en": "GENERAL", "de": "ALLGEMEIN", "fr": "GÉNÉRAL", "es": "GENERAL", "it": "GENERALE"}, "TEMA": {"en": "THEME", "de": "DESIGN", "fr": "THÈME", "es": "TEMA", "it": "TEMA"}, "OYNATICI": {"en": "PLAYER", "de": "PLAYER", "fr": "LECTEUR", "es": "REPRODUCTOR", "it": "LETTORE"}, "OYNATMA LİSTELERİ": {"en": "PLAYLISTS", "de": "WIEDERGABELISTEN", "fr": "LISTES DE LECTURE", "es": "LISTAS", "it": "PLAYLIST"}, "DAHA FAZLA": {"en": "MORE", "de": "MEHR", "fr": "PLUS", "es": "MÁS", "it": "ALTRO"}, "TV KANALI": {"en": "CHANNELS", "de": "SENDER", "fr": "CHAÎNES", "es": "CANALES", "it": "CANALI"}, "Giriş yap": {"en": "Sign in", "de": "Anmelden", "fr": "Se connecter", "es": "Iniciar sesión", "it": "Accedi"}, "Kayıt ol": {"en": "Sign up", "de": "Registrieren", "fr": "S’inscrire", "es": "Registrarse", "it": "Registrati"}, "E-posta": {"en": "Email", "de": "E-Mail", "fr": "E-mail", "es": "Correo electrónico", "it": "Email"}, "Şifre": {"en": "Password", "de": "Passwort", "fr": "Mot de passe", "es": "Contraseña", "it": "Password"}, "Şifremi unuttum": {"en": "Forgot password", "de": "Passwort vergessen", "fr": "Mot de passe oublié", "es": "Olvidé mi contraseña", "it": "Password dimenticata"}, "Takım": {"en": "Team", "de": "Team", "fr": "Équipe", "es": "Equipo", "it": "Squadra"}, "Yeni filmler": {"en": "New films", "de": "Neue Filme", "fr": "Nouveaux films", "es": "Películas nuevas", "it": "Nuovi film"}, "Takip et": {"en": "Follow", "de": "Folgen", "fr": "Suivre", "es": "Seguir", "it": "Segui"}, "Henüz takip yok.": {"en": "No follows yet.", "de": "Noch keine Abonnements.", "fr": "Aucun abonnement.", "es": "Sin seguimientos.", "it": "Nessun seguito."}, "Maçtan ne kadar önce?": {"en": "How long before kickoff?", "de": "Wie lange vor Anpfiff?", "fr": "Combien de temps avant le match ?", "es": "¿Cuánto antes del partido?", "it": "Quanto prima della partita?"}, "Takımını seç, maçını kaçırma": {"en": "Choose your team", "de": "Team auswählen", "fr": "Choisissez votre équipe", "es": "Elige tu equipo", "it": "Scegli la squadra"}, "Takip ettiklerin": {"en": "Your follows", "de": "Deine Abonnements", "fr": "Vos abonnements", "es": "Tus seguimientos", "it": "I tuoi seguiti"}, "Önerilen": {"en": "Recommended", "de": "Empfohlen", "fr": "Recommandé", "es": "Recomendado", "it": "Consigliato"}, "Fragman": {"en": "Trailer", "de": "Trailer", "fr": "Bande-annonce", "es": "Tráiler", "it": "Trailer"}, "Oyuncular": {"en": "Cast", "de": "Besetzung", "fr": "Distribution", "es": "Reparto", "it": "Cast"}, "Tür": {"en": "Genre", "de": "Genre", "fr": "Genre", "es": "Género", "it": "Genere"}, "Özet": {"en": "Synopsis", "de": "Handlung", "fr": "Résumé", "es": "Sinopsis", "it": "Trama"}}
+{
+  "ANASAYFA": {
+    "en": "HOME",
+    "de": "START",
+    "fr": "ACCUEIL",
+    "es": "INICIO",
+    "it": "HOME"
+  },
+  "CANLI": {
+    "en": "LIVE",
+    "de": "LIVE",
+    "fr": "DIRECT",
+    "es": "EN DIRECTO",
+    "it": "DIRETTA"
+  },
+  "FİLM": {
+    "en": "FILMS",
+    "de": "FILME",
+    "fr": "FILMS",
+    "es": "PELÍCULAS",
+    "it": "FILM"
+  },
+  "DİZİ": {
+    "en": "SERIES",
+    "de": "SERIEN",
+    "fr": "SÉRIES",
+    "es": "SERIES",
+    "it": "SERIE"
+  },
+  "Ayarlar": {
+    "en": "Settings",
+    "de": "Einstellungen",
+    "fr": "Réglages",
+    "es": "Ajustes",
+    "it": "Impostazioni"
+  },
+  "Tema": {
+    "en": "Theme",
+    "de": "Design",
+    "fr": "Thème",
+    "es": "Tema",
+    "it": "Tema"
+  },
+  "Dil": {
+    "en": "Language",
+    "de": "Sprache",
+    "fr": "Langue",
+    "es": "Idioma",
+    "it": "Lingua"
+  },
+  "Klasik": {
+    "en": "Classic",
+    "de": "Klassisch",
+    "fr": "Classique",
+    "es": "Clásico",
+    "it": "Classico"
+  },
+  "Modern": {
+    "en": "Modern",
+    "de": "Modern",
+    "fr": "Moderne",
+    "es": "Moderno",
+    "it": "Moderno"
+  },
+  "Ana Ekran Düzeni": {
+    "en": "Home layout",
+    "de": "Startseitenlayout",
+    "fr": "Disposition de l’accueil",
+    "es": "Diseño de inicio",
+    "it": "Layout iniziale"
+  },
+  "Takiplerim": {
+    "en": "Following",
+    "de": "Abonniert",
+    "fr": "Abonnements",
+    "es": "Siguiendo",
+    "it": "Seguiti"
+  },
+  "Filmler": {
+    "en": "Films",
+    "de": "Filme",
+    "fr": "Films",
+    "es": "Películas",
+    "it": "Film"
+  },
+  "Diziler": {
+    "en": "Series",
+    "de": "Serien",
+    "fr": "Séries",
+    "es": "Series",
+    "it": "Serie"
+  },
+  "Trend Filmler": {
+    "en": "Top films",
+    "de": "Top-Filme",
+    "fr": "Films populaires",
+    "es": "Películas populares",
+    "it": "Film popolari"
+  },
+  "Trend Diziler": {
+    "en": "Top series",
+    "de": "Top-Serien",
+    "fr": "Séries populaires",
+    "es": "Series populares",
+    "it": "Serie popolari"
+  },
+  "Yeni Eklenen Filmler": {
+    "en": "Recently added films",
+    "de": "Neue Filme",
+    "fr": "Films récents",
+    "es": "Películas añadidas",
+    "it": "Film aggiunti"
+  },
+  "Son Güncellenen Diziler": {
+    "en": "Recently updated series",
+    "de": "Aktualisierte Serien",
+    "fr": "Séries actualisées",
+    "es": "Series actualizadas",
+    "it": "Serie aggiornate"
+  },
+  "Kategoriler": {
+    "en": "Categories",
+    "de": "Kategorien",
+    "fr": "Catégories",
+    "es": "Categorías",
+    "it": "Categorie"
+  },
+  "Tümü": {
+    "en": "All",
+    "de": "Alle",
+    "fr": "Tout",
+    "es": "Todo",
+    "it": "Tutti"
+  },
+  "İzle": {
+    "en": "Watch",
+    "de": "Ansehen",
+    "fr": "Regarder",
+    "es": "Ver",
+    "it": "Guarda"
+  },
+  "Hatırlat": {
+    "en": "Remind me",
+    "de": "Erinnern",
+    "fr": "Me rappeler",
+    "es": "Recordarme",
+    "it": "Ricordami"
+  },
+  "Kaydet": {
+    "en": "Save",
+    "de": "Speichern",
+    "fr": "Enregistrer",
+    "es": "Guardar",
+    "it": "Salva"
+  },
+  "İptal": {
+    "en": "Cancel",
+    "de": "Abbrechen",
+    "fr": "Annuler",
+    "es": "Cancelar",
+    "it": "Annulla"
+  },
+  "Geri": {
+    "en": "Back",
+    "de": "Zurück",
+    "fr": "Retour",
+    "es": "Atrás",
+    "it": "Indietro"
+  },
+  "Kapat": {
+    "en": "Close",
+    "de": "Schließen",
+    "fr": "Fermer",
+    "es": "Cerrar",
+    "it": "Chiudi"
+  },
+  "Ara": {
+    "en": "Search",
+    "de": "Suchen",
+    "fr": "Rechercher",
+    "es": "Buscar",
+    "it": "Cerca"
+  },
+  "Bildirimler": {
+    "en": "Notifications",
+    "de": "Benachrichtigungen",
+    "fr": "Notifications",
+    "es": "Notificaciones",
+    "it": "Notifiche"
+  },
+  "Ebeveyn Kontrolü": {
+    "en": "Parental controls",
+    "de": "Kindersicherung",
+    "fr": "Contrôle parental",
+    "es": "Control parental",
+    "it": "Controllo genitori"
+  },
+  "Güvenli Çocuk Profili": {
+    "en": "Child profile",
+    "de": "Kinderprofil",
+    "fr": "Profil enfant",
+    "es": "Perfil infantil",
+    "it": "Profilo bambino"
+  },
+  "PIN ile aç": {
+    "en": "Unlock with PIN",
+    "de": "Mit PIN entsperren",
+    "fr": "Déverrouiller avec PIN",
+    "es": "Desbloquear con PIN",
+    "it": "Sblocca con PIN"
+  },
+  "Yayın Akışı": {
+    "en": "Programme guide",
+    "de": "Programmübersicht",
+    "fr": "Programme TV",
+    "es": "Guía de programación",
+    "it": "Guida programmi"
+  },
+  "Şimdi yayında": {
+    "en": "On now",
+    "de": "Jetzt live",
+    "fr": "En cours",
+    "es": "Ahora en directo",
+    "it": "In onda"
+  },
+  "Sona erdi": {
+    "en": "Ended",
+    "de": "Beendet",
+    "fr": "Terminé",
+    "es": "Finalizado",
+    "it": "Terminato"
+  },
+  "Program ayrıntıları": {
+    "en": "Programme details",
+    "de": "Programmdetails",
+    "fr": "Détails du programme",
+    "es": "Detalles del programa",
+    "it": "Dettagli programma"
+  },
+  "Hatırlatmayı kaldır": {
+    "en": "Remove reminder",
+    "de": "Erinnerung entfernen",
+    "fr": "Supprimer le rappel",
+    "es": "Eliminar recordatorio",
+    "it": "Rimuovi promemoria"
+  },
+  "Canlı yayını izle": {
+    "en": "Watch live",
+    "de": "Live ansehen",
+    "fr": "Regarder en direct",
+    "es": "Ver en directo",
+    "it": "Guarda in diretta"
+  },
+  "Video ölçekleme": {
+    "en": "Video scaling",
+    "de": "Bildskalierung",
+    "fr": "Format vidéo",
+    "es": "Escalado de vídeo",
+    "it": "Formato video"
+  },
+  "Ekranı doldur": {
+    "en": "Fill screen",
+    "de": "Bildschirm füllen",
+    "fr": "Remplir l’écran",
+    "es": "Llenar pantalla",
+    "it": "Riempi schermo"
+  },
+  "Oranı koru": {
+    "en": "Fit screen",
+    "de": "Bild einpassen",
+    "fr": "Ajuster à l’écran",
+    "es": "Ajustar pantalla",
+    "it": "Adatta allo schermo"
+  },
+  "GENEL": {
+    "en": "GENERAL",
+    "de": "ALLGEMEIN",
+    "fr": "GÉNÉRAL",
+    "es": "GENERAL",
+    "it": "GENERALE"
+  },
+  "TEMA": {
+    "en": "THEME",
+    "de": "DESIGN",
+    "fr": "THÈME",
+    "es": "TEMA",
+    "it": "TEMA"
+  },
+  "OYNATICI": {
+    "en": "PLAYER",
+    "de": "PLAYER",
+    "fr": "LECTEUR",
+    "es": "REPRODUCTOR",
+    "it": "LETTORE"
+  },
+  "OYNATMA LİSTELERİ": {
+    "en": "PLAYLISTS",
+    "de": "WIEDERGABELISTEN",
+    "fr": "LISTES DE LECTURE",
+    "es": "LISTAS",
+    "it": "PLAYLIST"
+  },
+  "DAHA FAZLA": {
+    "en": "MORE",
+    "de": "MEHR",
+    "fr": "PLUS",
+    "es": "MÁS",
+    "it": "ALTRO"
+  },
+  "TV KANALI": {
+    "en": "CHANNELS",
+    "de": "SENDER",
+    "fr": "CHAÎNES",
+    "es": "CANALES",
+    "it": "CANALI"
+  },
+  "Giriş yap": {
+    "en": "Sign in",
+    "de": "Anmelden",
+    "fr": "Se connecter",
+    "es": "Iniciar sesión",
+    "it": "Accedi"
+  },
+  "Kayıt ol": {
+    "en": "Sign up",
+    "de": "Registrieren",
+    "fr": "S’inscrire",
+    "es": "Registrarse",
+    "it": "Registrati"
+  },
+  "E-posta": {
+    "en": "Email",
+    "de": "E-Mail",
+    "fr": "E-mail",
+    "es": "Correo electrónico",
+    "it": "Email"
+  },
+  "Şifre": {
+    "en": "Password",
+    "de": "Passwort",
+    "fr": "Mot de passe",
+    "es": "Contraseña",
+    "it": "Password"
+  },
+  "Şifremi unuttum": {
+    "en": "Forgot password",
+    "de": "Passwort vergessen",
+    "fr": "Mot de passe oublié",
+    "es": "Olvidé mi contraseña",
+    "it": "Password dimenticata"
+  },
+  "Takım": {
+    "en": "Team",
+    "de": "Team",
+    "fr": "Équipe",
+    "es": "Equipo",
+    "it": "Squadra"
+  },
+  "Yeni filmler": {
+    "en": "New films",
+    "de": "Neue Filme",
+    "fr": "Nouveaux films",
+    "es": "Películas nuevas",
+    "it": "Nuovi film"
+  },
+  "Takip et": {
+    "en": "Follow",
+    "de": "Folgen",
+    "fr": "Suivre",
+    "es": "Seguir",
+    "it": "Segui"
+  },
+  "Henüz takip yok.": {
+    "en": "No follows yet.",
+    "de": "Noch keine Abonnements.",
+    "fr": "Aucun abonnement.",
+    "es": "Sin seguimientos.",
+    "it": "Nessun seguito."
+  },
+  "Maçtan ne kadar önce?": {
+    "en": "How long before kickoff?",
+    "de": "Wie lange vor Anpfiff?",
+    "fr": "Combien de temps avant le match ?",
+    "es": "¿Cuánto antes del partido?",
+    "it": "Quanto prima della partita?"
+  },
+  "Takımını seç, maçını kaçırma": {
+    "en": "Choose your team",
+    "de": "Team auswählen",
+    "fr": "Choisissez votre équipe",
+    "es": "Elige tu equipo",
+    "it": "Scegli la squadra"
+  },
+  "Takip ettiklerin": {
+    "en": "Your follows",
+    "de": "Deine Abonnements",
+    "fr": "Vos abonnements",
+    "es": "Tus seguimientos",
+    "it": "I tuoi seguiti"
+  },
+  "Önerilen": {
+    "en": "Recommended",
+    "de": "Empfohlen",
+    "fr": "Recommandé",
+    "es": "Recomendado",
+    "it": "Consigliato"
+  },
+  "Fragman": {
+    "en": "Trailer",
+    "de": "Trailer",
+    "fr": "Bande-annonce",
+    "es": "Tráiler",
+    "it": "Trailer"
+  },
+  "Oyuncular": {
+    "en": "Cast",
+    "de": "Besetzung",
+    "fr": "Distribution",
+    "es": "Reparto",
+    "it": "Cast"
+  },
+  "Tür": {
+    "en": "Genre",
+    "de": "Genre",
+    "fr": "Genre",
+    "es": "Género",
+    "it": "Genere"
+  },
+  "Özet": {
+    "en": "Synopsis",
+    "de": "Handlung",
+    "fr": "Résumé",
+    "es": "Sinopsis",
+    "it": "Trama"
+  },
+  "OLED Siyah": {
+    "en": "OLED Black",
+    "de": "OLED-Schwarz",
+    "fr": "Noir OLED",
+    "es": "Negro OLED",
+    "it": "Nero OLED"
+  },
+  "Gece Mavisi": {
+    "en": "Midnight Blue",
+    "de": "Nachtblau",
+    "fr": "Bleu nuit",
+    "es": "Azul noche",
+    "it": "Blu notte"
+  },
+  "Takım renkleri ve logo": {
+    "en": "Team colours and logo",
+    "de": "Teamfarben und Logo",
+    "fr": "Couleurs et logo de l’équipe",
+    "es": "Colores y escudo del equipo",
+    "it": "Colori e logo della squadra"
+  },
+  "Etkin": {
+    "en": "Enabled",
+    "de": "Aktiv",
+    "fr": "Activé",
+    "es": "Activado",
+    "it": "Attivo"
+  },
+  "Kotak TV renkleri": {
+    "en": "Kotak TV colours",
+    "de": "Kotak-TV-Farben",
+    "fr": "Couleurs Kotak TV",
+    "es": "Colores de Kotak TV",
+    "it": "Colori Kotak TV"
+  },
+  "Takım, dizi, yeni film": {
+    "en": "Teams, series, new films",
+    "de": "Teams, Serien, neue Filme",
+    "fr": "Équipes, séries, nouveaux films",
+    "es": "Equipos, series, películas nuevas",
+    "it": "Squadre, serie, nuovi film"
+  },
+  "Cihaz ayarları": {
+    "en": "Device settings",
+    "de": "Geräteeinstellungen",
+    "fr": "Réglages de l’appareil",
+    "es": "Ajustes del dispositivo",
+    "it": "Impostazioni dispositivo"
+  },
+  "Profil ve PIN": {
+    "en": "Profile and PIN",
+    "de": "Profil und PIN",
+    "fr": "Profil et code PIN",
+    "es": "Perfil y PIN",
+    "it": "Profilo e PIN"
+  },
+  "İzleme geçmişini kaydet": {
+    "en": "Save watch history",
+    "de": "Wiedergabeverlauf speichern",
+    "fr": "Enregistrer l’historique",
+    "es": "Guardar historial",
+    "it": "Salva cronologia"
+  },
+  "İzleme geçmişi": {
+    "en": "Watch history",
+    "de": "Wiedergabeverlauf",
+    "fr": "Historique",
+    "es": "Historial",
+    "it": "Cronologia"
+  },
+  "Temizle": {
+    "en": "Clear",
+    "de": "Löschen",
+    "fr": "Effacer",
+    "es": "Borrar",
+    "it": "Cancella"
+  },
+  "Listeleri yönet": {
+    "en": "Manage playlists",
+    "de": "Listen verwalten",
+    "fr": "Gérer les listes",
+    "es": "Administrar listas",
+    "it": "Gestisci playlist"
+  },
+  "Oynatma listesini önbelleğe al": {
+    "en": "Cache playlist",
+    "de": "Liste zwischenspeichern",
+    "fr": "Mettre la liste en cache",
+    "es": "Guardar lista en caché",
+    "it": "Memorizza playlist"
+  },
+  "Maksimum liste yükleme süresi": {
+    "en": "Playlist timeout",
+    "de": "Zeitlimit für Listen",
+    "fr": "Délai maximal de liste",
+    "es": "Tiempo límite de lista",
+    "it": "Timeout playlist"
+  },
+  "Maksimum EPG yükleme süresi": {
+    "en": "EPG timeout",
+    "de": "EPG-Zeitlimit",
+    "fr": "Délai maximal EPG",
+    "es": "Tiempo límite EPG",
+    "it": "Timeout EPG"
+  },
+  "24 saatlik EPG önbelleği": {
+    "en": "24-hour EPG cache",
+    "de": "24-Stunden-EPG-Cache",
+    "fr": "Cache EPG de 24 heures",
+    "es": "Caché EPG de 24 horas",
+    "it": "Cache EPG di 24 ore"
+  },
+  "Ayrıntılar": {
+    "en": "Details",
+    "de": "Details",
+    "fr": "Détails",
+    "es": "Detalles",
+    "it": "Dettagli"
+  },
+  "Ses Testi": {
+    "en": "Audio test",
+    "de": "Audiotest",
+    "fr": "Test audio",
+    "es": "Prueba de audio",
+    "it": "Test audio"
+  },
+  "Cihaz sesini kontrol et": {
+    "en": "Check device sound",
+    "de": "Geräteton prüfen",
+    "fr": "Vérifier le son",
+    "es": "Comprobar sonido",
+    "it": "Controlla audio"
+  },
+  "İleri geri sarma aralığı": {
+    "en": "Seek interval",
+    "de": "Sprungintervall",
+    "fr": "Intervalle de saut",
+    "es": "Intervalo de salto",
+    "it": "Intervallo salto"
+  },
+  "Ağ önbellekleme": {
+    "en": "Network buffering",
+    "de": "Netzwerkpuffer",
+    "fr": "Tampon réseau",
+    "es": "Búfer de red",
+    "it": "Buffer di rete"
+  },
+  "Canlı yayın": {
+    "en": "Live broadcast",
+    "de": "Live-Übertragung",
+    "fr": "Diffusion en direct",
+    "es": "Emisión en directo",
+    "it": "Trasmissione in diretta"
+  },
+  "Otomatik oynat": {
+    "en": "Autoplay",
+    "de": "Automatisch abspielen",
+    "fr": "Lecture automatique",
+    "es": "Reproducción automática",
+    "it": "Riproduzione automatica"
+  },
+  "Tam ekran & PiP": {
+    "en": "Fullscreen & PiP",
+    "de": "Vollbild & PiP",
+    "fr": "Plein écran et PiP",
+    "es": "Pantalla completa y PiP",
+    "it": "Schermo intero e PiP"
+  },
+  "Cihaz desteğine göre": {
+    "en": "Depending on device support",
+    "de": "Je nach Geräteunterstützung",
+    "fr": "Selon l’appareil",
+    "es": "Según el dispositivo",
+    "it": "Secondo il dispositivo"
+  },
+  "Ses ve altyazı": {
+    "en": "Audio and subtitles",
+    "de": "Audio und Untertitel",
+    "fr": "Audio et sous-titres",
+    "es": "Audio y subtítulos",
+    "it": "Audio e sottotitoli"
+  },
+  "Ses ve Altyazı": {
+    "en": "Audio and Subtitles",
+    "de": "Audio und Untertitel",
+    "fr": "Audio et sous-titres",
+    "es": "Audio y subtítulos",
+    "it": "Audio e sottotitoli"
+  },
+  "Yayındaki parçalar": {
+    "en": "Available stream tracks",
+    "de": "Verfügbare Tonspuren",
+    "fr": "Pistes disponibles",
+    "es": "Pistas disponibles",
+    "it": "Tracce disponibili"
+  },
+  "Oynatıcı Ayarları": {
+    "en": "Player settings",
+    "de": "Player-Einstellungen",
+    "fr": "Réglages du lecteur",
+    "es": "Ajustes del reproductor",
+    "it": "Impostazioni lettore"
+  },
+  "Kanal ara": {
+    "en": "Search channels",
+    "de": "Sender suchen",
+    "fr": "Chercher une chaîne",
+    "es": "Buscar canales",
+    "it": "Cerca canali"
+  },
+  "Kategori ara": {
+    "en": "Search categories",
+    "de": "Kategorien suchen",
+    "fr": "Chercher une catégorie",
+    "es": "Buscar categorías",
+    "it": "Cerca categorie"
+  },
+  "Takım ara": {
+    "en": "Search teams",
+    "de": "Teams suchen",
+    "fr": "Chercher une équipe",
+    "es": "Buscar equipos",
+    "it": "Cerca squadre"
+  },
+  "Tamam": {
+    "en": "Done",
+    "de": "Fertig",
+    "fr": "Terminé",
+    "es": "Listo",
+    "it": "Fatto"
+  },
+  "Kaydediliyor…": {
+    "en": "Saving…",
+    "de": "Wird gespeichert…",
+    "fr": "Enregistrement…",
+    "es": "Guardando…",
+    "it": "Salvataggio…"
+  },
+  "Önce bir takım seçin.": {
+    "en": "Choose a team first.",
+    "de": "Wähle zuerst ein Team.",
+    "fr": "Choisissez d’abord une équipe.",
+    "es": "Elige primero un equipo.",
+    "it": "Scegli prima una squadra."
+  },
+  "En fazla 3 takım takip edebilirsiniz.": {
+    "en": "You can follow up to 3 teams.",
+    "de": "Du kannst bis zu 3 Teams folgen.",
+    "fr": "Vous pouvez suivre jusqu’à 3 équipes.",
+    "es": "Puedes seguir hasta 3 equipos.",
+    "it": "Puoi seguire fino a 3 squadre."
+  },
+  "En fazla 3 takım takip edebilirsiniz. Ülke ve ligden takım seçin.": {
+    "en": "Follow up to 3 teams. Choose by country and league.",
+    "de": "Folge bis zu 3 Teams. Wähle Land und Liga.",
+    "fr": "Suivez jusqu’à 3 équipes. Choisissez le pays et la ligue.",
+    "es": "Sigue hasta 3 equipos. Elige país y liga.",
+    "it": "Segui fino a 3 squadre. Scegli paese e campionato."
+  },
+  "Bu takımın renklerini ve logosunu kullan": {
+    "en": "Use this team’s colours and logo",
+    "de": "Farben und Logo dieses Teams verwenden",
+    "fr": "Utiliser les couleurs et le logo de cette équipe",
+    "es": "Usar colores y escudo de este equipo",
+    "it": "Usa colori e logo di questa squadra"
+  },
+  "Kotak TV renklerini kullan": {
+    "en": "Use Kotak TV colours",
+    "de": "Kotak-TV-Farben verwenden",
+    "fr": "Utiliser les couleurs Kotak TV",
+    "es": "Usar colores de Kotak TV",
+    "it": "Usa colori Kotak TV"
+  },
+  "Telefon simgesini bu takım yap": {
+    "en": "Use this team as the app icon",
+    "de": "Dieses Team als App-Symbol verwenden",
+    "fr": "Utiliser cette équipe comme icône",
+    "es": "Usar este equipo como icono",
+    "it": "Usa questa squadra come icona"
+  },
+  "Telefon simgesini Kotak TV yap": {
+    "en": "Restore the Kotak TV app icon",
+    "de": "Kotak-TV-App-Symbol wiederherstellen",
+    "fr": "Rétablir l’icône Kotak TV",
+    "es": "Restaurar icono de Kotak TV",
+    "it": "Ripristina icona Kotak TV"
+  },
+  "Simge, uygulamadan çıktığınızda uygulanacak.": {
+    "en": "The icon will change when you leave the app.",
+    "de": "Das Symbol ändert sich beim Verlassen der App.",
+    "fr": "L’icône changera en quittant l’application.",
+    "es": "El icono cambiará al salir de la aplicación.",
+    "it": "L’icona cambierà quando esci dall’app."
+  },
+  "Simge değişikliği kaydedilemedi.": {
+    "en": "The icon change could not be saved.",
+    "de": "Die Symboländerung konnte nicht gespeichert werden.",
+    "fr": "Impossible d’enregistrer le changement d’icône.",
+    "es": "No se pudo guardar el cambio de icono.",
+    "it": "Impossibile salvare il cambio icona."
+  },
+  "Ebeveyn PIN’i": {
+    "en": "Parental PIN",
+    "de": "Eltern-PIN",
+    "fr": "Code PIN parental",
+    "es": "PIN parental",
+    "it": "PIN genitore"
+  },
+  "İzin verilen kategoriler": {
+    "en": "Allowed categories",
+    "de": "Erlaubte Kategorien",
+    "fr": "Catégories autorisées",
+    "es": "Categorías permitidas",
+    "it": "Categorie consentite"
+  },
+  "Ebeveyn PIN’i oluştur": {
+    "en": "Create a parental PIN",
+    "de": "Eltern-PIN erstellen",
+    "fr": "Créer un code PIN parental",
+    "es": "Crear PIN parental",
+    "it": "Crea PIN genitore"
+  },
+  "PIN tekrar": {
+    "en": "Confirm PIN",
+    "de": "PIN bestätigen",
+    "fr": "Confirmer le PIN",
+    "es": "Confirmar PIN",
+    "it": "Conferma PIN"
+  },
+  "PIN yanlış.": {
+    "en": "Incorrect PIN.",
+    "de": "Falsche PIN.",
+    "fr": "Code PIN incorrect.",
+    "es": "PIN incorrecto.",
+    "it": "PIN errato."
+  },
+  "Kaydet ve çocuk profiline geç": {
+    "en": "Save and enter child mode",
+    "de": "Speichern und Kinderprofil öffnen",
+    "fr": "Enregistrer et ouvrir le profil enfant",
+    "es": "Guardar y entrar al perfil infantil",
+    "it": "Salva e apri profilo bambino"
+  },
+  "Çocuk korumasını kaldır": {
+    "en": "Remove child protection",
+    "de": "Kinderschutz entfernen",
+    "fr": "Supprimer la protection enfant",
+    "es": "Quitar protección infantil",
+    "it": "Rimuovi protezione bambino"
+  },
+  "Koruma kaldırılamadı.": {
+    "en": "Protection could not be removed.",
+    "de": "Schutz konnte nicht entfernt werden.",
+    "fr": "Impossible de supprimer la protection.",
+    "es": "No se pudo quitar la protección.",
+    "it": "Impossibile rimuovere la protezione."
+  },
+  "Çocuk profili için en az bir kategori seçin.": {
+    "en": "Select at least one category for the child profile.",
+    "de": "Wähle mindestens eine Kategorie für das Kinderprofil.",
+    "fr": "Choisissez au moins une catégorie pour l’enfant.",
+    "es": "Elige al menos una categoría para el perfil infantil.",
+    "it": "Scegli almeno una categoria per il profilo bambino."
+  },
+  "Çıkmak için ekranın üstündeki Çocuk Profili düğmesine dokunup PIN’inizi girin.": {
+    "en": "To exit, tap Child Profile at the top and enter your PIN.",
+    "de": "Zum Verlassen oben auf Kinderprofil tippen und PIN eingeben.",
+    "fr": "Pour quitter, touchez Profil enfant en haut et entrez votre PIN.",
+    "es": "Para salir, toca Perfil infantil arriba e introduce tu PIN.",
+    "it": "Per uscire, tocca Profilo bambino in alto e inserisci il PIN."
+  },
+  "Çocuk profili açık: film ve diziler gizlidir. PIN ile yetişkin profiline geç.": {
+    "en": "Child mode is on: films and series are hidden. Enter your PIN to switch to the adult profile.",
+    "de": "Kinderprofil aktiv: Filme und Serien sind verborgen. Mit PIN zum Erwachsenenprofil wechseln.",
+    "fr": "Profil enfant actif : films et séries masqués. Utilisez le PIN pour le profil adulte.",
+    "es": "Perfil infantil activo: películas y series ocultas. Usa el PIN para el perfil adulto.",
+    "it": "Profilo bambino attivo: film e serie nascosti. Usa il PIN per il profilo adulto."
+  },
+  "Yetişkin profiline geçmek ve ayarları değiştirmek için PIN’inizi girin.": {
+    "en": "Enter your PIN to access the adult profile and settings.",
+    "de": "Gib deine PIN für das Erwachsenenprofil und die Einstellungen ein.",
+    "fr": "Entrez votre PIN pour le profil adulte et les réglages.",
+    "es": "Introduce el PIN para acceder al perfil adulto y ajustes.",
+    "it": "Inserisci il PIN per il profilo adulto e le impostazioni."
+  },
+  "Kategori seçmek için önce bir IPTV listesi ekleyin.": {
+    "en": "Add an IPTV playlist before choosing categories.",
+    "de": "Füge vor der Kategorieauswahl eine IPTV-Liste hinzu.",
+    "fr": "Ajoutez une liste IPTV avant de choisir les catégories.",
+    "es": "Añade una lista IPTV antes de elegir categorías.",
+    "it": "Aggiungi una playlist IPTV prima di scegliere le categorie."
+  },
+  "Ekranı doldur, görüntüyü esnetmeden kenarlardan kırpar.": {
+    "en": "Fill screen crops the edges without stretching the picture.",
+    "de": "Bildschirm füllen beschneidet die Ränder ohne Verzerrung.",
+    "fr": "Remplir l’écran rogne les bords sans étirer l’image.",
+    "es": "Llenar pantalla recorta los bordes sin estirar la imagen.",
+    "it": "Riempi schermo ritaglia i bordi senza deformare l’immagine."
+  },
+  "Sağlayıcı bu kanal için program bilgisi göndermedi.": {
+    "en": "The provider has not supplied this channel’s schedule.",
+    "de": "Der Anbieter hat kein Programm für diesen Sender geliefert.",
+    "fr": "Le fournisseur n’a pas transmis le programme de cette chaîne.",
+    "es": "El proveedor no ha enviado la programación de este canal.",
+    "it": "Il fornitore non ha inviato la guida di questo canale."
+  },
+  "Sağlayıcı bu program için açıklama vermedi.": {
+    "en": "The provider has not supplied a description.",
+    "de": "Der Anbieter hat keine Beschreibung geliefert.",
+    "fr": "Le fournisseur n’a pas fourni de description.",
+    "es": "El proveedor no ha proporcionado descripción.",
+    "it": "Il fornitore non ha fornito una descrizione."
+  },
+  "Çocuk Profili · Ebeveyn PIN’i ile aç": {
+    "en": "Child Profile · Unlock with parental PIN",
+    "de": "Kinderprofil · Mit Eltern-PIN entsperren",
+    "fr": "Profil enfant · Déverrouiller avec PIN",
+    "es": "Perfil infantil · Desbloquear con PIN",
+    "it": "Profilo bambino · Sblocca con PIN"
+  },
+  "Şimdi": {
+    "en": "Now",
+    "de": "Jetzt",
+    "fr": "Maintenant",
+    "es": "Ahora",
+    "it": "Ora"
+  },
+  "Bu Akşam": {
+    "en": "Tonight",
+    "de": "Heute Abend",
+    "fr": "Ce soir",
+    "es": "Esta noche",
+    "it": "Stasera"
+  },
+  "24 Saat": {
+    "en": "24 Hours",
+    "de": "24 Stunden",
+    "fr": "24 heures",
+    "es": "24 horas",
+    "it": "24 ore"
+  },
+  "Bana hatırlat": {
+    "en": "Remind me",
+    "de": "Mich erinnern",
+    "fr": "Me rappeler",
+    "es": "Recordarme",
+    "it": "Ricordami"
+  },
+  "Kanalı izle": {
+    "en": "Watch channel",
+    "de": "Sender ansehen",
+    "fr": "Regarder la chaîne",
+    "es": "Ver canal",
+    "it": "Guarda canale"
+  },
+  "Türkiye": {
+    "en": "Türkiye",
+    "de": "Türkei",
+    "fr": "Turquie",
+    "es": "Turquía",
+    "it": "Turchia"
+  },
+  "İngiltere": {
+    "en": "England",
+    "de": "England",
+    "fr": "Angleterre",
+    "es": "Inglaterra",
+    "it": "Inghilterra"
+  },
+  "İspanya": {
+    "en": "Spain",
+    "de": "Spanien",
+    "fr": "Espagne",
+    "es": "España",
+    "it": "Spagna"
+  },
+  "Almanya": {
+    "en": "Germany",
+    "de": "Deutschland",
+    "fr": "Allemagne",
+    "es": "Alemania",
+    "it": "Germania"
+  },
+  "Fransa": {
+    "en": "France",
+    "de": "Frankreich",
+    "fr": "France",
+    "es": "Francia",
+    "it": "Francia"
+  },
+  "İtalya": {
+    "en": "Italy",
+    "de": "Italien",
+    "fr": "Italie",
+    "es": "Italia",
+    "it": "Italia"
+  }
+}

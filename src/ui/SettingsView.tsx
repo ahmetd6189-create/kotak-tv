@@ -14,12 +14,14 @@ import { PageHeader, d } from "./Design";
 import { colors as c } from "../theme";
 export type Preferences = { layout: "Klasik" | "Modern"; saveHistory: boolean; videoFit?:"cover"|"contain"; seekSeconds?: number; bufferSeconds?: number };
 export function SettingsView({
+  child=false,
   settings,
   onChange,
   onBack,
   onInfo,
   onClearHistory,
 }: {
+  child?:boolean;
   settings: Preferences;
   onChange: (p: Preferences) => void;
   onBack: () => void;
@@ -36,7 +38,7 @@ export function SettingsView({
   );
   return (
     <ScrollView contentContainerStyle={d.screenList}>
-      <PageHeader title="Ayarlar" onBack={onBack} />
+      <PageHeader title="Ayarlar" onBack={onBack} />{child&&<Pressable onPress={()=>onInfo("Güvenli Çocuk Profili")} style={{padding:16,backgroundColor:"#172439",borderRadius:14}}><Text style={s.label}>Çocuk profili açık: film ve diziler gizlidir. PIN ile yetişkin profiline geç.</Text></Pressable>}
       <Text style={s.section}>TEMA</Text>
       <View style={s.group}>
         <Text style={[s.label, { padding: 16 }]}>Ana Ekran Düzeni</Text>

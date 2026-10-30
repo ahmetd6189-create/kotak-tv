@@ -194,6 +194,7 @@ export function KotakApp({entitlement,accountEmail,onSignOut,onEnableNotices}:Ac
   const [securityReady, setSecurityReady] = useState(false);
   const [securityError, setSecurityError] = useState(false);
   const [parentOpen, setParentOpen] = useState(false);
+  const [parentReentry,setParentReentry]=useState(false);const reentryUnlocked=useRef(false);
   const [cacheTime, setCacheTime] = useState<number | null>(null);
   const [audioTestOpen,setAudioTestOpen]=useState(false);
   const [voiceOpen,setVoiceOpen]=useState(false);
@@ -348,9 +349,7 @@ export function KotakApp({entitlement,accountEmail,onSignOut,onEnableNotices}:Ac
     if (!protection || child) return;
     const listener = AppState.addEventListener("change", state => {
       if (state === "background") {
-        episodeJob.current?.abort();
-        setChild(true); setPlaying([]); setScreen(null); setEpisodes(null);
-        setDetails(null); setSearchOpen(false); setInfo(null); setOptionsOpen(false); setAdd(false);setFollowOpen(false);setShareOpen(false);setPendingReminder(null);setMediaDetails(null);setVoiceOpen(false);setImdbOpen(false);setCategoryOpen(false);setEpgSettingsOpen(false);
+        reentryUnlocked.current=false;setParentReentry(true);
       }
     });
     return () => listener.remove();
@@ -496,12 +495,12 @@ export function KotakApp({entitlement,accountEmail,onSignOut,onEnableNotices}:Ac
     if(rules.length>=50)throw new Error("En fazla 50 takip eklenebilir.");
     let baseline=entries;
     if(draft.kind==="series"&&draft.seriesId){const series=entries.find(e=>e.seriesId===draft.seriesId&&e.playlistId===draft.playlistId);const config=configs.find(c=>c.id===draft.playlistId);if(series&&config)baseline=[...entries,...await loadEpisodes(config,series)];}
-    await seedFollows(baseline);
+    if(draft.kind!=="team")await seedFollows(baseline);
     const existing=rules.find(r=>r.kind===draft.kind&&r.label===draft.label&&r.playlistId===draft.playlistId);
     const next=[...rules.filter(r=>r.id!==existing?.id),{...draft,id:existing?.id||`f${Date.now().toString(36)}`,createdAt:existing?.createdAt||Date.now(),leadMinutes:minutes}];
-    await saveFollows(next);setFollowRules(next);await syncTeamReminders(entries,guides,next,()=>!childRef.current);
+    await saveFollows(next);setFollowRules(next);
   }
-  useEffect(()=>{if(!securityReady)return;if(child){void cancelFollowNotifications();setFollowOpen(false);return;}const controller={active:true};void syncTeamReminders(entries,guides,followRules,()=>controller.active&&!childRef.current).catch(()=>{});return()=>{controller.active=false};},[entries,guides,followRules,child,securityReady]);
+  useEffect(()=>{if(!securityReady)return;if(child){void cancelFollowNotifications();setFollowOpen(false);return;}const controller={active:true};const timer=setTimeout(()=>void syncTeamReminders(live,guides,followRules,()=>controller.active&&!childRef.current).catch(()=>{}),1500);return()=>{controller.active=false;clearTimeout(timer)};},[entries,guides,followRules,child,securityReady]);
   const followCheckedAt=useRef(Date.now());
   useEffect(()=>{const check=()=>{if(child||!followRules.length||!configs.length||busy||loadingLists||boot||playing.length||AppState.currentState!=="active"||Date.now()-followCheckedAt.current<5*60000)return;followCheckedAt.current=Date.now();void refreshAll().then(()=>{if(playingRef.current.length||childRef.current)return;if(followRules.some(r=>r.kind!=="team")){vodReady.current.clear();void ensureVod();}if(followRules.some(r=>r.kind==="team")){const controller=new AbortController();guideJob.current=controller;for(const config of configs)void readGuide(config,inferredEpgUrl(config),controller.signal);}});};const sub=AppState.addEventListener("change",state=>{if(state==="active")check();});const timer=setInterval(check,5*60000);return()=>{sub.remove();clearInterval(timer)};},[child,followRules.length,configs.length,busy,loadingLists,boot,playing.length]);
   async function reminder(item:Entry,p:Program){
@@ -757,6 +756,8 @@ export function KotakApp({entitlement,accountEmail,onSignOut,onEnableNotices}:Ac
     );
   }
   if (!securityReady) return <View style={[s.root, {alignItems:"center",justifyContent:"center",padding:24}]}>{securityError ? <Text style={d.secondary}>Koruma bilgileri okunamadı. Güvenliğiniz için içerik gizlendi. Uygulamayı yeniden açın.</Text> : <ActivityIndicator color={colors.blue}/>}</View>;
+  if(parentReentry&&protection)return <View style={{flex:1,backgroundColor:'#000'}}><ParentPanel protection={protection} child groups={[]} onChange={(value,isChild)=>{setProtection(value);if(!isChild){reentryUnlocked.current=true;setParentReentry(false);}}} onClose={()=>{setParentReentry(false);if(reentryUnlocked.current)return;setChild(true);setInfo(null);setOptionsOpen(false);setAdd(false);setFollowOpen(false);setShareOpen(false);setPendingReminder(null);setImdbOpen(false);setCategoryOpen(false);setEpgSettingsOpen(false);setPlaying([]);setEpisodes(null);setDetails(null);setMediaDetails(null);setSearchOpen(false);setVoiceOpen(false);setTop('ANASAYFA');setTab('ANASAYFA');setScreen(null);}}/></View>;
+
   return (
     <View style={s.root}>
       <View style={s.canvas}>
@@ -821,6 +822,7 @@ export function KotakApp({entitlement,accountEmail,onSignOut,onEnableNotices}:Ac
                 />
               ) : screen === "settings" ? (
                 <SettingsView
+                  child={child}
                   settings={settings}
                   onChange={changeSettings}
                   onBack={() => setScreen(null)}
@@ -1129,7 +1131,7 @@ export function KotakApp({entitlement,accountEmail,onSignOut,onEnableNotices}:Ac
               style={[d.secondary, { textAlign: "center", lineHeight: 22 }]}
             >
               {info === "Hakkında"
-                ? "Kotak TV\nKendi IPTV listenizle canlı TV, film ve dizi deneyimi.\nSürüm 1.0.15 · defsearchtv@gmail.com"
+                ? "Kotak TV\nKendi IPTV listenizle canlı TV, film ve dizi deneyimi.\nSürüm 1.0.16 · defsearchtv@gmail.com"
                 : info === "İletişim"
                   ? "defsearchtv@gmail.com"
                   : info?.includes("EPG")

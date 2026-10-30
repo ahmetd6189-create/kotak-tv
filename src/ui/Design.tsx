@@ -1,3 +1,4 @@
+import {useAppearance,accentFor,accentText} from './Appearance';
 import React, { useState } from "react";
 import {
   ActivityIndicator,
@@ -105,6 +106,7 @@ export function Pill({
   icon?: LucideIcon;
   disabled?: boolean;
 }) {
+  const {value:appearance}=useAppearance();
   const [focused, setFocused] = useState(false);
   return (
     <Pressable
@@ -121,8 +123,8 @@ export function Pill({
         disabled && { opacity: 0.4 },
       ]}
     >
-      {Icon && <Icon size={14} color={active ? c.white : c.blue} />}
-      <Text style={[d.pillText, active && { color: c.white }]}>{label}</Text>
+      {Icon && <Icon size={14} color={active ? accentText(appearance) : accentFor(appearance)} />}
+      <Text style={[d.pillText, active && { color: accentText(appearance) }]}>{label}</Text>
     </Pressable>
   );
 }
@@ -747,7 +749,7 @@ export function MoreScreen({
         );
       })}
       <Text style={[d.micro, { textAlign: "center", marginTop: 24 }]}>
-        Kotak TV · 1.0.15
+        Kotak TV · 1.0.16
       </Text>
       <FeatureCards onOpen={onOpen}/>
     </ScrollView>
