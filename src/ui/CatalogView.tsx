@@ -1,3 +1,4 @@
+import {localeFor} from '../native/i18n';
 import React,{useMemo,useState} from 'react';
 import {FlatList,Image,Pressable,StyleSheet,Text,TextInput,View,useWindowDimensions} from './Native';
 import {ChevronLeft,ChevronRight,Film,LayoutGrid,Search} from 'lucide-react-native';
@@ -6,7 +7,7 @@ import {mediaTitle,sortedCatalog,normalized} from '../native/catalog-tools';
 import {IconButton,Pill,d} from './Design';
 import {colors as c} from '../theme';
 export function ratingLabel(item:Entry){return item.imdbRating&&item.imdbRating>0&&item.imdbRating<=10?`IMDb ${item.imdbRating.toFixed(1)}`:item.rating&&item.rating>0&&item.rating<=10?`IMDb — · Sağlayıcı ${item.rating.toFixed(1)}`:'IMDb —';}
-export function dateLabel(value?:string){if(!value)return '';const date=new Date(value);return Number.isFinite(date.getTime())?new Intl.DateTimeFormat('tr-TR',{year:'numeric',month:'short',timeZone:'UTC'}).format(date):value;}
+export function dateLabel(value?:string){if(!value)return '';const date=new Date(value);return Number.isFinite(date.getTime())?new Intl.DateTimeFormat(localeFor(),{year:'numeric',month:'short',timeZone:'UTC'}).format(date):value;}
 export function PosterCard({item,onPress,width=112,rank}:{item:Entry;onPress:()=>void;width?:number;rank?:number}){
  return <Pressable accessibilityRole="button" accessibilityLabel={`${mediaTitle(item.name)} detayları`} onPress={onPress} style={{width}}>
  <View style={{height:rank?width*.57:width*1.5,backgroundColor:'#19191b',borderRadius:10,overflow:'hidden',alignItems:'center',justifyContent:'center'}}>{item.logo?<Image source={{uri:item.logo}} resizeMode="cover" style={StyleSheet.absoluteFill}/>:<Film color={c.zinc500} size={30}/>}{!!rank&&<Text style={s.rank}>{rank}</Text>}{!rank&&!!ratingLabel(item)&&<Text style={s.score}>{ratingLabel(item)}</Text>}</View>

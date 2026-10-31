@@ -1678,5 +1678,2637 @@
     "fr": "Ne manquez pas le match de {0}",
     "es": "No te pierdas el partido de {0}",
     "it": "Non perdere la partita di {0}"
+  },
+  "EPG bağlantısı bulunamadı. Liste ayarlarından XMLTV adresi ekleyebilirsiniz.": {
+    "en": "No EPG link. Add XMLTV in playlist settings.",
+    "de": "Kein EPG-Link. XMLTV in Listeneinstellungen hinzufügen.",
+    "fr": "Aucun lien EPG. Ajoutez XMLTV dans les réglages.",
+    "es": "Sin enlace EPG. Añade XMLTV en ajustes de lista.",
+    "it": "Nessun link EPG. Aggiungi XMLTV nelle impostazioni."
+  },
+  "Görünür kanalların programları kontrol ediliyor…": {
+    "en": "Checking visible channel programmes…",
+    "de": "Sichtbare Senderprogramme werden geprüft…",
+    "fr": "Vérification des programmes visibles…",
+    "es": "Comprobando programas visibles…",
+    "it": "Controllo programmi visibili…"
+  },
+  "Kanal sunucusundan program akışı alındı.": {
+    "en": "Programme guide received.",
+    "de": "Programmübersicht empfangen.",
+    "fr": "Programme reçu.",
+    "es": "Programación recibida.",
+    "it": "Guida ricevuta."
+  },
+  "Sağlayıcı bu kanallar için program göndermedi. Diğer kanallara bakabilir veya EPG kaynağını değiştirebilirsin.": {
+    "en": "No programmes supplied. Try other channels or another EPG source.",
+    "de": "Keine Programme geliefert. Andere Sender oder EPG-Quelle versuchen.",
+    "fr": "Aucun programme fourni. Essayez d’autres chaînes ou une autre source EPG.",
+    "es": "Sin programas. Prueba otros canales u otra fuente EPG.",
+    "it": "Nessun programma fornito. Prova altri canali o sorgente EPG."
+  },
+  "Program akışı alınıyor…": {
+    "en": "Loading programme guide…",
+    "de": "Programm wird geladen…",
+    "fr": "Chargement du programme…",
+    "es": "Cargando programación…",
+    "it": "Caricamento guida…"
+  },
+  "EPG boş": {
+    "en": "Empty EPG",
+    "de": "EPG leer",
+    "fr": "EPG vide",
+    "es": "EPG vacío",
+    "it": "EPG vuoto"
+  },
+  "Sağlayıcının mevcut yayın akışı alındı.": {
+    "en": "Provider’s current schedule received.",
+    "de": "Aktuelles Anbieterprogramm empfangen.",
+    "fr": "Programme actuel du fournisseur reçu.",
+    "es": "Programación actual recibida.",
+    "it": "Programmazione attuale ricevuta."
+  },
+  "EPG yüklemesi durduruldu. Yenile ile tekrar deneyebilirsin.": {
+    "en": "EPG loading stopped. Refresh to retry.",
+    "de": "EPG-Laden gestoppt. Zum Wiederholen aktualisieren.",
+    "fr": "Chargement EPG arrêté. Actualisez pour réessayer.",
+    "es": "Carga EPG detenida. Actualiza para reintentar.",
+    "it": "Caricamento EPG interrotto. Aggiorna per riprovare."
+  },
+  "XMLTV alınamadı; kanalların kendi EPG verisi kontrol ediliyor…": {
+    "en": "XMLTV unavailable; checking channel EPG…",
+    "de": "XMLTV nicht verfügbar; Sender-EPG wird geprüft…",
+    "fr": "XMLTV indisponible ; vérification de l’EPG des chaînes…",
+    "es": "XMLTV no disponible; comprobando EPG…",
+    "it": "XMLTV non disponibile; controllo EPG…"
+  },
+  "Sağlayıcı bu kanallar için EPG göndermedi. EPG Kaynağı ayarını kontrol edebilirsin.": {
+    "en": "Provider sent no EPG for these channels. Check EPG Source settings.",
+    "de": "Kein EPG für diese Sender geliefert. EPG-Quelle prüfen.",
+    "fr": "Aucun EPG fourni pour ces chaînes. Vérifiez la source EPG.",
+    "es": "Sin EPG para estos canales. Revisa la fuente EPG.",
+    "it": "Nessun EPG per questi canali. Controlla la sorgente EPG."
+  },
+  "Kayıtlı program rehberi gösteriliyor.": {
+    "en": "Showing saved programme guide.",
+    "de": "Gespeichertes Programm wird angezeigt.",
+    "fr": "Affichage du programme enregistré.",
+    "es": "Mostrando guía guardada.",
+    "it": "Visualizzazione guida salvata."
+  },
+  "Kanal önbelleği kaydedilemedi.": {
+    "en": "Could not save channel cache.",
+    "de": "Sendercache nicht gespeichert.",
+    "fr": "Cache des chaînes non enregistré.",
+    "es": "No se pudo guardar caché.",
+    "it": "Cache canali non salvata."
+  },
+  "Kayıtlı listeler okunamadı. Listeyi yeniden ekleyebilirsiniz.": {
+    "en": "Could not read saved playlists. Add the playlist again.",
+    "de": "Gespeicherte Listen nicht lesbar. Liste erneut hinzufügen.",
+    "fr": "Listes enregistrées illisibles. Ajoutez la liste à nouveau.",
+    "es": "No se pudieron leer listas. Añade la lista de nuevo.",
+    "it": "Playlist salvate illeggibili. Aggiungi di nuovo la playlist."
+  },
+  "{0} içerik alındı.{1}": {
+    "en": "{0} items loaded.{1}",
+    "de": "{0} Inhalte geladen.{1}",
+    "fr": "{0} contenus chargés.{1}",
+    "es": "{0} contenidos cargados.{1}",
+    "it": "{0} contenuti caricati.{1}"
+  },
+  "Kanal önbelleği kaydedilemedi. Yayın izlemeye devam edebilirsiniz.": {
+    "en": "Could not save cache. You can keep watching.",
+    "de": "Cache nicht gespeichert. Du kannst weitersehen.",
+    "fr": "Cache non enregistré. Vous pouvez continuer à regarder.",
+    "es": "Caché no guardada. Puedes seguir viendo.",
+    "it": "Cache non salvata. Puoi continuare a guardare."
+  },
+  "Liste yenileniyor; mevcut içerikleri kullanabilirsin.": {
+    "en": "Refreshing playlist; existing content is available.",
+    "de": "Liste wird aktualisiert; vorhandene Inhalte verfügbar.",
+    "fr": "Actualisation ; contenus existants disponibles.",
+    "es": "Actualizando lista; contenido existente disponible.",
+    "it": "Aggiornamento playlist; contenuti esistenti disponibili."
+  },
+  "İşlem iptal edildi.": {
+    "en": "Operation cancelled.",
+    "de": "Vorgang abgebrochen.",
+    "fr": "Opération annulée.",
+    "es": "Operación cancelada.",
+    "it": "Operazione annullata."
+  },
+  "Liste güncelleniyor. Tamamlanınca takibi kaydedebilirsin.": {
+    "en": "Playlist updating. Save the follow when it finishes.",
+    "de": "Liste wird aktualisiert. Danach das Abonnement speichern.",
+    "fr": "Liste en actualisation. Enregistrez le suivi après.",
+    "es": "Lista actualizándose. Guarda el seguimiento al terminar.",
+    "it": "Playlist in aggiornamento. Salva il seguito al termine."
+  },
+  "Hatırlatıcı": {
+    "en": "Reminder",
+    "de": "Erinnerung",
+    "fr": "Rappel",
+    "es": "Recordatorio",
+    "it": "Promemoria"
+  },
+  "Bölümler": {
+    "en": "Episodes",
+    "de": "Folgen",
+    "fr": "Épisodes",
+    "es": "Episodios",
+    "it": "Episodi"
+  },
+  "Film detayı alınamadı; listedeki yayın adresi deneniyor.": {
+    "en": "Film details unavailable; trying the playlist stream URL.",
+    "de": "Filmdetails fehlen; Stream-URL aus der Liste wird versucht.",
+    "fr": "Détails indisponibles ; essai de l’adresse du flux.",
+    "es": "Detalles no disponibles; probando URL de la lista.",
+    "it": "Dettagli non disponibili; tentativo con URL della playlist."
+  },
+  "Yayın bağlantısı": {
+    "en": "Stream link",
+    "de": "Streamlink",
+    "fr": "Lien du flux",
+    "es": "Enlace de emisión",
+    "it": "Link del flusso"
+  },
+  "Kayıtlı kanal bilgisi gösteriliyor. İnternet bağlantısını kontrol edip Kütüphaneniz ekranından listeyi yenileyin.": {
+    "en": "Showing saved channels. Check internet and refresh the playlist in Your Library.",
+    "de": "Gespeicherte Sender angezeigt. Internet prüfen und Liste in der Bibliothek aktualisieren.",
+    "fr": "Chaînes enregistrées affichées. Vérifiez Internet et actualisez la liste dans la bibliothèque.",
+    "es": "Canales guardados. Revisa Internet y actualiza la lista en Tu biblioteca.",
+    "it": "Canali salvati visualizzati. Controlla Internet e aggiorna la playlist nella libreria."
+  },
+  "İzleme geçmişi kaydedilemedi.": {
+    "en": "Could not save watch history.",
+    "de": "Verlauf nicht gespeichert.",
+    "fr": "Historique non enregistré.",
+    "es": "Historial no guardado.",
+    "it": "Cronologia non salvata."
+  },
+  "Çoklu ekran": {
+    "en": "Multi-screen",
+    "de": "Mehrfachansicht",
+    "fr": "Multi-écran",
+    "es": "Multipantalla",
+    "it": "Multischermo"
+  },
+  "En fazla dört kanal seçebilirsiniz.": {
+    "en": "Select up to four channels.",
+    "de": "Bis zu vier Sender wählen.",
+    "fr": "Choisissez jusqu’à quatre chaînes.",
+    "es": "Selecciona hasta cuatro canales.",
+    "it": "Seleziona fino a quattro canali."
+  },
+  "Listeyi kaldır": {
+    "en": "Remove playlist",
+    "de": "Liste entfernen",
+    "fr": "Supprimer la liste",
+    "es": "Eliminar lista",
+    "it": "Rimuovi playlist"
+  },
+  "{0} kaldırılsın mı?": {
+    "en": "Remove {0}?",
+    "de": "{0} entfernen?",
+    "fr": "Supprimer {0} ?",
+    "es": "¿Eliminar {0}?",
+    "it": "Rimuovere {0}?"
+  },
+  "Vazgeç": {
+    "en": "Cancel",
+    "de": "Abbrechen",
+    "fr": "Annuler",
+    "es": "Cancelar",
+    "it": "Annulla"
+  },
+  "Kaldır": {
+    "en": "Remove",
+    "de": "Entfernen",
+    "fr": "Supprimer",
+    "es": "Eliminar",
+    "it": "Rimuovi"
+  },
+  "Liste kaldırılamadı.": {
+    "en": "Could not remove playlist.",
+    "de": "Liste nicht entfernt.",
+    "fr": "Liste non supprimée.",
+    "es": "No se pudo eliminar la lista.",
+    "it": "Playlist non rimossa."
+  },
+  "Ekran Paylaşımı": {
+    "en": "Screen casting",
+    "de": "Bildschirmübertragung",
+    "fr": "Diffusion sur écran",
+    "es": "Transmitir pantalla",
+    "it": "Trasmissione schermo"
+  },
+  "Önce izlemek istediğin yayını aç. Oynatıcıdaki TV simgesinden aynı Wi-Fi ağındaki TV’yi seç.": {
+    "en": "Open a stream, then use the TV icon to choose a TV on the same Wi-Fi.",
+    "de": "Stream öffnen und über das TV-Symbol einen Fernseher im selben WLAN wählen.",
+    "fr": "Ouvrez un flux et utilisez l’icône TV pour choisir un téléviseur sur le même Wi-Fi.",
+    "es": "Abre una emisión y elige con el icono TV un televisor en la misma red Wi-Fi.",
+    "it": "Apri un flusso e scegli con l’icona TV un televisore sulla stessa rete Wi-Fi."
+  },
+  "Akış Ön Yükleme": {
+    "en": "Stream preloading",
+    "de": "Stream-Vorladen",
+    "fr": "Préchargement du flux",
+    "es": "Precarga de emisión",
+    "it": "Precaricamento flusso"
+  },
+  "Çift Ses & Subwoofer": {
+    "en": "Dual audio & subwoofer",
+    "de": "Doppelton & Subwoofer",
+    "fr": "Double audio et caisson de basses",
+    "es": "Audio doble y subwoofer",
+    "it": "Audio doppio e subwoofer"
+  },
+  "Yayını paylaş": {
+    "en": "Share stream",
+    "de": "Stream teilen",
+    "fr": "Partager le flux",
+    "es": "Compartir emisión",
+    "it": "Condividi flusso"
+  },
+  "Birlikte İzle (SharePlay)": {
+    "en": "Watch together (SharePlay)",
+    "de": "Gemeinsam ansehen (SharePlay)",
+    "fr": "Regarder ensemble (SharePlay)",
+    "es": "Ver juntos (SharePlay)",
+    "it": "Guarda insieme (SharePlay)"
+  },
+  "IMDb Sıralaması": {
+    "en": "IMDb ranking",
+    "de": "IMDb-Rangliste",
+    "fr": "Classement IMDb",
+    "es": "Clasificación IMDb",
+    "it": "Classifica IMDb"
+  },
+  "EPG Kaynağı": {
+    "en": "EPG source",
+    "de": "EPG-Quelle",
+    "fr": "Source EPG",
+    "es": "Fuente EPG",
+    "it": "Sorgente EPG"
+  },
+  "Profil Seçin": {
+    "en": "Select profile",
+    "de": "Profil wählen",
+    "fr": "Choisir un profil",
+    "es": "Seleccionar perfil",
+    "it": "Seleziona profilo"
+  },
+  "Çoklu Ekran & PiP": {
+    "en": "Multi-screen & PiP",
+    "de": "Mehrfachansicht & PiP",
+    "fr": "Multi-écran et PiP",
+    "es": "Multipantalla y PiP",
+    "it": "Multischermo e PiP"
+  },
+  "Kaydedilmiş videolar": {
+    "en": "Saved videos",
+    "de": "Gespeicherte Videos",
+    "fr": "Vidéos enregistrées",
+    "es": "Vídeos guardados",
+    "it": "Video salvati"
+  },
+  "Bizimle iletişime geçin": {
+    "en": "Contact us",
+    "de": "Kontaktiere uns",
+    "fr": "Contactez-nous",
+    "es": "Contáctanos",
+    "it": "Contattaci"
+  },
+  "İletişim": {
+    "en": "Contact",
+    "de": "Kontakt",
+    "fr": "Contact",
+    "es": "Contacto",
+    "it": "Contatti"
+  },
+  "Arkadaşınıza önerin": {
+    "en": "Recommend to a friend",
+    "de": "Freunden empfehlen",
+    "fr": "Recommander à un ami",
+    "es": "Recomendar a un amigo",
+    "it": "Consiglia a un amico"
+  },
+  "Kotak TV — Kendi IPTV listenizle canlı TV, film ve dizi deneyimi.": {
+    "en": "Kotak TV — Live TV, films and series with your own IPTV playlist.",
+    "de": "Kotak TV — Live-TV, Filme und Serien mit deiner IPTV-Liste.",
+    "fr": "Kotak TV — TV en direct, films et séries avec votre liste IPTV.",
+    "es": "Kotak TV — TV, películas y series con tu lista IPTV.",
+    "it": "Kotak TV — TV live, film e serie con la tua playlist IPTV."
+  },
+  "Koruma bilgileri okunamadı. Güvenliğiniz için içerik gizlendi. Uygulamayı yeniden açın.": {
+    "en": "Protection settings unreadable. Content hidden for safety. Reopen the app.",
+    "de": "Schutzeinstellungen unlesbar. Inhalte sicherheitshalber verborgen. App neu öffnen.",
+    "fr": "Protection illisible. Contenu masqué par sécurité. Rouvrez l’application.",
+    "es": "Protección ilegible. Contenido oculto por seguridad. Reabre la aplicación.",
+    "it": "Protezione illeggibile. Contenuti nascosti per sicurezza. Riapri l’app."
+  },
+  "Kayıtlı bilgiler açılıyor…": {
+    "en": "Opening saved data…",
+    "de": "Gespeicherte Daten werden geöffnet…",
+    "fr": "Ouverture des données enregistrées…",
+    "es": "Abriendo datos guardados…",
+    "it": "Apertura dati salvati…"
+  },
+  "Canlı kanal listesi alınıyor…": {
+    "en": "Loading live channels…",
+    "de": "Live-Sender werden geladen…",
+    "fr": "Chargement des chaînes en direct…",
+    "es": "Cargando canales en directo…",
+    "it": "Caricamento canali live…"
+  },
+  "İzlemeye devam et": {
+    "en": "Continue watching",
+    "de": "Weiterschauen",
+    "fr": "Continuer à regarder",
+    "es": "Seguir viendo",
+    "it": "Continua a guardare"
+  },
+  "Film ve dizi kataloğu alınıyor. Canlı kanallar hazır.": {
+    "en": "Loading films and series. Live channels are ready.",
+    "de": "Filme und Serien werden geladen. Live-Sender bereit.",
+    "fr": "Chargement des films et séries. Chaînes en direct prêtes.",
+    "es": "Cargando películas y series. Canales listos.",
+    "it": "Caricamento film e serie. Canali live pronti."
+  },
+  "Film ve dizileri yükle": {
+    "en": "Load films and series",
+    "de": "Filme und Serien laden",
+    "fr": "Charger films et séries",
+    "es": "Cargar películas y series",
+    "it": "Carica film e serie"
+  },
+  "Film ve diziler yükleniyor…": {
+    "en": "Loading films and series…",
+    "de": "Filme und Serien werden geladen…",
+    "fr": "Chargement des films et séries…",
+    "es": "Cargando películas y series…",
+    "it": "Caricamento film e serie…"
+  },
+  "TV Kanalları": {
+    "en": "TV channels",
+    "de": "TV-Sender",
+    "fr": "Chaînes TV",
+    "es": "Canales TV",
+    "it": "Canali TV"
+  },
+  "2 veya 4 kanal seçin (": {
+    "en": "Select 2 or 4 channels (",
+    "de": "2 oder 4 Sender wählen (",
+    "fr": "Choisissez 2 ou 4 chaînes (",
+    "es": "Selecciona 2 o 4 canales (",
+    "it": "Seleziona 2 o 4 canali ("
+  },
+  "Çoklu Ekranı Aç": {
+    "en": "Open multi-screen",
+    "de": "Mehrfachansicht öffnen",
+    "fr": "Ouvrir le multi-écran",
+    "es": "Abrir multipantalla",
+    "it": "Apri multischermo"
+  },
+  "Bu görünümde kanal bulunamadı.": {
+    "en": "No channels in this view.",
+    "de": "Keine Sender in dieser Ansicht.",
+    "fr": "Aucune chaîne dans cette vue.",
+    "es": "Sin canales en esta vista.",
+    "it": "Nessun canale in questa vista."
+  },
+  "Film açılıyor": {
+    "en": "Opening film",
+    "de": "Film wird geöffnet",
+    "fr": "Ouverture du film",
+    "es": "Abriendo película",
+    "it": "Apertura film"
+  },
+  "· Gerçek yayın adresi kontrol ediliyor…": {
+    "en": "· Checking stream URL…",
+    "de": "· Stream-URL wird geprüft…",
+    "fr": "· Vérification de l’adresse du flux…",
+    "es": "· Comprobando URL…",
+    "it": "· Controllo URL del flusso…"
+  },
+  "Hatırlatıcı kuruldu": {
+    "en": "Reminder set",
+    "de": "Erinnerung eingerichtet",
+    "fr": "Rappel créé",
+    "es": "Recordatorio creado",
+    "it": "Promemoria impostato"
+  },
+  "{0} dakika önce bildirim gönderilecek.": {
+    "en": "You’ll be notified {0} minutes before.",
+    "de": "Benachrichtigung {0} Minuten vorher.",
+    "fr": "Notification {0} minutes avant.",
+    "es": "Aviso {0} minutos antes.",
+    "it": "Notifica {0} minuti prima."
+  },
+  "Kategori seçimi kaydedilemedi.": {
+    "en": "Category selection could not be saved.",
+    "de": "Kategorieauswahl nicht gespeichert.",
+    "fr": "Sélection de catégories non enregistrée.",
+    "es": "Selección de categorías no guardada.",
+    "it": "Selezione categorie non salvata."
+  },
+  "Bölüm bilgileri alınamadı.": {
+    "en": "Episode details unavailable.",
+    "de": "Folgendetails nicht verfügbar.",
+    "fr": "Détails des épisodes indisponibles.",
+    "es": "Detalles de episodios no disponibles.",
+    "it": "Dettagli episodi non disponibili."
+  },
+  "Hızlı Seçenekler": {
+    "en": "Quick options",
+    "de": "Schnelloptionen",
+    "fr": "Options rapides",
+    "es": "Opciones rápidas",
+    "it": "Opzioni rapide"
+  },
+  "Çevrimdışı Mod & 24s EPG": {
+    "en": "Offline mode & 24h EPG",
+    "de": "Offline-Modus & 24h-EPG",
+    "fr": "Mode hors ligne et EPG 24 h",
+    "es": "Modo sin conexión y EPG 24 h",
+    "it": "Modalità offline e EPG 24 h"
+  },
+  "Kotak TV Özellikleri": {
+    "en": "Kotak TV features",
+    "de": "Kotak-TV-Funktionen",
+    "fr": "Fonctions Kotak TV",
+    "es": "Funciones Kotak TV",
+    "it": "Funzioni Kotak TV"
+  },
+  "Pro Sürümüne Geç": {
+    "en": "Upgrade to Pro",
+    "de": "Auf Pro upgraden",
+    "fr": "Passer à Pro",
+    "es": "Mejorar a Pro",
+    "it": "Passa a Pro"
+  },
+  "Hakkında": {
+    "en": "About",
+    "de": "Über",
+    "fr": "À propos",
+    "es": "Acerca de",
+    "it": "Informazioni"
+  },
+  "Aylık Kotak Pro": {
+    "en": "Monthly Kotak Pro",
+    "de": "Kotak Pro monatlich",
+    "fr": "Kotak Pro mensuel",
+    "es": "Kotak Pro mensual",
+    "it": "Kotak Pro mensile"
+  },
+  "Mağaza üzerinden abonelik satın alma henüz etkin değil.": {
+    "en": "Store subscription purchases are not enabled yet.",
+    "de": "Store-Abonnements noch nicht aktiviert.",
+    "fr": "Achats d’abonnements non activés.",
+    "es": "Compras de suscripciones aún no habilitadas.",
+    "it": "Acquisti abbonamenti non ancora attivi."
+  },
+  "Kotak TV Kendi IPTV listenizle canlı TV, film ve dizi deneyimi. Sürüm 1.0.16 · defsearchtv@gmail.com": {
+    "en": "Kotak TV Live TV, films and series with your IPTV playlist. Version 1.0.16 · defsearchtv@gmail.com",
+    "de": "Kotak TV Live-TV, Filme und Serien mit deiner IPTV-Liste. Version 1.0.16 · defsearchtv@gmail.com",
+    "fr": "Kotak TV TV en direct, films et séries avec votre liste IPTV. Version 1.0.16 · defsearchtv@gmail.com",
+    "es": "Kotak TV TV, películas y series con tu lista IPTV. Versión 1.0.16 · defsearchtv@gmail.com",
+    "it": "Kotak TV TV live, film e serie con la tua playlist IPTV. Versione 1.0.16 · defsearchtv@gmail.com"
+  },
+  "Yayının sunduğu ses ve altyazı parçalarını oynatıcı kontrollerinden seçebilirsiniz. Sanal subwoofer işlemesi henüz etkin değil.": {
+    "en": "Choose stream audio/subtitles in player controls. Virtual subwoofer processing is not enabled yet.",
+    "de": "Ton/Untertitel im Player wählen. Virtuelle Subwoofer-Verarbeitung noch nicht aktiv.",
+    "fr": "Choisissez audio/sous-titres dans le lecteur. Traitement de basses virtuel non activé.",
+    "es": "Elige audio/subtítulos en el reproductor. Subwoofer virtual aún no activo.",
+    "it": "Scegli audio/sottotitoli nel lettore. Subwoofer virtuale non ancora attivo."
+  },
+  "Bu özellik henüz etkin değil. IPTV listelerinizden canlı yayın, film ve dizi izlemeye devam edebilirsiniz.": {
+    "en": "Feature not enabled yet. Keep watching TV, films and series from your playlists.",
+    "de": "Funktion noch nicht aktiv. TV, Filme und Serien aus deinen Listen bleiben verfügbar.",
+    "fr": "Fonction non activée. Continuez à regarder TV, films et séries de vos listes.",
+    "es": "Función aún no activa. Puedes seguir viendo TV, películas y series de tus listas.",
+    "it": "Funzione non ancora attiva. Continua a guardare TV, film e serie delle playlist."
+  },
+  "Bu adres için işlem yapılabiliyorsa kod gönderildi. Gelen kutunu ve spam klasörünü kontrol et.": {
+    "en": "If this address is eligible, a code was sent. Check inbox and spam.",
+    "de": "Falls für diese Adresse möglich, wurde ein Code gesendet. Posteingang und Spam prüfen.",
+    "fr": "Si cette adresse est éligible, un code a été envoyé. Vérifiez boîte de réception et indésirables.",
+    "es": "Si esta dirección es válida para la operación, se envió un código. Revisa correo y spam.",
+    "it": "Se l’indirizzo è idoneo, è stato inviato un codice. Controlla posta e spam."
+  },
+  "Şifren güncellendi. Diğer oturumları kapatma işlemi doğrulanamadı. Yeni şifrenle giriş yap.": {
+    "en": "Password updated. Other session sign-out could not be verified. Sign in with the new password.",
+    "de": "Passwort geändert. Abmeldung anderer Sitzungen nicht bestätigt. Mit neuem Passwort anmelden.",
+    "fr": "Mot de passe modifié. Fermeture des autres sessions non confirmée. Connectez-vous avec le nouveau mot de passe.",
+    "es": "Contraseña actualizada. Cierre de otras sesiones no confirmado. Accede con la nueva.",
+    "it": "Password aggiornata. Chiusura altre sessioni non verificata. Accedi con la nuova."
+  },
+  "24 saatlik denemeni hesabınla başlat. Aynı hesabın kalan kullanım süresi korunur.": {
+    "en": "Start your 24-hour trial with your account. Remaining time stays with this account.",
+    "de": "Starte 24 Stunden Testzeit mit deinem Konto. Restzeit bleibt diesem Konto zugeordnet.",
+    "fr": "Démarrez l’essai de 24 heures avec votre compte. Le temps restant reste associé au compte.",
+    "es": "Inicia la prueba de 24 horas con tu cuenta. El tiempo restante se conserva en ella.",
+    "it": "Avvia la prova di 24 ore con il tuo account. Il tempo residuo resta associato all’account."
+  },
+  "Yeni şifren en az 8 karakter olsun. Başka hesaplarında kullandığın şifreyi kullanma.": {
+    "en": "Use at least 8 characters. Do not reuse passwords from other accounts.",
+    "de": "Mindestens 8 Zeichen verwenden. Keine Passwörter anderer Konten wiederverwenden.",
+    "fr": "Utilisez au moins 8 caractères. Ne réutilisez pas un autre mot de passe.",
+    "es": "Usa al menos 8 caracteres. No reutilices contraseñas de otras cuentas.",
+    "it": "Usa almeno 8 caratteri. Non riutilizzare password di altri account."
+  },
+  "E-posta adresine gönderilen tek kullanımlık kodla devam et. Kodunu kimseyle paylaşma.": {
+    "en": "Continue with the one-time code sent to your email. Never share it.",
+    "de": "Mit dem Einmalcode aus der E-Mail fortfahren. Niemals teilen.",
+    "fr": "Continuez avec le code reçu par e-mail. Ne le partagez jamais.",
+    "es": "Continúa con el código recibido por correo. No lo compartas.",
+    "it": "Continua con il codice monouso via email. Non condividerlo."
+  },
+  "Süre bildirimleri planlanamadı. Bildirim iznini kontrol et.": {
+    "en": "Expiry reminders could not be scheduled. Check notification permission.",
+    "de": "Ablauferinnerungen nicht geplant. Benachrichtigungsrechte prüfen.",
+    "fr": "Rappels d’expiration non programmés. Vérifiez les autorisations.",
+    "es": "Avisos de vencimiento no programados. Revisa permisos.",
+    "it": "Avvisi scadenza non programmati. Controlla permessi notifiche."
+  },
+  "Kullanım hakkı bulunamadı.": {
+    "en": "No access entitlement found.",
+    "de": "Keine Zugangsberechtigung gefunden.",
+    "fr": "Aucun droit d’accès trouvé.",
+    "es": "No se encontró acceso.",
+    "it": "Nessun diritto di accesso trovato."
+  },
+  "Bildirim izni verilmedi. Telefon ayarlarından açabilirsin.": {
+    "en": "Notifications denied. Enable them in phone settings.",
+    "de": "Benachrichtigungen verweigert. In Telefoneinstellungen aktivieren.",
+    "fr": "Notifications refusées. Activez-les dans les réglages du téléphone.",
+    "es": "Notificaciones denegadas. Actívalas en ajustes del teléfono.",
+    "it": "Notifiche negate. Attivale nelle impostazioni del telefono."
+  },
+  "Süre bildirimleri açıldı.": {
+    "en": "Expiry reminders enabled.",
+    "de": "Ablauferinnerungen aktiviert.",
+    "fr": "Rappels d’expiration activés.",
+    "es": "Avisos de vencimiento activados.",
+    "it": "Avvisi scadenza attivati."
+  },
+  "Süre bu düğmeye bastığında başlar. Yayın listeni kendin eklersin.": {
+    "en": "Time starts when you press this button. Add your own playlist.",
+    "de": "Die Zeit startet mit diesem Knopf. Eigene Liste hinzufügen.",
+    "fr": "Le temps démarre avec ce bouton. Ajoutez votre propre liste.",
+    "es": "El tiempo empieza al pulsar. Añade tu propia lista.",
+    "it": "Il tempo parte premendo questo pulsante. Aggiungi la tua playlist."
+  },
+  "Abonelik satın alma henüz açılmadı. Ödeme hazır olduğunda burada Google Play veya App Store üzerinden devam edebilirsin.": {
+    "en": "Subscriptions are not available yet. Once enabled, pay here through Google Play or App Store.",
+    "de": "Abonnements noch nicht verfügbar. Später hier über Google Play oder App Store bezahlen.",
+    "fr": "Abonnements non disponibles. Une fois activés, payez ici via Google Play ou App Store.",
+    "es": "Suscripciones aún no disponibles. Cuando se activen, paga aquí con Google Play o App Store.",
+    "it": "Abbonamenti non disponibili. Quando attivi, paga qui con Google Play o App Store."
+  },
+  "Test sesi başlatılamadı. Cihazın medya sesini ve ses çıkışını kontrol edin.": {
+    "en": "Test sound failed. Check media volume and audio output.",
+    "de": "Testton fehlgeschlagen. Medienlautstärke und Ausgabe prüfen.",
+    "fr": "Échec du son de test. Vérifiez volume et sortie audio.",
+    "es": "Falló el sonido de prueba. Revisa volumen y salida de audio.",
+    "it": "Suono di prova fallito. Controlla volume e uscita audio."
+  },
+  "Cihazın sesini kontrol et": {
+    "en": "Check device sound",
+    "de": "Geräteton prüfen",
+    "fr": "Vérifier le son",
+    "es": "Comprobar sonido",
+    "it": "Controlla audio dispositivo"
+  },
+  "Test sesi çalıyor…": {
+    "en": "Playing test sound…",
+    "de": "Testton läuft…",
+    "fr": "Lecture du son de test…",
+    "es": "Sonido de prueba…",
+    "it": "Suono di prova…"
+  },
+  "Test sesini çal": {
+    "en": "Play test sound",
+    "de": "Testton abspielen",
+    "fr": "Lire le son de test",
+    "es": "Reproducir prueba",
+    "it": "Riproduci suono di prova"
+  },
+  "Bu kısa ses uygulamanın içindedir; internet veya IPTV sağlayıcısı gerektirmez.": {
+    "en": "This sound is included in the app; no internet or IPTV provider needed.",
+    "de": "Dieser Ton ist in der App; kein Internet oder IPTV-Anbieter nötig.",
+    "fr": "Son inclus dans l’application ; ni Internet ni fournisseur IPTV nécessaires.",
+    "es": "Sonido incluido en la aplicación; no requiere Internet ni proveedor IPTV.",
+    "it": "Suono incluso nell’app; non richiede Internet o fornitore IPTV."
+  },
+  "Test sesi duyulmuyorsa telefonun medya sesini ve bilgisayarın/emülatörün ses çıkışını kontrol et. Test duyuluyor ama yayın duyulmuyorsa oynatıcıdaki Ses ve Altyazı menüsünden ses parçasını seç.": {
+    "en": "If silent, check phone media volume and computer/emulator output. If only streams are silent, choose a track in Audio and Subtitles.",
+    "de": "Bei Stille Medienlautstärke und Computer-/Emulatorausgabe prüfen. Ist nur der Stream stumm, Tonspur unter Audio und Untertitel wählen.",
+    "fr": "Si aucun son, vérifiez volume et sortie ordinateur/émulateur. Si seul le flux est muet, choisissez une piste dans Audio et sous-titres.",
+    "es": "Si no suena, revisa volumen y salida del ordenador/emulador. Si solo la emisión está muda, elige pista en Audio y subtítulos.",
+    "it": "Se muto, controlla volume e uscita computer/emulatore. Se solo il flusso è muto, scegli traccia in Audio e sottotitoli."
+  },
+  "Bu kaynak özel HTTP başlıkları gerektiriyor. Bu TV alıcısı doğrudan aktarımı desteklemiyor; telefonda izleyebilirsin.": {
+    "en": "Custom HTTP headers required. This receiver cannot cast it directly; watch on your phone.",
+    "de": "Spezielle HTTP-Header nötig. Dieser Empfänger kann nicht direkt übertragen; auf dem Telefon ansehen.",
+    "fr": "En-têtes HTTP spécifiques requis. Ce récepteur ne peut pas diffuser directement ; regardez sur le téléphone.",
+    "es": "Requiere cabeceras HTTP especiales. Este receptor no admite transmisión directa; mira en el teléfono.",
+    "it": "Richiede intestazioni HTTP speciali. Il ricevitore non supporta trasmissione diretta; guarda sul telefono."
+  },
+  "TV cihazı seç": {
+    "en": "Choose TV device",
+    "de": "TV-Gerät wählen",
+    "fr": "Choisir un téléviseur",
+    "es": "Elegir televisor",
+    "it": "Scegli dispositivo TV"
+  },
+  "Aktarılıyor…": {
+    "en": "Casting…",
+    "de": "Übertragung…",
+    "fr": "Diffusion…",
+    "es": "Transmitiendo…",
+    "it": "Trasmissione…"
+  },
+  "TV seç": {
+    "en": "Choose TV",
+    "de": "TV wählen",
+    "fr": "Choisir TV",
+    "es": "Elegir TV",
+    "it": "Scegli TV"
+  },
+  "IMDb — · Sağlayıcı {0}": {
+    "en": "IMDb — · Provider {0}",
+    "de": "IMDb — · Anbieter {0}",
+    "fr": "IMDb — · Fournisseur {0}",
+    "es": "IMDb — · Proveedor {0}",
+    "it": "IMDb — · Fornitore {0}"
+  },
+  "{0} detayları": {
+    "en": "{0} details",
+    "de": "{0} Details",
+    "fr": "Détails de {0}",
+    "es": "Detalles de {0}",
+    "it": "Dettagli di {0}"
+  },
+  "{0} tümünü göster": {
+    "en": "Show all {0}",
+    "de": "Alle {0} anzeigen",
+    "fr": "Afficher tout : {0}",
+    "es": "Ver todo: {0}",
+    "it": "Mostra tutto: {0}"
+  },
+  "Kataloğa geri dön": {
+    "en": "Back to catalogue",
+    "de": "Zurück zum Katalog",
+    "fr": "Retour au catalogue",
+    "es": "Volver al catálogo",
+    "it": "Torna al catalogo"
+  },
+  "Katalog sütun sayısını değiştir": {
+    "en": "Change catalogue columns",
+    "de": "Katalogspalten ändern",
+    "fr": "Modifier les colonnes",
+    "es": "Cambiar columnas del catálogo",
+    "it": "Cambia colonne catalogo"
+  },
+  "{0} içinde ara": {
+    "en": "Search in {0}",
+    "de": "In {0} suchen",
+    "fr": "Rechercher dans {0}",
+    "es": "Buscar en {0}",
+    "it": "Cerca in {0}"
+  },
+  "IMDb: en yüksek": {
+    "en": "IMDb: highest first",
+    "de": "IMDb: höchste zuerst",
+    "fr": "IMDb : meilleures notes",
+    "es": "IMDb: mayor primero",
+    "it": "IMDb: voto più alto"
+  },
+  "Yayın tarihi: en yeni": {
+    "en": "Release date: newest first",
+    "de": "Erscheinung: neueste zuerst",
+    "fr": "Sortie : plus récents",
+    "es": "Estreno: más recientes",
+    "it": "Uscita: più recenti"
+  },
+  "IMDb varsa kullanılır; yoksa sağlayıcı puanıyla sıralanır. Puanın kaynağı kartta yazılır.": {
+    "en": "IMDb when available, otherwise provider score. Source is shown on the card.",
+    "de": "IMDb falls verfügbar, sonst Anbieterwertung. Quelle auf der Karte.",
+    "fr": "IMDb si disponible, sinon note du fournisseur. Source sur la fiche.",
+    "es": "IMDb si disponible, si no nota del proveedor. Fuente en la tarjeta.",
+    "it": "IMDb se disponibile, altrimenti voto del fornitore. Fonte sulla scheda."
+  },
+  "Yayın tarihi bilinmeyenler sonda gösterilir.": {
+    "en": "Unknown release dates appear last.",
+    "de": "Unbekannte Daten am Ende.",
+    "fr": "Dates inconnues à la fin.",
+    "es": "Fechas desconocidas al final.",
+    "it": "Date sconosciute in fondo."
+  },
+  "Bu görünümde içerik bulunamadı.": {
+    "en": "No content in this view.",
+    "de": "Keine Inhalte in dieser Ansicht.",
+    "fr": "Aucun contenu dans cette vue.",
+    "es": "Sin contenido en esta vista.",
+    "it": "Nessun contenuto in questa vista."
+  },
+  "Kategorilerden geri dön": {
+    "en": "Back from categories",
+    "de": "Kategorien verlassen",
+    "fr": "Retour des catégories",
+    "es": "Volver de categorías",
+    "it": "Torna dalle categorie"
+  },
+  "Gösterilen kategorileri düzenle": {
+    "en": "Edit visible categories",
+    "de": "Sichtbare Kategorien bearbeiten",
+    "fr": "Modifier les catégories visibles",
+    "es": "Editar categorías visibles",
+    "it": "Modifica categorie visibili"
+  },
+  "Tüm kategorilerde ara": {
+    "en": "Search all categories",
+    "de": "Alle Kategorien durchsuchen",
+    "fr": "Rechercher toutes les catégories",
+    "es": "Buscar en todas las categorías",
+    "it": "Cerca in tutte le categorie"
+  },
+  "Kategoriler içinde ara": {
+    "en": "Search categories",
+    "de": "Kategorien suchen",
+    "fr": "Rechercher des catégories",
+    "es": "Buscar categorías",
+    "it": "Cerca categorie"
+  },
+  "Ada göre": {
+    "en": "By name",
+    "de": "Nach Name",
+    "fr": "Par nom",
+    "es": "Por nombre",
+    "it": "Per nome"
+  },
+  "{0} kategorisini aç": {
+    "en": "Open category {0}",
+    "de": "Kategorie {0} öffnen",
+    "fr": "Ouvrir catégorie {0}",
+    "es": "Abrir categoría {0}",
+    "it": "Apri categoria {0}"
+  },
+  "Tür:": {
+    "en": "Genre:",
+    "de": "Genre:",
+    "fr": "Genre :",
+    "es": "Género:",
+    "it": "Genere:"
+  },
+  "Program bilgisi sağlanmadı": {
+    "en": "Programme information unavailable",
+    "de": "Programminformation fehlt",
+    "fr": "Programme indisponible",
+    "es": "Información no disponible",
+    "it": "Informazioni programma non disponibili"
+  },
+  "Puanı bulunan": {
+    "en": "Rated",
+    "de": "Bewertet",
+    "fr": "Avec note",
+    "es": "Con puntuación",
+    "it": "Con voto"
+  },
+  "{0} yayın akışı": {
+    "en": "{0} programme guide",
+    "de": "{0} Programmübersicht",
+    "fr": "Programme de {0}",
+    "es": "Programación de {0}",
+    "it": "Guida di {0}"
+  },
+  "Bölümleri aç": {
+    "en": "Open episodes",
+    "de": "Folgen öffnen",
+    "fr": "Ouvrir les épisodes",
+    "es": "Abrir episodios",
+    "it": "Apri episodi"
+  },
+  "Görüntü ölçeği ve ağ önbelleği": {
+    "en": "Picture scaling and network buffer",
+    "de": "Bildskalierung und Netzwerkpuffer",
+    "fr": "Format image et tampon réseau",
+    "es": "Escalado y búfer de red",
+    "it": "Formato immagine e buffer rete"
+  },
+  "Ses parçaları ve oynatıcı": {
+    "en": "Audio tracks and player",
+    "de": "Tonspuren und Player",
+    "fr": "Pistes audio et lecteur",
+    "es": "Pistas de audio y reproductor",
+    "it": "Tracce audio e lettore"
+  },
+  "Program rehberi ve önbellek": {
+    "en": "Programme guide and cache",
+    "de": "Programmübersicht und Cache",
+    "fr": "Guide et cache",
+    "es": "Guía y caché",
+    "it": "Guida e cache"
+  },
+  "Kotak TV • Yeni Nesil Özellikler": {
+    "en": "Kotak TV • Next-generation features",
+    "de": "Kotak TV • Neue Funktionen",
+    "fr": "Kotak TV • Fonctions nouvelle génération",
+    "es": "Kotak TV • Funciones de nueva generación",
+    "it": "Kotak TV • Funzioni di nuova generazione"
+  },
+  "İçerik Ara": {
+    "en": "Search content",
+    "de": "Inhalte suchen",
+    "fr": "Rechercher du contenu",
+    "es": "Buscar contenido",
+    "it": "Cerca contenuti"
+  },
+  "sonuç": {
+    "en": "results",
+    "de": "Ergebnisse",
+    "fr": "résultats",
+    "es": "resultados",
+    "it": "risultati"
+  },
+  "Aramanıza uygun içerik bulunamadı.": {
+    "en": "No matching content.",
+    "de": "Keine passenden Inhalte.",
+    "fr": "Aucun contenu correspondant.",
+    "es": "Sin contenido coincidente.",
+    "it": "Nessun contenuto corrispondente."
+  },
+  "Daha fazla sonuç için aramanızı daraltın.": {
+    "en": "Narrow your search to see more results.",
+    "de": "Suche eingrenzen für weitere Ergebnisse.",
+    "fr": "Affinez la recherche pour d’autres résultats.",
+    "es": "Afina la búsqueda para más resultados.",
+    "it": "Affina la ricerca per altri risultati."
+  },
+  "{0} AKIŞ · {1} OYNATMA LİSTESİ": {
+    "en": "{0} STREAMS · {1} PLAYLISTS",
+    "de": "{0} STREAMS · {1} LISTEN",
+    "fr": "{0} FLUX · {1} LISTES",
+    "es": "{0} EMISIONES · {1} LISTAS",
+    "it": "{0} FLUSSI · {1} PLAYLIST"
+  },
+  "DİL • TEMA • EBEVEYN KONTROLÜ": {
+    "en": "LANGUAGE • THEME • PARENTAL CONTROL",
+    "de": "SPRACHE • DESIGN • KINDERSICHERUNG",
+    "fr": "LANGUE • THÈME • CONTRÔLE PARENTAL",
+    "es": "IDIOMA • TEMA • CONTROL PARENTAL",
+    "it": "LINGUA • TEMA • CONTROLLO GENITORI"
+  },
+  "SESLİ ARAMA • EPG • PAYLAŞIM": {
+    "en": "VOICE SEARCH • EPG • SHARING",
+    "de": "SPRACHSUCHE • EPG • TEILEN",
+    "fr": "RECHERCHE VOCALE • EPG • PARTAGE",
+    "es": "VOZ • EPG • COMPARTIR",
+    "it": "RICERCA VOCALE • EPG • CONDIVISIONE"
+  },
+  "HERHANGİ BİR SORUNUZ VARSA": {
+    "en": "ANY QUESTIONS?",
+    "de": "FRAGEN?",
+    "fr": "DES QUESTIONS ?",
+    "es": "¿PREGUNTAS?",
+    "it": "DOMANDE?"
+  },
+  "içerik": {
+    "en": "items",
+    "de": "Inhalte",
+    "fr": "contenus",
+    "es": "contenidos",
+    "it": "contenuti"
+  },
+  "Güncelleniyor…": {
+    "en": "Updating…",
+    "de": "Aktualisierung…",
+    "fr": "Actualisation…",
+    "es": "Actualizando…",
+    "it": "Aggiornamento…"
+  },
+  "Listeyi Kaldır": {
+    "en": "Remove playlist",
+    "de": "Liste entfernen",
+    "fr": "Supprimer la liste",
+    "es": "Eliminar lista",
+    "it": "Rimuovi playlist"
+  },
+  "Henüz oynatma listesi eklenmedi.": {
+    "en": "No playlists added yet.",
+    "de": "Noch keine Listen.",
+    "fr": "Aucune liste ajoutée.",
+    "es": "Sin listas todavía.",
+    "it": "Nessuna playlist aggiunta."
+  },
+  "Kanalı oynat": {
+    "en": "Play channel",
+    "de": "Sender abspielen",
+    "fr": "Lire la chaîne",
+    "es": "Reproducir canal",
+    "it": "Riproduci canale"
+  },
+  "Doğrudan yayın adresi": {
+    "en": "Direct stream address",
+    "de": "Direkte Streamadresse",
+    "fr": "Adresse directe du flux",
+    "es": "Dirección de emisión directa",
+    "it": "Indirizzo diretto flusso"
+  },
+  "HLS, MP4 ve cihazın desteklediği diğer HTTP/HTTPS yayınları.": {
+    "en": "HLS, MP4 and other HTTP/HTTPS streams supported by your device.",
+    "de": "HLS, MP4 und andere vom Gerät unterstützte HTTP/HTTPS-Streams.",
+    "fr": "HLS, MP4 et autres flux HTTP/HTTPS compatibles avec votre appareil.",
+    "es": "HLS, MP4 y otros flujos HTTP/HTTPS compatibles con tu dispositivo.",
+    "it": "HLS, MP4 e altri flussi HTTP/HTTPS supportati dal dispositivo."
+  },
+  "Yayını aç": {
+    "en": "Open stream",
+    "de": "Stream öffnen",
+    "fr": "Ouvrir le flux",
+    "es": "Abrir emisión",
+    "it": "Apri flusso"
+  },
+  "Bu bir oynatma listesi. Liste olarak ekle düğmesini kullan.": {
+    "en": "This is a playlist. Use Add as playlist.",
+    "de": "Dies ist eine Liste. Als Liste hinzufügen verwenden.",
+    "fr": "Ceci est une liste. Utilisez Ajouter comme liste.",
+    "es": "Es una lista. Usa Añadir como lista.",
+    "it": "È una playlist. Usa Aggiungi come playlist."
+  },
+  "Doğrudan yayın": {
+    "en": "Direct stream",
+    "de": "Direkter Stream",
+    "fr": "Flux direct",
+    "es": "Emisión directa",
+    "it": "Flusso diretto"
+  },
+  "Doğrudan bağlantı": {
+    "en": "Direct link",
+    "de": "Direkter Link",
+    "fr": "Lien direct",
+    "es": "Enlace directo",
+    "it": "Link diretto"
+  },
+  "Bu listeden otomatik EPG adresi bulunamadı. Sağlayıcının XMLTV bağlantısını girin.": {
+    "en": "No automatic EPG link found. Enter the provider’s XMLTV URL.",
+    "de": "Kein automatischer EPG-Link. XMLTV-URL des Anbieters eingeben.",
+    "fr": "Aucun EPG automatique. Entrez l’URL XMLTV du fournisseur.",
+    "es": "Sin EPG automático. Introduce URL XMLTV del proveedor.",
+    "it": "Nessun EPG automatico. Inserisci URL XMLTV del fornitore."
+  },
+  "Program rehberi için sağlayıcının XMLTV bağlantısı gerekir. Aynı kanal kimlikleri veya eşleşen kanal adları kullanılır.": {
+    "en": "Programme guide requires the provider’s XMLTV link. Channel IDs or matching names are used.",
+    "de": "Programmübersicht benötigt XMLTV-Link. Sender-IDs oder passende Namen werden verwendet.",
+    "fr": "Le guide nécessite le lien XMLTV. Identifiants ou noms correspondants sont utilisés.",
+    "es": "La guía requiere enlace XMLTV. Se usan ID o nombres de canal coincidentes.",
+    "it": "La guida richiede link XMLTV. Si usano ID o nomi canale corrispondenti."
+  },
+  "Önce IPTV listesi ekleyin.": {
+    "en": "Add an IPTV playlist first.",
+    "de": "Zuerst IPTV-Liste hinzufügen.",
+    "fr": "Ajoutez d’abord une liste IPTV.",
+    "es": "Añade primero una lista IPTV.",
+    "it": "Aggiungi prima una playlist IPTV."
+  },
+  "EPG’den geri dön": {
+    "en": "Back from EPG",
+    "de": "EPG verlassen",
+    "fr": "Retour de l’EPG",
+    "es": "Volver de EPG",
+    "it": "Torna dall’EPG"
+  },
+  "EPG kaynağını ayarla": {
+    "en": "Set EPG source",
+    "de": "EPG-Quelle festlegen",
+    "fr": "Configurer source EPG",
+    "es": "Configurar fuente EPG",
+    "it": "Imposta sorgente EPG"
+  },
+  "Hatırlatıcılar ({0})": {
+    "en": "Reminders ({0})",
+    "de": "Erinnerungen ({0})",
+    "fr": "Rappels ({0})",
+    "es": "Recordatorios ({0})",
+    "it": "Promemoria ({0})"
+  },
+  "EPG önceki saat": {
+    "en": "Previous EPG hour",
+    "de": "Vorherige EPG-Stunde",
+    "fr": "Heure EPG précédente",
+    "es": "Hora EPG anterior",
+    "it": "Ora EPG precedente"
+  },
+  "hatırlatmayı kaldır": {
+    "en": "remove reminder",
+    "de": "Erinnerung entfernen",
+    "fr": "supprimer le rappel",
+    "es": "eliminar recordatorio",
+    "it": "rimuovi promemoria"
+  },
+  "hatırlat": {
+    "en": "remind me",
+    "de": "erinnern",
+    "fr": "me rappeler",
+    "es": "recordarme",
+    "it": "ricordami"
+  },
+  "Henüz hatırlatıcı kurulmadı.": {
+    "en": "No reminders set yet.",
+    "de": "Noch keine Erinnerungen.",
+    "fr": "Aucun rappel créé.",
+    "es": "Sin recordatorios.",
+    "it": "Nessun promemoria impostato."
+  },
+  "Program detayını kapat": {
+    "en": "Close programme details",
+    "de": "Programmdetails schließen",
+    "fr": "Fermer les détails",
+    "es": "Cerrar detalles del programa",
+    "it": "Chiudi dettagli programma"
+  },
+  "Bölümleri kapat": {
+    "en": "Close episodes",
+    "de": "Folgen schließen",
+    "fr": "Fermer les épisodes",
+    "es": "Cerrar episodios",
+    "it": "Chiudi episodi"
+  },
+  "Takım veya dizi adı en az 3 karakter olmalı.": {
+    "en": "Team or series name needs at least 3 characters.",
+    "de": "Team- oder Serienname benötigt mindestens 3 Zeichen.",
+    "fr": "Nom d’équipe ou série : 3 caractères minimum.",
+    "es": "Nombre de equipo o serie: mínimo 3 caracteres.",
+    "it": "Nome squadra o serie: minimo 3 caratteri."
+  },
+  "Lütfen listeden bir takım seçin.": {
+    "en": "Select a team from the list.",
+    "de": "Team aus der Liste wählen.",
+    "fr": "Choisissez une équipe dans la liste.",
+    "es": "Selecciona un equipo de la lista.",
+    "it": "Seleziona una squadra dalla lista."
+  },
+  "Önümüzdeki 24 saatte EPG’de bulunan maçlar için telefon hatırlatması kurulur.": {
+    "en": "Phone reminders are set for matches in the next 24 hours of EPG.",
+    "de": "Telefonerinnerungen für Spiele der nächsten 24 EPG-Stunden werden eingerichtet.",
+    "fr": "Rappels créés pour les matchs de l’EPG des prochaines 24 heures.",
+    "es": "Recordatorios para partidos del EPG de las próximas 24 horas.",
+    "it": "Promemoria per partite nell’EPG delle prossime 24 ore."
+  },
+  "Takipten sonra listene eklenen yeni bölümler, liste yenilendiğinde bildirilir.": {
+    "en": "New episodes added after following are notified when the playlist refreshes.",
+    "de": "Neue Folgen nach dem Abonnieren werden bei Listenaktualisierung gemeldet.",
+    "fr": "Les nouveaux épisodes après le suivi sont signalés à l’actualisation.",
+    "es": "Los episodios añadidos tras seguir se notifican al actualizar.",
+    "it": "Gli episodi aggiunti dopo il seguito sono notificati all’aggiornamento."
+  },
+  "Takipten sonra listene eklenen yeni filmler, liste yenilendiğinde bildirilir.": {
+    "en": "New films added after following are notified when the playlist refreshes.",
+    "de": "Neue Filme nach dem Abonnieren werden bei Listenaktualisierung gemeldet.",
+    "fr": "Les nouveaux films après le suivi sont signalés à l’actualisation.",
+    "es": "Las películas añadidas tras seguir se notifican al actualizar.",
+    "it": "I film aggiunti dopo il seguito sono notificati all’aggiornamento."
+  },
+  "Yeni bölümler": {
+    "en": "New episodes",
+    "de": "Neue Folgen",
+    "fr": "Nouveaux épisodes",
+    "es": "Nuevos episodios",
+    "it": "Nuovi episodi"
+  },
+  "{0} takibi bırak": {
+    "en": "Unfollow {0}",
+    "de": "{0} nicht mehr folgen",
+    "fr": "Ne plus suivre {0}",
+    "es": "Dejar de seguir {0}",
+    "it": "Non seguire più {0}"
+  },
+  "Yeni içerik, uygulama açıkken veya listeyi yenilediğinde kontrol edilir. Uygulama kapalıyken anında yeni içerik bildirimi için sunucu push servisi gerekir. Kurulmuş maç hatırlatmaları uygulama kapalıyken de telefon tarafından işlenir.": {
+    "en": "New content is checked with the app open or when refreshing. Instant notifications with the app closed require server push. Existing match reminders work through your phone even when the app is closed.",
+    "de": "Neue Inhalte werden bei offener App oder Aktualisierung geprüft. Sofortmeldungen bei geschlossener App benötigen Push-Server. Bereits geplante Spielerinnerungen funktionieren über das Telefon auch bei geschlossener App.",
+    "fr": "Les contenus sont vérifiés dans l’application ouverte ou à l’actualisation. Les alertes instantanées application fermée nécessitent un serveur push. Les rappels déjà créés fonctionnent via le téléphone même application fermée.",
+    "es": "El contenido se revisa con la aplicación abierta o al actualizar. Avisos instantáneos con ella cerrada requieren servidor push. Recordatorios ya creados funcionan en el teléfono con la aplicación cerrada.",
+    "it": "I contenuti si controllano con app aperta o aggiornando. Avvisi immediati ad app chiusa richiedono server push. I promemoria già creati funzionano sul telefono anche ad app chiusa."
+  },
+  "Sesli TV asistanını aç": {
+    "en": "Open voice TV assistant",
+    "de": "TV-Sprachassistent öffnen",
+    "fr": "Ouvrir l’assistant vocal TV",
+    "es": "Abrir asistente TV de voz",
+    "it": "Apri assistente TV vocale"
+  },
+  "Yüklemeyi yeniden başlat": {
+    "en": "Restart loading",
+    "de": "Laden neu starten",
+    "fr": "Relancer le chargement",
+    "es": "Reiniciar carga",
+    "it": "Riavvia caricamento"
+  },
+  "Yalnız seçtiğin kategoriler ana ekranda gösterilir.": {
+    "en": "Only selected categories appear on the home screen.",
+    "de": "Nur gewählte Kategorien auf der Startseite.",
+    "fr": "Seules les catégories choisies apparaissent à l’accueil.",
+    "es": "Solo categorías elegidas en inicio.",
+    "it": "Solo categorie scelte nella home."
+  },
+  "Tümünü seç": {
+    "en": "Select all",
+    "de": "Alle auswählen",
+    "fr": "Tout sélectionner",
+    "es": "Seleccionar todo",
+    "it": "Seleziona tutto"
+  },
+  "Seçimi temizle": {
+    "en": "Clear selection",
+    "de": "Auswahl löschen",
+    "fr": "Effacer la sélection",
+    "es": "Borrar selección",
+    "it": "Cancella selezione"
+  },
+  "Kendi OMDb API anahtarını gir.": {
+    "en": "Enter your OMDb API key.",
+    "de": "OMDb-API-Schlüssel eingeben.",
+    "fr": "Entrez votre clé API OMDb.",
+    "es": "Introduce tu clave API OMDb.",
+    "it": "Inserisci chiave API OMDb."
+  },
+  "IMDb bilgileri alınıyor…": {
+    "en": "Loading IMDb information…",
+    "de": "IMDb-Daten werden geladen…",
+    "fr": "Chargement IMDb…",
+    "es": "Cargando información IMDb…",
+    "it": "Caricamento informazioni IMDb…"
+  },
+  "{0}/{1} içerik kontrol edildi · {2} doğrulanmış eşleşme": {
+    "en": "{0}/{1} items checked · {2} verified matches",
+    "de": "{0}/{1} Inhalte geprüft · {2} bestätigte Treffer",
+    "fr": "{0}/{1} contenus vérifiés · {2} correspondances confirmées",
+    "es": "{0}/{1} revisados · {2} coincidencias verificadas",
+    "it": "{0}/{1} controllati · {2} corrispondenze verificate"
+  },
+  "{0} içerik eşleşti. IMDb puanı en az 7 olanlar ana ekranda sıralandı.": {
+    "en": "{0} items matched. IMDb ratings of at least 7 are ranked on the home screen.",
+    "de": "{0} Treffer. IMDb-Wertungen ab 7 auf der Startseite sortiert.",
+    "fr": "{0} correspondances. Notes IMDb d’au moins 7 classées à l’accueil.",
+    "es": "{0} coincidencias. Notas IMDb de al menos 7 ordenadas en inicio.",
+    "it": "{0} corrispondenze. Voti IMDb di almeno 7 ordinati nella home."
+  },
+  "IMDb bilgisi alınamadı.": {
+    "en": "IMDb information unavailable.",
+    "de": "IMDb-Daten nicht verfügbar.",
+    "fr": "Informations IMDb indisponibles.",
+    "es": "Información IMDb no disponible.",
+    "it": "Informazioni IMDb non disponibili."
+  },
+  "IMDb’ye göre film ve diziler": {
+    "en": "Films and series by IMDb",
+    "de": "Filme und Serien nach IMDb",
+    "fr": "Films et séries selon IMDb",
+    "es": "Películas y series por IMDb",
+    "it": "Film e serie per IMDb"
+  },
+  "Gerçek puanlar, doğru içerik": {
+    "en": "Real ratings, correct content",
+    "de": "Echte Bewertungen, richtige Inhalte",
+    "fr": "Notes réelles, contenus corrects",
+    "es": "Notas reales, contenido correcto",
+    "it": "Voti reali, contenuti corretti"
+  },
+  "Kanal logoları bu listede gösterilmez. Sağlayıcının IMDb bilgisi yoksa OMDb üzerinden başlık/IMDb kimliği eşleştirilir. Eşleşmeyen içerik için puan uydurulmaz.": {
+    "en": "No channel logos here. Missing IMDb data is matched via OMDb by title or ID. No ratings are invented for unmatched content.",
+    "de": "Keine Senderlogos hier. Fehlende IMDb-Daten werden per OMDb nach Titel oder ID gesucht. Keine erfundenen Bewertungen ohne Treffer.",
+    "fr": "Aucun logo de chaîne ici. IMDb manquant est recherché via OMDb par titre ou ID. Aucune note inventée sans correspondance.",
+    "es": "Sin logos de canal. Si falta IMDb, OMDb busca título o ID. No se inventan notas sin coincidencia.",
+    "it": "Nessun logo canale. Dati IMDb mancanti cercati via OMDb per titolo o ID. Nessun voto inventato senza corrispondenza."
+  },
+  "OMDb API anahtarı": {
+    "en": "OMDb API key",
+    "de": "OMDb-API-Schlüssel",
+    "fr": "Clé API OMDb",
+    "es": "Clave API OMDb",
+    "it": "Chiave API OMDb"
+  },
+  "OMDb API anahtarın": {
+    "en": "Your OMDb API key",
+    "de": "Dein OMDb-API-Schlüssel",
+    "fr": "Votre clé API OMDb",
+    "es": "Tu clave API OMDb",
+    "it": "La tua chiave API OMDb"
+  },
+  "OMDb anahtarı al": {
+    "en": "Get OMDb key",
+    "de": "OMDb-Schlüssel erhalten",
+    "fr": "Obtenir une clé OMDb",
+    "es": "Obtener clave OMDb",
+    "it": "Ottieni chiave OMDb"
+  },
+  "İşlem seçtiğin veri servisine en fazla 20 film ve 20 dizi başlığı gönderir. IPTV sunucu adresin ve şifren gönderilmez.": {
+    "en": "Up to 20 film and 20 series titles are sent to your selected data service. IPTV server address and password are not sent.",
+    "de": "Bis zu 20 Film- und 20 Serientitel an den Datendienst gesendet. IPTV-Serveradresse und Passwort werden nicht gesendet.",
+    "fr": "Jusqu’à 20 titres de films et 20 de séries envoyés au service choisi. Adresse IPTV et mot de passe non envoyés.",
+    "es": "Hasta 20 títulos de películas y 20 de series enviados al servicio elegido. No se envían dirección IPTV ni contraseña.",
+    "it": "Fino a 20 titoli di film e 20 di serie inviati al servizio scelto. Indirizzo IPTV e password non inviati."
+  },
+  "Bilgiler alınıyor…": {
+    "en": "Loading details…",
+    "de": "Details werden geladen…",
+    "fr": "Chargement des détails…",
+    "es": "Cargando detalles…",
+    "it": "Caricamento dettagli…"
+  },
+  "IMDb listesini hazırla": {
+    "en": "Prepare IMDb list",
+    "de": "IMDb-Liste vorbereiten",
+    "fr": "Préparer la liste IMDb",
+    "es": "Preparar lista IMDb",
+    "it": "Prepara lista IMDb"
+  },
+  "AI Canlı Maç Analizi": {
+    "en": "AI live match analysis",
+    "de": "KI-Livespielanalyse",
+    "fr": "Analyse de match IA en direct",
+    "es": "Análisis de partido con IA",
+    "it": "Analisi partita live IA"
+  },
+  "Kişisel AI TV Asistanı": {
+    "en": "Personal AI TV assistant",
+    "de": "Persönlicher KI-TV-Assistent",
+    "fr": "Assistant TV personnel IA",
+    "es": "Asistente TV personal IA",
+    "it": "Assistente TV personale IA"
+  },
+  "AI Canlı Ses Çevirisi": {
+    "en": "AI live audio translation",
+    "de": "KI-Live-Audioübersetzung",
+    "fr": "Traduction audio IA en direct",
+    "es": "Traducción de audio IA en directo",
+    "it": "Traduzione audio live IA"
+  },
+  "Kayıtlı kanal bilgileri ve program rehberi": {
+    "en": "Saved channels and programme guide",
+    "de": "Gespeicherte Sender und Programmübersicht",
+    "fr": "Chaînes et guide enregistrés",
+    "es": "Canales y guía guardados",
+    "it": "Canali e guida salvati"
+  },
+  "Türkçe ses tanıma ile içerik aç": {
+    "en": "Open content with Turkish speech recognition",
+    "de": "Inhalte per türkischer Spracherkennung öffnen",
+    "fr": "Ouvrir via reconnaissance vocale turque",
+    "es": "Abrir con reconocimiento de voz turco",
+    "it": "Apri con riconoscimento vocale turco"
+  },
+  "Servis bağlantısı bekleniyor": {
+    "en": "Waiting for service connection",
+    "de": "Warten auf Dienstverbindung",
+    "fr": "Connexion au service en attente",
+    "es": "Esperando conexión al servicio",
+    "it": "In attesa del servizio"
+  },
+  "Maçın nabzı": {
+    "en": "Match pulse",
+    "de": "Spielgeschehen",
+    "fr": "Au cœur du match",
+    "es": "Pulso del partido",
+    "it": "Ritmo della partita"
+  },
+  "Senin TV asistanın": {
+    "en": "Your TV assistant",
+    "de": "Dein TV-Assistent",
+    "fr": "Votre assistant TV",
+    "es": "Tu asistente TV",
+    "it": "Il tuo assistente TV"
+  },
+  "Türkçe canlı altyazı": {
+    "en": "Live Turkish subtitles",
+    "de": "Türkische Live-Untertitel",
+    "fr": "Sous-titres turcs en direct",
+    "es": "Subtítulos turcos en directo",
+    "it": "Sottotitoli turchi live"
+  },
+  "Ses tanıma servisi henüz bağlı değil. Komutunu yazarak mevcut listende yerel filtreleme yapabilirsin.": {
+    "en": "Speech service not connected yet. Type a command to filter your playlist locally.",
+    "de": "Sprachdienst noch nicht verbunden. Befehl zum lokalen Filtern der Liste eingeben.",
+    "fr": "Service vocal non connecté. Tapez une commande pour filtrer votre liste localement.",
+    "es": "Servicio de voz no conectado. Escribe para filtrar tu lista localmente.",
+    "it": "Servizio vocale non collegato. Scrivi per filtrare la playlist localmente."
+  },
+  "Akıllı arama komutu": {
+    "en": "Smart search command",
+    "de": "Intelligenter Suchbefehl",
+    "fr": "Commande de recherche intelligente",
+    "es": "Comando de búsqueda inteligente",
+    "it": "Comando ricerca intelligente"
+  },
+  "Bana spor kanallarını bul": {
+    "en": "Find sports channels",
+    "de": "Sportsender finden",
+    "fr": "Trouver des chaînes sportives",
+    "es": "Buscar canales deportivos",
+    "it": "Trova canali sportivi"
+  },
+  "Listende eşleşen içerik bulunamadı.": {
+    "en": "No matching content in your playlist.",
+    "de": "Keine passenden Inhalte in deiner Liste.",
+    "fr": "Aucun contenu correspondant dans votre liste.",
+    "es": "Sin coincidencias en tu lista.",
+    "it": "Nessuna corrispondenza nella playlist."
+  },
+  "Canlı maç ve oyuncu verisi sağlayıcısı bağlı değil.": {
+    "en": "Live match and player data provider not connected.",
+    "de": "Live-Spiel- und Spielerdatenanbieter nicht verbunden.",
+    "fr": "Fournisseur de données de matchs et joueurs non connecté.",
+    "es": "Proveedor de datos de partidos y jugadores no conectado.",
+    "it": "Fornitore dati partite e giocatori non collegato."
+  },
+  "Oyuncu performansı": {
+    "en": "Player performance",
+    "de": "Spielerleistung",
+    "fr": "Performance des joueurs",
+    "es": "Rendimiento de jugadores",
+    "it": "Prestazioni giocatori"
+  },
+  "Kaçırdığın yayınların 1 dakikalık özetleri burada yer alacak.": {
+    "en": "One-minute recaps of missed programmes will appear here.",
+    "de": "Einminütige Rückblicke verpasster Sendungen erscheinen hier.",
+    "fr": "Résumés d’une minute des programmes manqués ici.",
+    "es": "Aquí aparecerán resúmenes de un minuto de programas perdidos.",
+    "it": "Qui appariranno riassunti di un minuto dei programmi persi."
+  },
+  "Henüz özet yok": {
+    "en": "No recaps yet",
+    "de": "Noch keine Rückblicke",
+    "fr": "Aucun résumé",
+    "es": "Sin resúmenes",
+    "it": "Nessun riassunto"
+  },
+  "Özet servisi ve işlenecek yayın kaydı bağlandığında kullanılabilir.": {
+    "en": "Available when recap service and programme recording are connected.",
+    "de": "Verfügbar, wenn Rückblickdienst und Aufnahme verbunden sind.",
+    "fr": "Disponible avec service de résumé et enregistrement connectés.",
+    "es": "Disponible al conectar servicio de resúmenes y grabación.",
+    "it": "Disponibile collegando servizio riassunti e registrazione."
+  },
+  "Türkçe • Canlı çeviri": {
+    "en": "Turkish • Live translation",
+    "de": "Türkisch • Live-Übersetzung",
+    "fr": "Turc • Traduction en direct",
+    "es": "Turco • Traducción en directo",
+    "it": "Turco • Traduzione live"
+  },
+  "Altyazı bekleniyor…": {
+    "en": "Waiting for subtitles…",
+    "de": "Warten auf Untertitel…",
+    "fr": "Sous-titres en attente…",
+    "es": "Esperando subtítulos…",
+    "it": "In attesa di sottotitoli…"
+  },
+  "Canlı sesi işleyen çeviri servisi henüz bağlı değil. Yayının kendi altyazıları oynatıcıdaki Ses ve Altyazı menüsünden seçilebilir.": {
+    "en": "Live translation service not connected. Choose the stream’s subtitles in Audio and Subtitles.",
+    "de": "Live-Übersetzung nicht verbunden. Vorhandene Untertitel unter Audio und Untertitel wählen.",
+    "fr": "Traduction en direct non connectée. Choisissez les sous-titres du flux dans Audio et sous-titres.",
+    "es": "Traducción en directo no conectada. Elige subtítulos de la emisión en Audio y subtítulos.",
+    "it": "Traduzione live non collegata. Scegli i sottotitoli del flusso in Audio e sottotitoli."
+  },
+  "Oynatıcıdaki Yayını paylaş düğmesi bağlantıyı telefonunun paylaşım menüsüne iletir. Oda, eş zamanlı oynatma veya paylaşım sunucusu kullanılmaz.": {
+    "en": "Share stream opens the phone sharing menu. No room, synchronised playback or sharing server is used.",
+    "de": "Stream teilen öffnet das Teilen-Menü. Kein Raum, synchronisierte Wiedergabe oder Freigabeserver.",
+    "fr": "Partager le flux ouvre le menu de partage. Aucune salle, synchronisation ni serveur de partage.",
+    "es": "Compartir abre el menú del teléfono. Sin salas, reproducción sincronizada ni servidor.",
+    "it": "Condividi apre il menu del telefono. Nessuna stanza, sincronizzazione o server di condivisione."
+  },
+  "Kanal adları, kategoriler ve sağlayıcının gönderdiği 24 saatlik EPG cihazda saklanır.": {
+    "en": "Channel names, categories and provider’s 24-hour EPG are saved on device.",
+    "de": "Sendernamen, Kategorien und 24-Stunden-EPG des Anbieters auf Gerät gespeichert.",
+    "fr": "Noms, catégories et EPG de 24 heures du fournisseur enregistrés sur l’appareil.",
+    "es": "Nombres, categorías y EPG de 24 horas guardados en dispositivo.",
+    "it": "Nomi, categorie ed EPG di 24 ore del fornitore salvati sul dispositivo."
+  },
+  "Önbellek hazır": {
+    "en": "Cache ready",
+    "de": "Cache bereit",
+    "fr": "Cache prêt",
+    "es": "Caché lista",
+    "it": "Cache pronta"
+  },
+  "Henüz önbellek yok": {
+    "en": "No cache yet",
+    "de": "Noch kein Cache",
+    "fr": "Aucun cache",
+    "es": "Sin caché",
+    "it": "Nessuna cache"
+  },
+  "Son kayıt: {0}": {
+    "en": "Last saved: {0}",
+    "de": "Zuletzt gespeichert: {0}",
+    "fr": "Dernier enregistrement : {0}",
+    "es": "Último guardado: {0}",
+    "it": "Ultimo salvataggio: {0}"
+  },
+  "Bir IPTV listesi yüklediğinde önbellek oluşturulur.": {
+    "en": "Cache is created when you load an IPTV playlist.",
+    "de": "Cache entsteht beim Laden einer IPTV-Liste.",
+    "fr": "Cache créé au chargement d’une liste IPTV.",
+    "es": "Caché creada al cargar una lista IPTV.",
+    "it": "Cache creata caricando una playlist IPTV."
+  },
+  "İnternet olmadan canlı video oynatılamaz. EPG yalnızca sağlayıcının gönderdiği programları içerir.": {
+    "en": "Live video requires internet. EPG contains only programmes supplied by your provider.",
+    "de": "Live-Video benötigt Internet. EPG enthält nur Programme des Anbieters.",
+    "fr": "Vidéo en direct nécessite Internet. EPG contient uniquement les programmes du fournisseur.",
+    "es": "Vídeo en directo requiere Internet. EPG solo contiene programas del proveedor.",
+    "it": "Video live richiede Internet. EPG contiene solo programmi del fornitore."
+  },
+  "TV deneyimini özgürleştir": {
+    "en": "Free your TV experience",
+    "de": "Befreie dein TV-Erlebnis",
+    "fr": "Libérez votre expérience TV",
+    "es": "Libera tu experiencia TV",
+    "it": "Libera la tua esperienza TV"
+  },
+  "24 saat ücretsiz deneme": {
+    "en": "24-hour free trial",
+    "de": "24 Stunden kostenlos testen",
+    "fr": "Essai gratuit de 24 heures",
+    "es": "Prueba gratuita de 24 horas",
+    "it": "Prova gratuita di 24 ore"
+  },
+  "Kendi listelerinle canlı TV, film ve dizi": {
+    "en": "Live TV, films and series with your playlists",
+    "de": "Live-TV, Filme und Serien mit deinen Listen",
+    "fr": "TV en direct, films et séries avec vos listes",
+    "es": "TV, películas y series con tus listas",
+    "it": "TV live, film e serie con le tue playlist"
+  },
+  "Çoklu ekran ve resim içinde resim": {
+    "en": "Multi-screen and picture in picture",
+    "de": "Mehrfachansicht und Bild im Bild",
+    "fr": "Multi-écran et image dans l’image",
+    "es": "Multipantalla e imagen en imagen",
+    "it": "Multischermo e picture in picture"
+  },
+  "Aylık": {
+    "en": "Monthly",
+    "de": "Monatlich",
+    "fr": "Mensuel",
+    "es": "Mensual",
+    "it": "Mensile"
+  },
+  "Yıllık": {
+    "en": "Yearly",
+    "de": "Jährlich",
+    "fr": "Annuel",
+    "es": "Anual",
+    "it": "Annuale"
+  },
+  "Yıllık Kotak Pro · Popüler": {
+    "en": "Yearly Kotak Pro · Popular",
+    "de": "Kotak Pro jährlich · Beliebt",
+    "fr": "Kotak Pro annuel · Populaire",
+    "es": "Kotak Pro anual · Popular",
+    "it": "Kotak Pro annuale · Popolare"
+  },
+  "Kullanım bitişi:": {
+    "en": "Access expires:",
+    "de": "Zugang endet:",
+    "fr": "Fin d’accès :",
+    "es": "Acceso hasta:",
+    "it": "Scadenza accesso:"
+  },
+  "Süre bildirimlerini aç": {
+    "en": "Enable expiry reminders",
+    "de": "Ablauferinnerungen aktivieren",
+    "fr": "Activer les rappels d’expiration",
+    "es": "Activar avisos de vencimiento",
+    "it": "Attiva avvisi scadenza"
+  },
+  "Bildirimler planlanamadı. Tekrar dene.": {
+    "en": "Could not schedule notifications. Try again.",
+    "de": "Benachrichtigungen nicht geplant. Erneut versuchen.",
+    "fr": "Notifications non programmées. Réessayez.",
+    "es": "No se programaron notificaciones. Reintenta.",
+    "it": "Notifiche non programmate. Riprova."
+  },
+  "Mağaza bağlantısı bekleniyor": {
+    "en": "Waiting for store connection",
+    "de": "Warten auf Store-Verbindung",
+    "fr": "Connexion à la boutique en attente",
+    "es": "Esperando conexión a tienda",
+    "it": "In attesa dello store"
+  },
+  "Abonelik satın alma henüz açılmadı. Deneme süren hesabına bağlıdır; yeniden yükleme süreyi sıfırlamaz.": {
+    "en": "Subscriptions not available yet. Trial belongs to your account; reinstalling does not reset it.",
+    "de": "Abonnements noch nicht verfügbar. Testzeit ans Konto gebunden; Neuinstallation setzt sie nicht zurück.",
+    "fr": "Abonnements non disponibles. Essai lié au compte ; réinstaller ne le réinitialise pas.",
+    "es": "Suscripciones aún no disponibles. Prueba ligada a la cuenta; reinstalar no la reinicia.",
+    "it": "Abbonamenti non disponibili. Prova legata all’account; reinstallare non la azzera."
+  },
+  "Sürüm 1.0.16": {
+    "en": "Version 1.0.16",
+    "de": "Version 1.0.16",
+    "fr": "Version 1.0.16",
+    "es": "Versión 1.0.16",
+    "it": "Versione 1.0.16"
+  },
+  "Kotak TV, kendi IPTV listenizle canlı yayın, film ve dizi izlemek için tasarlanmış bir oynatıcıdır. İçerik sağlayıcınızın M3U veya Xtream Codes bilgileriyle kullanılır.": {
+    "en": "Kotak TV plays live TV, films and series from your IPTV playlist using your provider’s M3U or Xtream Codes details.",
+    "de": "Kotak TV spielt Live-TV, Filme und Serien deiner IPTV-Liste mit M3U- oder Xtream-Codes-Daten des Anbieters.",
+    "fr": "Kotak TV lit TV, films et séries de votre liste IPTV via les données M3U ou Xtream Codes du fournisseur.",
+    "es": "Kotak TV reproduce TV, películas y series de tu lista IPTV con M3U o Xtream Codes del proveedor.",
+    "it": "Kotak TV riproduce TV, film e serie della playlist IPTV con dati M3U o Xtream Codes del fornitore."
+  },
+  "Desteklenen yayınlarda tam ekran, ses/altyazı seçimi, 2/4 ekran ve PiP sunar. Görüntü kalitesi kaynak yayına ve cihaz desteğine bağlıdır.": {
+    "en": "Supported streams offer fullscreen, audio/subtitle selection, 2/4 screens and PiP. Quality depends on source and device.",
+    "de": "Unterstützte Streams bieten Vollbild, Ton/Untertitel, 2/4 Ansichten und PiP. Qualität hängt von Quelle und Gerät ab.",
+    "fr": "Flux compatibles : plein écran, audio/sous-titres, 2/4 écrans et PiP. Qualité selon source et appareil.",
+    "es": "Flujos compatibles: pantalla completa, audio/subtítulos, 2/4 pantallas y PiP. Calidad según fuente y dispositivo.",
+    "it": "Flussi compatibili: schermo intero, audio/sottotitoli, 2/4 schermi e PiP. Qualità secondo sorgente e dispositivo."
+  },
+  "Yayın tarihi bilinmiyor": {
+    "en": "Release date unknown",
+    "de": "Erscheinungsdatum unbekannt",
+    "fr": "Date de sortie inconnue",
+    "es": "Estreno desconocido",
+    "it": "Data di uscita sconosciuta"
+  },
+  "{0} afişi": {
+    "en": "{0} poster",
+    "de": "{0} Poster",
+    "fr": "Affiche de {0}",
+    "es": "Póster de {0}",
+    "it": "Locandina di {0}"
+  },
+  "Detayı kapat": {
+    "en": "Close details",
+    "de": "Details schließen",
+    "fr": "Fermer les détails",
+    "es": "Cerrar detalles",
+    "it": "Chiudi dettagli"
+  },
+  "Sağlayıcı {0}": {
+    "en": "Provider {0}",
+    "de": "Anbieter {0}",
+    "fr": "Fournisseur {0}",
+    "es": "Proveedor {0}",
+    "it": "Fornitore {0}"
+  },
+  "İçerik bilgisi alınıyor": {
+    "en": "Loading content information",
+    "de": "Inhaltsdaten werden geladen",
+    "fr": "Chargement des informations",
+    "es": "Cargando información",
+    "it": "Caricamento informazioni"
+  },
+  "İçerik bilgileri alınıyor…": {
+    "en": "Loading content information…",
+    "de": "Inhaltsdaten werden geladen…",
+    "fr": "Chargement des informations…",
+    "es": "Cargando información…",
+    "it": "Caricamento informazioni…"
+  },
+  "Sağlayıcı bu içerik için özet vermedi.": {
+    "en": "Provider supplied no synopsis.",
+    "de": "Anbieter hat keine Zusammenfassung geliefert.",
+    "fr": "Fournisseur n’a fourni aucun résumé.",
+    "es": "Proveedor no dio sinopsis.",
+    "it": "Fornitore non ha fornito una trama."
+  },
+  "Fragmanı izle": {
+    "en": "Watch trailer",
+    "de": "Trailer ansehen",
+    "fr": "Voir la bande-annonce",
+    "es": "Ver tráiler",
+    "it": "Guarda trailer"
+  },
+  "Yıldız": {
+    "en": "Star",
+    "de": "Star",
+    "fr": "Vedette",
+    "es": "Estrella",
+    "it": "Star"
+  },
+  "Yönetmen": {
+    "en": "Director",
+    "de": "Regie",
+    "fr": "Réalisation",
+    "es": "Dirección",
+    "it": "Regia"
+  },
+  "Benzer Başlıklar": {
+    "en": "Similar titles",
+    "de": "Ähnliche Titel",
+    "fr": "Titres similaires",
+    "es": "Títulos similares",
+    "it": "Titoli simili"
+  },
+  "Yayın yeniden bağlanıyor": {
+    "en": "Reconnecting stream",
+    "de": "Stream wird neu verbunden",
+    "fr": "Reconnexion au flux",
+    "es": "Reconectando emisión",
+    "it": "Riconnessione flusso"
+  },
+  "Ne zaman hatırlatayım?": {
+    "en": "When should I remind you?",
+    "de": "Wann erinnern?",
+    "fr": "Quand vous rappeler ?",
+    "es": "¿Cuándo te aviso?",
+    "it": "Quando vuoi il promemoria?"
+  },
+  "Hatırlatma süresi dakika": {
+    "en": "Reminder lead time in minutes",
+    "de": "Erinnerungsvorlauf in Minuten",
+    "fr": "Délai du rappel en minutes",
+    "es": "Antelación en minutos",
+    "it": "Anticipo promemoria in minuti"
+  },
+  "Önce bir yayın aç": {
+    "en": "Open a stream first",
+    "de": "Zuerst Stream öffnen",
+    "fr": "Ouvrez d’abord un flux",
+    "es": "Abre una emisión primero",
+    "it": "Apri prima un flusso"
+  },
+  "Yayın bağlantısını telefonundaki WhatsApp, Telegram, SMS veya diğer paylaşım uygulamalarıyla gönderebilirsin. Herkes kendi oynatıcısında izler.": {
+    "en": "Send the link via WhatsApp, Telegram, SMS or other sharing apps. Everyone watches in their own player.",
+    "de": "Link per WhatsApp, Telegram, SMS oder anderen Apps senden. Jeder schaut im eigenen Player.",
+    "fr": "Envoyez le lien via WhatsApp, Telegram, SMS ou autre. Chacun utilise son propre lecteur.",
+    "es": "Envía el enlace por WhatsApp, Telegram, SMS u otras apps. Cada persona usa su reproductor.",
+    "it": "Invia il link via WhatsApp, Telegram, SMS o altre app. Ognuno usa il proprio lettore."
+  },
+  "Bağlantıyı paylaş": {
+    "en": "Share link",
+    "de": "Link teilen",
+    "fr": "Partager le lien",
+    "es": "Compartir enlace",
+    "it": "Condividi link"
+  },
+  "Paylaşım menüsü açılamadı.": {
+    "en": "Could not open sharing menu.",
+    "de": "Teilen-Menü nicht geöffnet.",
+    "fr": "Menu de partage indisponible.",
+    "es": "No se pudo abrir menú para compartir.",
+    "it": "Menu condivisione non disponibile."
+  },
+  "Simge değişikliği uygulanamadı. Yeniden deneyin.": {
+    "en": "Could not change icon. Try again.",
+    "de": "Symbol nicht geändert. Erneut versuchen.",
+    "fr": "Icône non modifiée. Réessayez.",
+    "es": "No se cambió el icono. Reintenta.",
+    "it": "Icona non cambiata. Riprova."
+  },
+  "Bu fragman uygulama içinde açılamadı. Film ayrıntılarına dönmek için kapat düğmesine dokun.": {
+    "en": "Trailer cannot play in the app. Close it to return to film details.",
+    "de": "Trailer kann nicht in der App laufen. Schließen, um zu Filmdetails zurückzukehren.",
+    "fr": "Bande-annonce illisible dans l’application. Fermez pour revenir aux détails.",
+    "es": "Tráiler no reproducible en la app. Cierra para volver a detalles.",
+    "it": "Trailer non riproducibile nell’app. Chiudi per tornare ai dettagli."
+  },
+  "Mikrofon izni verilmedi. Yazıyla da arayabilirsin.": {
+    "en": "Microphone access denied. You can type instead.",
+    "de": "Mikrofonzugriff verweigert. Suche kann eingegeben werden.",
+    "fr": "Microphone refusé. Vous pouvez écrire.",
+    "es": "Micrófono denegado. Puedes escribir.",
+    "it": "Microfono negato. Puoi scrivere."
+  },
+  "Ses algılanmadı. Mikrofonu kontrol edip tekrar dene veya yazıyla ara.": {
+    "en": "No speech detected. Check microphone and retry, or type.",
+    "de": "Keine Sprache erkannt. Mikrofon prüfen und erneut versuchen oder schreiben.",
+    "fr": "Aucune voix détectée. Vérifiez le micro ou écrivez.",
+    "es": "No se detectó voz. Revisa micrófono o escribe.",
+    "it": "Nessuna voce rilevata. Controlla microfono o scrivi."
+  },
+  "Ses tanıma başlatılamadı ({0}). Cihazın Google ses hizmetini kontrol et; yazılı arama kullanılabilir.": {
+    "en": "Speech could not start ({0}). Check Google voice services; text search is available.",
+    "de": "Spracherkennung nicht gestartet ({0}). Google-Sprachdienst prüfen; Textsuche verfügbar.",
+    "fr": "Reconnaissance vocale non démarrée ({0}). Vérifiez les services Google ; recherche écrite disponible.",
+    "es": "Voz no iniciada ({0}). Revisa servicios de voz Google; búsqueda escrita disponible.",
+    "it": "Voce non avviata ({0}). Controlla servizi vocali Google; ricerca scritta disponibile."
+  },
+  "Bu cihazda ses tanıma hizmeti yok. Google ses hizmetini etkinleştir veya yazıyla ara.": {
+    "en": "Speech recognition unavailable. Enable Google voice services or type.",
+    "de": "Spracherkennung fehlt. Google-Sprachdienst aktivieren oder schreiben.",
+    "fr": "Reconnaissance vocale indisponible. Activez les services Google ou écrivez.",
+    "es": "Reconocimiento de voz no disponible. Activa servicios Google o escribe.",
+    "it": "Riconoscimento vocale non disponibile. Attiva servizi Google o scrivi."
+  },
+  "Sesli arama için mikrofon ve konuşma tanıma izni gerekiyor.": {
+    "en": "Voice search requires microphone and speech recognition permissions.",
+    "de": "Sprachsuche benötigt Mikrofon- und Spracherkennungsrechte.",
+    "fr": "Recherche vocale nécessite les permissions micro et reconnaissance vocale.",
+    "es": "Búsqueda por voz requiere permisos de micrófono y reconocimiento.",
+    "it": "Ricerca vocale richiede permessi microfono e riconoscimento."
+  },
+  "Sesli arama başlatılamadı.": {
+    "en": "Could not start voice search.",
+    "de": "Sprachsuche nicht gestartet.",
+    "fr": "Recherche vocale non démarrée.",
+    "es": "No se inició búsqueda por voz.",
+    "it": "Ricerca vocale non avviata."
+  },
+  "“Bugün TRT1’de ne var?”, “En yüksek IMDb puanlı filmi veya diziyi bul” ya da “Türkiye maçını aç” diyebilirsin.": {
+    "en": "Try “What is on TRT1 today?”, “Find the highest rated film or series” or “Open the Türkiye match”.",
+    "de": "Zum Beispiel: „Was läuft heute auf TRT1?“, „Finde den bestbewerteten Film oder die Serie“ oder „Öffne das Türkiye-Spiel“.",
+    "fr": "Dites « Que passe-t-il sur TRT1 aujourd’hui ? », « Trouve le film ou la série avec la meilleure note » ou « Ouvre le match de Türkiye ».",
+    "es": "Prueba «¿Qué hay en TRT1 hoy?», «Busca la película o serie mejor valorada» o «Abre el partido de Türkiye».",
+    "it": "Prova «Cosa c’è su TRT1 oggi?», «Trova il film o la serie con il voto più alto» o «Apri la partita della Türkiye»."
+  },
+  "{0} kanalını aç": {
+    "en": "Open channel {0}",
+    "de": "Sender {0} öffnen",
+    "fr": "Ouvrir chaîne {0}",
+    "es": "Abrir canal {0}",
+    "it": "Apri canale {0}"
+  },
+  "{0} arama sonucunu aç": {
+    "en": "Open search result {0}",
+    "de": "Suchergebnis {0} öffnen",
+    "fr": "Ouvrir résultat {0}",
+    "es": "Abrir resultado {0}",
+    "it": "Apri risultato {0}"
+  },
+  "Yayının ses parçaları henüz alınamadı.": {
+    "en": "Audio tracks not available yet.",
+    "de": "Tonspuren noch nicht verfügbar.",
+    "fr": "Pistes audio pas encore disponibles.",
+    "es": "Pistas de audio aún no disponibles.",
+    "it": "Tracce audio non ancora disponibili."
+  },
+  "Bu altyazı parçası seçilemedi. Başka bir parça veya uyumlu oynatıcıyı deneyin.": {
+    "en": "Subtitle track could not be selected. Try another track or compatible player.",
+    "de": "Untertitel nicht gewählt. Andere Spur oder kompatiblen Player versuchen.",
+    "fr": "Sous-titres non sélectionnés. Essayez une autre piste ou un lecteur compatible.",
+    "es": "No se pudo seleccionar subtítulo. Prueba otra pista o reproductor compatible.",
+    "it": "Sottotitolo non selezionato. Prova altra traccia o lettore compatibile."
+  },
+  "Xtream Codes API sunucu bilgileri ile doğrudan bağlanın": {
+    "en": "Connect directly with Xtream Codes API server details",
+    "de": "Direkt mit Xtream-Codes-API-Serverdaten verbinden",
+    "fr": "Connexion directe avec les données du serveur API Xtream Codes",
+    "es": "Conecta con datos del servidor API Xtream Codes",
+    "it": "Connettiti con dati server API Xtream Codes"
+  },
+  "M3U oynatma listesi bağlantınızı ekleyin": {
+    "en": "Add your M3U playlist link",
+    "de": "M3U-Listenlink hinzufügen",
+    "fr": "Ajoutez votre lien de liste M3U",
+    "es": "Añade enlace de lista M3U",
+    "it": "Aggiungi link playlist M3U"
+  },
+  "Bu kaynakta ses parçası bulunamadı.": {
+    "en": "No audio track in this source.",
+    "de": "Keine Tonspur in dieser Quelle.",
+    "fr": "Aucune piste audio dans cette source.",
+    "es": "Sin pista de audio en esta fuente.",
+    "it": "Nessuna traccia audio nella sorgente."
+  },
+  "Yayın altyazı parçası sağlamıyor. Otomatik çeviri yapılmaz.": {
+    "en": "Stream provides no subtitles. No automatic translation.",
+    "de": "Stream liefert keine Untertitel. Keine automatische Übersetzung.",
+    "fr": "Flux sans sous-titres. Pas de traduction automatique.",
+    "es": "Emisión sin subtítulos. Sin traducción automática.",
+    "it": "Flusso senza sottotitoli. Nessuna traduzione automatica."
+  },
+  "E-posta veya şifre hatalı. Şifreni unuttuysan sıfırlayabilirsin.": {
+    "en": "Incorrect email or password. Reset your password if forgotten.",
+    "de": "E-Mail oder Passwort falsch. Bei Bedarf Passwort zurücksetzen.",
+    "fr": "E-mail ou mot de passe incorrect. Réinitialisez si oublié.",
+    "es": "Correo o contraseña incorrectos. Restablece si la olvidaste.",
+    "it": "Email o password errati. Reimposta se dimenticata."
+  },
+  "Önce e-posta adresini doğrula. Doğrulama kodunu yeniden gönderebilirsin.": {
+    "en": "Verify email first. You can resend the code.",
+    "de": "Zuerst E-Mail bestätigen. Code erneut sendbar.",
+    "fr": "Vérifiez l’e-mail. Vous pouvez renvoyer le code.",
+    "es": "Verifica correo primero. Puedes reenviar código.",
+    "it": "Verifica prima email. Puoi reinviare codice."
+  },
+  "Çok fazla deneme yapıldı. Bir süre bekleyip tekrar dene.": {
+    "en": "Too many attempts. Wait and retry.",
+    "de": "Zu viele Versuche. Warten und erneut versuchen.",
+    "fr": "Trop de tentatives. Patientez puis réessayez.",
+    "es": "Demasiados intentos. Espera y reintenta.",
+    "it": "Troppi tentativi. Attendi e riprova."
+  },
+  "Bu adrese e-posta gönderimine izin verilmiyor. Destek ile iletişime geç.": {
+    "en": "Email to this address is not allowed. Contact support.",
+    "de": "E-Mail an diese Adresse nicht erlaubt. Support kontaktieren.",
+    "fr": "Envoi à cette adresse interdit. Contactez l’assistance.",
+    "es": "Envío a esta dirección no permitido. Contacta con soporte.",
+    "it": "Invio a questo indirizzo non consentito. Contatta assistenza."
+  },
+  "Oturumun sona erdi. Tekrar giriş yap.": {
+    "en": "Session expired. Sign in again.",
+    "de": "Sitzung abgelaufen. Erneut anmelden.",
+    "fr": "Session expirée. Reconnectez-vous.",
+    "es": "Sesión caducada. Inicia sesión otra vez.",
+    "it": "Sessione scaduta. Accedi di nuovo."
+  },
+  "En az 8 karakterli, tahmin edilmesi zor bir şifre belirle.": {
+    "en": "Use a hard-to-guess password of at least 8 characters.",
+    "de": "Schwer erratbares Passwort mit mindestens 8 Zeichen wählen.",
+    "fr": "Choisissez un mot de passe difficile à deviner d’au moins 8 caractères.",
+    "es": "Usa contraseña difícil de adivinar de al menos 8 caracteres.",
+    "it": "Usa password difficile da indovinare di almeno 8 caratteri."
+  },
+  "Yeni şifren önceki şifrenden farklı olmalı.": {
+    "en": "New password must differ from the previous one.",
+    "de": "Neues Passwort muss vom alten abweichen.",
+    "fr": "Le nouveau mot de passe doit être différent.",
+    "es": "La nueva contraseña debe ser distinta.",
+    "it": "La nuova password deve essere diversa."
+  },
+  "Kod geçersiz veya süresi dolmuş. Son gelen kodu kontrol et veya yeni kod iste.": {
+    "en": "Code invalid or expired. Check the latest code or request another.",
+    "de": "Code ungültig oder abgelaufen. Neuesten prüfen oder neuen anfordern.",
+    "fr": "Code invalide ou expiré. Vérifiez le dernier ou demandez-en un autre.",
+    "es": "Código inválido o caducado. Revisa el último o pide otro.",
+    "it": "Codice non valido o scaduto. Controlla l’ultimo o richiedine uno nuovo."
+  },
+  "Şifre sıfırlama oturumu sona erdi. Yeni kod iste.": {
+    "en": "Password reset session expired. Request a new code.",
+    "de": "Rücksetzsitzung abgelaufen. Neuen Code anfordern.",
+    "fr": "Session de réinitialisation expirée. Demandez un nouveau code.",
+    "es": "Sesión de recuperación caducada. Pide otro código.",
+    "it": "Sessione recupero scaduta. Richiedi nuovo codice."
+  },
+  "Sunucuya ulaşılamadı. Bağlantını kontrol edip tekrar dene.": {
+    "en": "Server unreachable. Check connection and retry.",
+    "de": "Server unerreichbar. Verbindung prüfen und erneut versuchen.",
+    "fr": "Serveur inaccessible. Vérifiez la connexion et réessayez.",
+    "es": "Servidor inaccesible. Revisa conexión y reintenta.",
+    "it": "Server irraggiungibile. Controlla connessione e riprova."
+  },
+  "Hesap sunucusunda işlem tamamlanamadı. E-posta gönderim hizmetinde sorun olabilir. Biraz sonra dene veya destek ile iletişime geç.": {
+    "en": "Account request failed. Email service may be unavailable. Try later or contact support.",
+    "de": "Kontoanfrage fehlgeschlagen. E-Mail-Dienst möglicherweise gestört. Später versuchen oder Support kontaktieren.",
+    "fr": "Demande échouée. Service e-mail peut-être indisponible. Réessayez plus tard ou contactez l’assistance.",
+    "es": "Solicitud fallida. Correo quizá no disponible. Reintenta más tarde o contacta soporte.",
+    "it": "Richiesta fallita. Servizio email forse non disponibile. Riprova più tardi o contatta assistenza."
+  },
+  "Sunucudan beklenmeyen yanıt alındı. Tekrar dene.": {
+    "en": "Unexpected server response. Try again.",
+    "de": "Unerwartete Serverantwort. Erneut versuchen.",
+    "fr": "Réponse inattendue. Réessayez.",
+    "es": "Respuesta inesperada. Reintenta.",
+    "it": "Risposta inattesa. Riprova."
+  },
+  "İşlem tamamlanamadı. Tekrar dene veya destek ile iletişime geç.": {
+    "en": "Operation failed. Retry or contact support.",
+    "de": "Vorgang fehlgeschlagen. Wiederholen oder Support kontaktieren.",
+    "fr": "Échec. Réessayez ou contactez l’assistance.",
+    "es": "Operación fallida. Reintenta o contacta soporte.",
+    "it": "Operazione fallita. Riprova o contatta assistenza."
+  },
+  "Bu kanal listende bulunamadı.": {
+    "en": "Channel not in your playlist.",
+    "de": "Sender nicht in deiner Liste.",
+    "fr": "Chaîne absente de votre liste.",
+    "es": "Canal no está en tu lista.",
+    "it": "Canale non nella playlist."
+  },
+  "Sağlayıcı bu kanal için program verisi göndermedi.": {
+    "en": "Provider sent no programme data for this channel.",
+    "de": "Keine Programmdaten für diesen Sender geliefert.",
+    "fr": "Aucun programme fourni pour cette chaîne.",
+    "es": "Proveedor no envió programación para este canal.",
+    "it": "Fornitore non ha inviato programmi per questo canale."
+  },
+  "Bu akşamki yayınlar": {
+    "en": "Tonight’s programmes",
+    "de": "Heutiges Abendprogramm",
+    "fr": "Programmes de ce soir",
+    "es": "Programación de esta noche",
+    "it": "Programmi di stasera"
+  },
+  "Önümüzdeki 24 saatin yayın akışı": {
+    "en": "Next 24 hours of programming",
+    "de": "Programm der nächsten 24 Stunden",
+    "fr": "Programme des prochaines 24 heures",
+    "es": "Programación de próximas 24 horas",
+    "it": "Guida delle prossime 24 ore"
+  },
+  "Listendeki IMDb puanlarına göre en yüksek puanlı içerikler": {
+    "en": "Highest IMDb-rated content in your playlist",
+    "de": "Höchste IMDb-Wertungen deiner Liste",
+    "fr": "Meilleures notes IMDb de votre liste",
+    "es": "Mayores notas IMDb de tu lista",
+    "it": "Voti IMDb più alti della playlist"
+  },
+  "Bu türde gerçek IMDb puanı bulunamadı. IMDb ayarlarından veri anahtarını ekleyebilirsin.": {
+    "en": "No verified IMDb ratings for this genre. Add a data key in IMDb settings.",
+    "de": "Keine bestätigten IMDb-Wertungen für dieses Genre. Schlüssel in IMDb-Einstellungen hinzufügen.",
+    "fr": "Aucune note IMDb vérifiée pour ce genre. Ajoutez une clé dans les réglages IMDb.",
+    "es": "Sin notas IMDb verificadas para este género. Añade clave en ajustes IMDb.",
+    "it": "Nessun voto IMDb verificato per questo genere. Aggiungi chiave nelle impostazioni IMDb."
+  },
+  "Maç şu anda bu kanalda.": {
+    "en": "The match is live on this channel.",
+    "de": "Das Spiel läuft auf diesem Sender.",
+    "fr": "Le match est en direct sur cette chaîne.",
+    "es": "El partido está en directo en este canal.",
+    "it": "La partita è live su questo canale."
+  },
+  "Maçın kanalı ve saati aşağıda. Takibe alalım mı?": {
+    "en": "Match channel and time are below. Follow it?",
+    "de": "Sender und Spielzeit unten. Folgen?",
+    "fr": "Chaîne et horaire ci-dessous. Suivre ?",
+    "es": "Canal y hora abajo. ¿Seguir?",
+    "it": "Canale e orario sotto. Seguire?"
+  },
+  "Maç mevcut EPG’de bulunamadı. Sağlayıcı bu programı göndermemiş olabilir.": {
+    "en": "Match missing in current EPG. Provider may not have sent it.",
+    "de": "Spiel fehlt im aktuellen EPG. Anbieter hat es möglicherweise nicht gesendet.",
+    "fr": "Match absent de l’EPG. Le fournisseur ne l’a peut-être pas envoyé.",
+    "es": "Partido no está en EPG actual. Proveedor quizá no lo envió.",
+    "it": "Partita assente nell’EPG. Il fornitore potrebbe non averla inviata."
+  },
+  "Bulduğum içerikler": {
+    "en": "Content found",
+    "de": "Gefundene Inhalte",
+    "fr": "Contenus trouvés",
+    "es": "Contenido encontrado",
+    "it": "Contenuti trovati"
+  },
+  "Ödeme servisi HTTPS adresi olmalı.": {
+    "en": "Payment service must use HTTPS.",
+    "de": "Zahlungsdienst muss HTTPS nutzen.",
+    "fr": "Service de paiement doit utiliser HTTPS.",
+    "es": "Servicio de pago debe usar HTTPS.",
+    "it": "Servizio pagamento deve usare HTTPS."
+  },
+  "Önce hesabına giriş yapmalısın.": {
+    "en": "Sign in first.",
+    "de": "Zuerst anmelden.",
+    "fr": "Connectez-vous d’abord.",
+    "es": "Inicia sesión primero.",
+    "it": "Accedi prima."
+  },
+  "Kullanım hakkı doğrulanamadı. Tekrar dene.": {
+    "en": "Access could not be verified. Try again.",
+    "de": "Zugang nicht bestätigt. Erneut versuchen.",
+    "fr": "Accès non vérifié. Réessayez.",
+    "es": "Acceso no verificado. Reintenta.",
+    "it": "Accesso non verificato. Riprova."
+  },
+  "Yayın bağlantısı yok.": {
+    "en": "No stream link.",
+    "de": "Kein Streamlink.",
+    "fr": "Aucun lien de flux.",
+    "es": "Sin enlace de emisión.",
+    "it": "Nessun link flusso."
+  },
+  "Bu MKV dosyası TV alıcısında doğrudan desteklenmeyebilir. HLS veya MP4 kaynağı seçin.": {
+    "en": "Receiver may not support MKV directly. Choose HLS or MP4.",
+    "de": "Empfänger unterstützt MKV eventuell nicht direkt. HLS oder MP4 wählen.",
+    "fr": "Récepteur peut ne pas accepter MKV. Choisissez HLS ou MP4.",
+    "es": "Receptor quizá no admite MKV. Elige HLS o MP4.",
+    "it": "Ricevitore potrebbe non supportare MKV. Scegli HLS o MP4."
+  },
+  "Doğrulanmış abonelik bilgisi alınamadı.": {
+    "en": "Verified subscription information unavailable.",
+    "de": "Bestätigte Abonnementdaten fehlen.",
+    "fr": "Informations d’abonnement vérifiées indisponibles.",
+    "es": "Información verificada de suscripción no disponible.",
+    "it": "Informazioni abbonamento verificate non disponibili."
+  },
+  "Kotak Pro kullanım süren doldu.": {
+    "en": "Kotak Pro access expired.",
+    "de": "Kotak-Pro-Zugang abgelaufen.",
+    "fr": "Accès Kotak Pro expiré.",
+    "es": "Acceso Kotak Pro vencido.",
+    "it": "Accesso Kotak Pro scaduto."
+  },
+  "Demo sürenin bitmesine {0} saat {1} dakika kaldı.": {
+    "en": "Trial ends in {0} hours {1} minutes.",
+    "de": "Testphase endet in {0} Stunden {1} Minuten.",
+    "fr": "Essai se termine dans {0} heures {1} minutes.",
+    "es": "Prueba termina en {0} horas {1} minutos.",
+    "it": "Prova termina tra {0} ore {1} minuti."
+  },
+  "Kotak Pro kullanım süren 1 günden az kaldı.": {
+    "en": "Less than 1 day of Kotak Pro remains.",
+    "de": "Weniger als 1 Tag Kotak Pro übrig.",
+    "fr": "Moins d’un jour Kotak Pro restant.",
+    "es": "Queda menos de 1 día de Kotak Pro.",
+    "it": "Resta meno di 1 giorno di Kotak Pro."
+  },
+  "Kotak Pro kullanım süren 2 günden az kaldı.": {
+    "en": "Less than 2 days of Kotak Pro remain.",
+    "de": "Weniger als 2 Tage Kotak Pro übrig.",
+    "fr": "Moins de 2 jours Kotak Pro restants.",
+    "es": "Quedan menos de 2 días de Kotak Pro.",
+    "it": "Restano meno di 2 giorni di Kotak Pro."
+  },
+  "Takip bildirimleri için bildirim izni gerekli.": {
+    "en": "Follow alerts require notification permission.",
+    "de": "Abonnementhinweise benötigen Benachrichtigungsrechte.",
+    "fr": "Alertes de suivi nécessitent l’autorisation des notifications.",
+    "es": "Alertas requieren permiso de notificaciones.",
+    "it": "Avvisi richiedono permesso notifiche."
+  },
+  "IMDb veri anahtarı geçersiz veya günlük sorgu sınırı dolmuş.": {
+    "en": "Invalid IMDb key or daily query limit reached.",
+    "de": "IMDb-Schlüssel ungültig oder Tageslimit erreicht.",
+    "fr": "Clé IMDb invalide ou limite quotidienne atteinte.",
+    "es": "Clave IMDb inválida o límite diario alcanzado.",
+    "it": "Chiave IMDb non valida o limite giornaliero raggiunto."
+  },
+  "Geçerli bir http:// veya https:// adresi girin.": {
+    "en": "Enter a valid http:// or https:// address.",
+    "de": "Gültige http://- oder https://-Adresse eingeben.",
+    "fr": "Entrez une adresse http:// ou https:// valide.",
+    "es": "Introduce dirección http:// o https:// válida.",
+    "it": "Inserisci indirizzo http:// o https:// valido."
+  },
+  "Yalnızca HTTP ve HTTPS adresleri destekleniyor.": {
+    "en": "Only HTTP and HTTPS supported.",
+    "de": "Nur HTTP und HTTPS unterstützt.",
+    "fr": "HTTP et HTTPS uniquement.",
+    "es": "Solo HTTP y HTTPS.",
+    "it": "Solo HTTP e HTTPS."
+  },
+  "Sunucu süre sınırında yanıt vermedi. Tekrar deneyin.": {
+    "en": "Server timed out. Try again.",
+    "de": "Server-Zeitlimit erreicht. Erneut versuchen.",
+    "fr": "Délai serveur dépassé. Réessayez.",
+    "es": "Servidor agotó tiempo. Reintenta.",
+    "it": "Timeout server. Riprova."
+  },
+  "Sunucu HTTP {0} döndürdü. Hesabı veya adresi kontrol edin.": {
+    "en": "Server returned HTTP {0}. Check account or address.",
+    "de": "Server meldet HTTP {0}. Konto oder Adresse prüfen.",
+    "fr": "Serveur renvoie HTTP {0}. Vérifiez compte ou adresse.",
+    "es": "Servidor devolvió HTTP {0}. Revisa cuenta o dirección.",
+    "it": "Server ha restituito HTTP {0}. Controlla account o indirizzo."
+  },
+  "Liste 64 MB sınırını aşıyor.": {
+    "en": "Playlist exceeds 64 MB.",
+    "de": "Liste überschreitet 64 MB.",
+    "fr": "Liste dépasse 64 Mo.",
+    "es": "Lista supera 64 MB.",
+    "it": "Playlist supera 64 MB."
+  },
+  "Liste işlenemeyecek kadar büyük.": {
+    "en": "Playlist too large to process.",
+    "de": "Liste zu groß zur Verarbeitung.",
+    "fr": "Liste trop grande à traiter.",
+    "es": "Lista demasiado grande para procesar.",
+    "it": "Playlist troppo grande da elaborare."
+  },
+  "Sunucuya bağlanılamadı. Adresi, internet bağlantısını ve sağlayıcının erişim iznini kontrol edin.": {
+    "en": "Cannot connect. Check server address, internet and provider permissions.",
+    "de": "Keine Verbindung. Serveradresse, Internet und Anbieterrechte prüfen.",
+    "fr": "Connexion impossible. Vérifiez adresse, Internet et permissions du fournisseur.",
+    "es": "No conecta. Revisa dirección, Internet y permisos del proveedor.",
+    "it": "Connessione fallita. Controlla indirizzo, Internet e permessi del fornitore."
+  },
+  "Adres bir M3U listesi döndürmedi. Giriş sayfası veya yanlış link olabilir.": {
+    "en": "Address did not return M3U. May be a login page or incorrect link.",
+    "de": "Adresse liefert kein M3U. Möglicherweise Anmeldeseite oder falscher Link.",
+    "fr": "Adresse ne renvoie pas M3U. Peut-être une page de connexion ou lien erroné.",
+    "es": "Dirección no devolvió M3U. Puede ser página de acceso o enlace incorrecto.",
+    "it": "Indirizzo non restituisce M3U. Potrebbe essere pagina accesso o link errato."
+  },
+  "Listede oynatılabilir HTTP/HTTPS yayını bulunamadı.": {
+    "en": "No playable HTTP/HTTPS streams in playlist.",
+    "de": "Keine abspielbaren HTTP/HTTPS-Streams in Liste.",
+    "fr": "Aucun flux HTTP/HTTPS lisible dans la liste.",
+    "es": "Sin flujos HTTP/HTTPS reproducibles en lista.",
+    "it": "Nessun flusso HTTP/HTTPS riproducibile nella playlist."
+  },
+  "Xtream sunucusu geçerli JSON döndürmedi. Sunucu adresini kontrol edin.": {
+    "en": "Xtream returned invalid JSON. Check server address.",
+    "de": "Xtream liefert ungültiges JSON. Serveradresse prüfen.",
+    "fr": "JSON Xtream invalide. Vérifiez adresse serveur.",
+    "es": "JSON Xtream inválido. Revisa dirección servidor.",
+    "it": "JSON Xtream non valido. Controlla indirizzo server."
+  },
+  "Xtream hesabı aktif değil veya kullanıcı adı/şifre yanlış.": {
+    "en": "Xtream account inactive or username/password incorrect.",
+    "de": "Xtream-Konto inaktiv oder Zugangsdaten falsch.",
+    "fr": "Compte Xtream inactif ou identifiants incorrects.",
+    "es": "Cuenta Xtream inactiva o credenciales incorrectas.",
+    "it": "Account Xtream inattivo o credenziali errate."
+  },
+  "Katalog yanıtı geçersiz.": {
+    "en": "Invalid catalogue response.",
+    "de": "Ungültige Katalogantwort.",
+    "fr": "Réponse catalogue invalide.",
+    "es": "Respuesta catálogo inválida.",
+    "it": "Risposta catalogo non valida."
+  },
+  "İçerik": {
+    "en": "Content",
+    "de": "Inhalt",
+    "fr": "Contenu",
+    "es": "Contenido",
+    "it": "Contenuto"
+  },
+  "{0} listesi alınamadı.": {
+    "en": "Could not load {0} list.",
+    "de": "Liste {0} nicht geladen.",
+    "fr": "Liste {0} non chargée.",
+    "es": "No se cargó lista {0}.",
+    "it": "Lista {0} non caricata."
+  },
+  "Canlı TV": {
+    "en": "Live TV",
+    "de": "Live-TV",
+    "fr": "TV en direct",
+    "es": "TV en directo",
+    "it": "TV live"
+  },
+  "Hesaba bağlanıldı ancak kanal veya içerik listesi alınamadı.": {
+    "en": "Connected, but channel or content list unavailable.",
+    "de": "Verbunden, aber Sender-/Inhaltsliste fehlt.",
+    "fr": "Connecté, mais liste de chaînes/contenus indisponible.",
+    "es": "Conectado, pero lista de canales/contenido no disponible.",
+    "it": "Connesso, ma lista canali/contenuti non disponibile."
+  },
+  "Bu dizi için bölüm bulunamadı.": {
+    "en": "No episodes found for this series.",
+    "de": "Keine Folgen dieser Serie gefunden.",
+    "fr": "Aucun épisode trouvé pour cette série.",
+    "es": "Sin episodios para esta serie.",
+    "it": "Nessun episodio per questa serie."
+  },
+  "EPG adresi XMLTV verisi döndürmedi.": {
+    "en": "EPG address did not return XMLTV.",
+    "de": "EPG-Adresse liefert kein XMLTV.",
+    "fr": "Adresse EPG ne renvoie pas XMLTV.",
+    "es": "Dirección EPG no devolvió XMLTV.",
+    "it": "Indirizzo EPG non restituisce XMLTV."
+  },
+  "Geçersiz JSON dizisi.": {
+    "en": "Invalid JSON array.",
+    "de": "Ungültiges JSON-Array.",
+    "fr": "Tableau JSON invalide.",
+    "es": "Matriz JSON inválida.",
+    "it": "Array JSON non valido."
+  },
+  "Geçersiz JSON sonu.": {
+    "en": "Invalid JSON ending.",
+    "de": "Ungültiges JSON-Ende.",
+    "fr": "Fin JSON invalide.",
+    "es": "Final JSON inválido.",
+    "it": "Fine JSON non valida."
+  },
+  "Geçersiz JSON.": {
+    "en": "Invalid JSON.",
+    "de": "Ungültiges JSON.",
+    "fr": "JSON invalide.",
+    "es": "JSON inválido.",
+    "it": "JSON non valido."
+  },
+  "Geçersiz JSON öğesi.": {
+    "en": "Invalid JSON item.",
+    "de": "Ungültiges JSON-Element.",
+    "fr": "Élément JSON invalide.",
+    "es": "Elemento JSON inválido.",
+    "it": "Elemento JSON non valido."
+  },
+  "JSON dizisi tamamlanmadı.": {
+    "en": "Incomplete JSON array.",
+    "de": "Unvollständiges JSON-Array.",
+    "fr": "Tableau JSON incomplet.",
+    "es": "Matriz JSON incompleta.",
+    "it": "Array JSON incompleto."
+  },
+  "Takım simgesi için Android APK güncellemesi gerekiyor.": {
+    "en": "Update Android APK to use team icons.",
+    "de": "Android-APK für Teamsymbole aktualisieren.",
+    "fr": "Mettez à jour l’APK Android pour les icônes d’équipe.",
+    "es": "Actualiza APK Android para iconos de equipos.",
+    "it": "Aggiorna APK Android per icone squadre."
+  },
+  "Liste sunucusu zamanında yanıt vermedi. Mevcut kanallar kullanılabilir; yenileyerek tekrar deneyebilirsin.": {
+    "en": "Playlist server timed out. Existing channels available; refresh to retry.",
+    "de": "Listenserver-Zeitlimit. Vorhandene Sender verfügbar; zum Wiederholen aktualisieren.",
+    "fr": "Délai serveur de liste dépassé. Chaînes existantes disponibles ; actualisez.",
+    "es": "Servidor de lista agotó tiempo. Canales existentes disponibles; actualiza.",
+    "it": "Timeout server playlist. Canali esistenti disponibili; aggiorna."
+  },
+  "EPG sunucusu zamanında yanıt vermedi.": {
+    "en": "EPG server timed out.",
+    "de": "EPG-Server-Zeitlimit erreicht.",
+    "fr": "Délai serveur EPG dépassé.",
+    "es": "Tiempo servidor EPG agotado.",
+    "it": "Timeout server EPG."
+  },
+  "EPG dosyası çok büyük.": {
+    "en": "EPG file too large.",
+    "de": "EPG-Datei zu groß.",
+    "fr": "Fichier EPG trop grand.",
+    "es": "Archivo EPG demasiado grande.",
+    "it": "File EPG troppo grande."
+  },
+  "Açılmış EPG verisi çok büyük.": {
+    "en": "Decompressed EPG too large.",
+    "de": "Entpacktes EPG zu groß.",
+    "fr": "EPG décompressé trop grand.",
+    "es": "EPG descomprimido demasiado grande.",
+    "it": "EPG decompresso troppo grande."
+  },
+  "EPG verisi çok büyük.": {
+    "en": "EPG data too large.",
+    "de": "EPG-Daten zu groß.",
+    "fr": "Données EPG trop grandes.",
+    "es": "Datos EPG demasiado grandes.",
+    "it": "Dati EPG troppo grandi."
+  },
+  "Bu program başlamış. Gelecekteki bir programı seçin.": {
+    "en": "Programme already started. Choose a future one.",
+    "de": "Sendung schon gestartet. Zukünftige wählen.",
+    "fr": "Programme déjà commencé. Choisissez un programme futur.",
+    "es": "Programa ya empezó. Elige uno futuro.",
+    "it": "Programma già iniziato. Scegline uno futuro."
+  },
+  "Program hatırlatması için bildirim izni gerekiyor. Telefon ayarlarından Kotak TV bildirimlerini açın.": {
+    "en": "Reminders require notification permission. Enable Kotak TV notifications in phone settings.",
+    "de": "Erinnerungen benötigen Benachrichtigungsrechte. Kotak-TV-Benachrichtigungen in Telefoneinstellungen aktivieren.",
+    "fr": "Rappels nécessitent l’autorisation. Activez les notifications Kotak TV dans les réglages.",
+    "es": "Recordatorios requieren permiso. Activa notificaciones Kotak TV en ajustes.",
+    "it": "Promemoria richiedono permesso. Attiva notifiche Kotak TV nelle impostazioni."
+  },
+  "Hatırlatıcı kurulamadı. Telefonun bildirim ve alarm izinlerini kontrol edin.": {
+    "en": "Could not set reminder. Check notification and alarm permissions.",
+    "de": "Erinnerung nicht eingerichtet. Benachrichtigungs- und Alarmrechte prüfen.",
+    "fr": "Rappel non créé. Vérifiez permissions notifications et alarmes.",
+    "es": "No se creó recordatorio. Revisa permisos de notificaciones y alarmas.",
+    "it": "Promemoria non creato. Controlla permessi notifiche e sveglie."
+  },
+  "1 ile 10080 arasında dakika girin.": {
+    "en": "Enter 1 to 10080 minutes.",
+    "de": "1 bis 10080 Minuten eingeben.",
+    "fr": "Entrez de 1 à 10080 minutes.",
+    "es": "Introduce de 1 a 10080 minutos.",
+    "it": "Inserisci da 1 a 10080 minuti."
+  },
+  "Seçtiğin hatırlatma saati geçmiş. Daha kısa bir süre seç.": {
+    "en": "Reminder time passed. Choose a shorter lead time.",
+    "de": "Erinnerungszeit vorbei. Kürzeren Vorlauf wählen.",
+    "fr": "Heure du rappel passée. Choisissez un délai plus court.",
+    "es": "Hora del aviso pasada. Elige menos antelación.",
+    "it": "Orario promemoria passato. Scegli anticipo minore."
+  },
+  "Ada Göre": {
+    "en": "By name",
+    "de": "Nach Name",
+    "fr": "Par nom",
+    "es": "Por nombre",
+    "it": "Per nome"
+  },
+  "Sayıya Göre": {
+    "en": "By number",
+    "de": "Nach Nummer",
+    "fr": "Par numéro",
+    "es": "Por número",
+    "it": "Per numero"
+  },
+  "Tüm kategorileri göster": {
+    "en": "Show all categories",
+    "de": "Alle Kategorien anzeigen",
+    "fr": "Afficher toutes les catégories",
+    "es": "Mostrar todas las categorías",
+    "it": "Mostra tutte le categorie"
+  },
+  "Ana ekran kategorilerini seç": {
+    "en": "Choose home categories",
+    "de": "Startkategorien wählen",
+    "fr": "Choisir catégories d’accueil",
+    "es": "Elegir categorías de inicio",
+    "it": "Scegli categorie home"
+  },
+  "Oynatma listesi oluşturmak için (+) tuşuna basın": {
+    "en": "Press (+) to create a playlist",
+    "de": "Zum Erstellen einer Liste (+) drücken",
+    "fr": "Appuyez sur (+) pour créer une liste",
+    "es": "Pulsa (+) para crear una lista",
+    "it": "Premi (+) per creare una playlist"
+  },
+  "Hızlı Test: Örnek Oynatma Listesini Yükle": {
+    "en": "Quick test: load sample playlist",
+    "de": "Schnelltest: Beispielliste laden",
+    "fr": "Test rapide : charger une liste exemple",
+    "es": "Prueba rápida: cargar lista de ejemplo",
+    "it": "Test rapido: carica playlist esempio"
+  },
+  "Hızlı seçenekler": {
+    "en": "Quick options",
+    "de": "Schnelloptionen",
+    "fr": "Options rapides",
+    "es": "Opciones rápidas",
+    "it": "Opzioni rapide"
+  },
+  "Favoriler": {
+    "en": "Favourites",
+    "de": "Favoriten",
+    "fr": "Favoris",
+    "es": "Favoritos",
+    "it": "Preferiti"
+  },
+  "YILLIK PAKET": {
+    "en": "YEARLY PLAN",
+    "de": "JAHRESPAKET",
+    "fr": "OFFRE ANNUELLE",
+    "es": "PLAN ANUAL",
+    "it": "PIANO ANNUALE"
+  },
+  "{0} saniye sonra tekrar dene.": {
+    "en": "Try again in {0} seconds.",
+    "de": "In {0} Sekunden erneut versuchen.",
+    "fr": "Réessayez dans {0} secondes.",
+    "es": "Reintenta en {0} segundos.",
+    "it": "Riprova tra {0} secondi."
+  },
+  "Hesap kontrol ediliyor": {
+    "en": "Checking account",
+    "de": "Konto wird geprüft",
+    "fr": "Vérification du compte",
+    "es": "Comprobando cuenta",
+    "it": "Controllo account"
+  },
+  "Kategori": {
+    "en": "Category",
+    "de": "Kategorie",
+    "fr": "Catégorie",
+    "es": "Categoría",
+    "it": "Categoria"
+  },
+  "Konuklar:": {
+    "en": "Guests:",
+    "de": "Gäste:",
+    "fr": "Invités :",
+    "es": "Invitados:",
+    "it": "Ospiti:"
+  },
+  "Pencereyi kapat": {
+    "en": "Close window",
+    "de": "Fenster schließen",
+    "fr": "Fermer la fenêtre",
+    "es": "Cerrar ventana",
+    "it": "Chiudi finestra"
+  },
+  "Son Kanallar": {
+    "en": "Recent channels",
+    "de": "Letzte Sender",
+    "fr": "Chaînes récentes",
+    "es": "Canales recientes",
+    "it": "Canali recenti"
+  },
+  "film bulunmuyor.": {
+    "en": "No films found.",
+    "de": "Keine Filme gefunden.",
+    "fr": "Aucun film trouvé.",
+    "es": "No hay películas.",
+    "it": "Nessun film trovato."
+  },
+  "dizi bulunmuyor.": {
+    "en": "No series found.",
+    "de": "Keine Serien gefunden.",
+    "fr": "Aucune série trouvée.",
+    "es": "No hay series.",
+    "it": "Nessuna serie trovata."
+  },
+  "Kanal, film veya dizi ara…": {
+    "en": "Search channels, films or series…",
+    "de": "Sender, Filme oder Serien suchen…",
+    "fr": "Rechercher chaînes, films ou séries…",
+    "es": "Buscar canales, películas o series…",
+    "it": "Cerca canali, film o serie…"
+  },
+  "Liste Ekle": {
+    "en": "Add playlist",
+    "de": "Liste hinzufügen",
+    "fr": "Ajouter une liste",
+    "es": "Añadir lista",
+    "it": "Aggiungi playlist"
+  },
+  "Adres: https://…/stream.m3u8": {
+    "en": "Address: https://…/stream.m3u8",
+    "de": "Adresse: https://…/stream.m3u8",
+    "fr": "Adresse : https://…/stream.m3u8",
+    "es": "Dirección: https://…/stream.m3u8",
+    "it": "Indirizzo: https://…/stream.m3u8"
+  },
+  "Liste olarak ekle": {
+    "en": "Add as playlist",
+    "de": "Als Liste hinzufügen",
+    "fr": "Ajouter comme liste",
+    "es": "Añadir como lista",
+    "it": "Aggiungi come playlist"
+  },
+  "XMLTV adresi": {
+    "en": "XMLTV address",
+    "de": "XMLTV-Adresse",
+    "fr": "Adresse XMLTV",
+    "es": "Dirección XMLTV",
+    "it": "Indirizzo XMLTV"
+  },
+  "Kaydet ve EPG’yi getir": {
+    "en": "Save and load EPG",
+    "de": "Speichern und EPG laden",
+    "fr": "Enregistrer et charger EPG",
+    "es": "Guardar y cargar EPG",
+    "it": "Salva e carica EPG"
+  },
+  "Otomatik EPG adresini kullan": {
+    "en": "Use automatic EPG address",
+    "de": "Automatische EPG-Adresse nutzen",
+    "fr": "Utiliser l’adresse EPG automatique",
+    "es": "Usar dirección EPG automática",
+    "it": "Usa indirizzo EPG automatico"
+  },
+  "EPG’yi yenile": {
+    "en": "Refresh EPG",
+    "de": "EPG aktualisieren",
+    "fr": "Actualiser EPG",
+    "es": "Actualizar EPG",
+    "it": "Aggiorna EPG"
+  },
+  "EPG kanal ara": {
+    "en": "Search EPG channels",
+    "de": "EPG-Sender suchen",
+    "fr": "Rechercher chaînes EPG",
+    "es": "Buscar canales EPG",
+    "it": "Cerca canali EPG"
+  },
+  "EPG sonraki saat": {
+    "en": "Next EPG hour",
+    "de": "Nächste EPG-Stunde",
+    "fr": "Heure EPG suivante",
+    "es": "Hora EPG siguiente",
+    "it": "Ora EPG successiva"
+  },
+  "Ana ekran kategorileri": {
+    "en": "Home categories",
+    "de": "Startkategorien",
+    "fr": "Catégories d’accueil",
+    "es": "Categorías de inicio",
+    "it": "Categorie home"
+  },
+  "Kategorileri kapat": {
+    "en": "Close categories",
+    "de": "Kategorien schließen",
+    "fr": "Fermer les catégories",
+    "es": "Cerrar categorías",
+    "it": "Chiudi categorie"
+  },
+  "Gol ihtimali": {
+    "en": "Goal probability",
+    "de": "Torwahrscheinlichkeit",
+    "fr": "Probabilité de but",
+    "es": "Probabilidad de gol",
+    "it": "Probabilità di gol"
+  },
+  "Tahmin verisi bekleniyor": {
+    "en": "Waiting for prediction data",
+    "de": "Warten auf Prognosedaten",
+    "fr": "Données de prédiction en attente",
+    "es": "Esperando datos de predicción",
+    "it": "In attesa di dati previsione"
+  },
+  "Diziyi takip et": {
+    "en": "Follow series",
+    "de": "Serie folgen",
+    "fr": "Suivre la série",
+    "es": "Seguir serie",
+    "it": "Segui serie"
+  },
+  "Ana Kadro": {
+    "en": "Main cast",
+    "de": "Hauptbesetzung",
+    "fr": "Distribution principale",
+    "es": "Reparto principal",
+    "it": "Cast principale"
+  },
+  "Resimler": {
+    "en": "Images",
+    "de": "Bilder",
+    "fr": "Images",
+    "es": "Imágenes",
+    "it": "Immagini"
+  },
+  "Dakika": {
+    "en": "Minutes",
+    "de": "Minuten",
+    "fr": "Minutes",
+    "es": "Minutos",
+    "it": "Minuti"
+  },
+  "Video ilerlemesi": {
+    "en": "Video progress",
+    "de": "Videofortschritt",
+    "fr": "Progression vidéo",
+    "es": "Progreso de vídeo",
+    "it": "Avanzamento video"
+  },
+  "Sesi Yenile": {
+    "en": "Reload audio",
+    "de": "Audio neu laden",
+    "fr": "Recharger l’audio",
+    "es": "Recargar audio",
+    "it": "Ricarica audio"
+  },
+  "Sesi yenile": {
+    "en": "Reload audio",
+    "de": "Audio neu laden",
+    "fr": "Recharger l’audio",
+    "es": "Recargar audio",
+    "it": "Ricarica audio"
+  },
+  "Kaydet ve Onayla": {
+    "en": "Save and confirm",
+    "de": "Speichern und bestätigen",
+    "fr": "Enregistrer et confirmer",
+    "es": "Guardar y confirmar",
+    "it": "Salva e conferma"
+  },
+  "Oynatma Listesi Yok": {
+    "en": "No playlist",
+    "de": "Keine Liste",
+    "fr": "Aucune liste",
+    "es": "Sin lista",
+    "it": "Nessuna playlist"
+  },
+  "Oynatma Listesi Ekle": {
+    "en": "Add playlist",
+    "de": "Liste hinzufügen",
+    "fr": "Ajouter une liste",
+    "es": "Añadir lista",
+    "it": "Aggiungi playlist"
+  },
+  "Kullanım bitişi: {0}": {
+    "en": "Access expires: {0}",
+    "de": "Zugang endet: {0}",
+    "fr": "Fin d’accès : {0}",
+    "es": "Acceso hasta: {0}",
+    "it": "Scadenza accesso: {0}"
+  },
+  "2 veya 4 kanal seçin ({0})": {
+    "en": "Select 2 or 4 channels ({0})",
+    "de": "2 oder 4 Sender wählen ({0})",
+    "fr": "Choisissez 2 ou 4 chaînes ({0})",
+    "es": "Selecciona 2 o 4 canales ({0})",
+    "it": "Seleziona 2 o 4 canali ({0})"
+  },
+  "{0} sonuç": {
+    "en": "{0} results",
+    "de": "{0} Ergebnisse",
+    "fr": "{0} résultats",
+    "es": "{0} resultados",
+    "it": "{0} risultati"
+  },
+  "{0} içerik": {
+    "en": "{0} items",
+    "de": "{0} Inhalte",
+    "fr": "{0} contenus",
+    "es": "{0} contenidos",
+    "it": "{0} contenuti"
+  },
+  "Çok fazla deneme. {0} saniye sonra tekrar dene.": {
+    "en": "Too many attempts. Try again in {0} seconds.",
+    "de": "Zu viele Versuche. In {0} Sekunden erneut versuchen.",
+    "fr": "Trop de tentatives. Réessayez dans {0} secondes.",
+    "es": "Demasiados intentos. Reintenta en {0} segundos.",
+    "it": "Troppi tentativi. Riprova tra {0} secondi."
+  },
+  "Puanı bulunan film bulunmuyor.": {
+    "en": "No rated films found.",
+    "de": "Keine bewerteten Filme gefunden.",
+    "fr": "Aucun film noté trouvé.",
+    "es": "No hay películas con nota.",
+    "it": "Nessun film con voto trovato."
+  },
+  "Puanı bulunan dizi bulunmuyor.": {
+    "en": "No rated series found.",
+    "de": "Keine bewerteten Serien gefunden.",
+    "fr": "Aucune série notée trouvée.",
+    "es": "No hay series con nota.",
+    "it": "Nessuna serie con voto trovata."
+  },
+  "saniye sonra tekrar dene.": {
+    "en": "seconds before retrying.",
+    "de": "Sekunden bis zum nächsten Versuch.",
+    "fr": "secondes avant de réessayer.",
+    "es": "segundos antes de reintentar.",
+    "it": "secondi prima di riprovare."
+  },
+  "bulunmuyor.": {
+    "en": "not found.",
+    "de": "nicht gefunden.",
+    "fr": "introuvable.",
+    "es": "no encontrado.",
+    "it": "non trovato."
+  },
+  "● CANLI": {
+    "en": "● LIVE",
+    "de": "● LIVE",
+    "fr": "● DIRECT",
+    "es": "● EN DIRECTO",
+    "it": "● DIRETTA"
   }
 }

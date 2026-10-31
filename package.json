@@ -15,7 +15,8 @@
     "test:ui": "node tests/ui.cjs",
     "test:account": "node --test tests/account.test.cjs",
     "postinstall": "node scripts/patch-vlc.cjs",
-    "test:native-config": "node --test tests/team-icons.test.cjs"
+    "test:native-config": "node --test tests/team-icons.test.cjs",
+    "test:i18n": "node --test tests/i18n.test.cjs && node scripts/audit-i18n.cjs --check"
   },
   "dependencies": {
     "@react-native-async-storage/async-storage": "2.2.0",

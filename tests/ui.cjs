@@ -29,6 +29,17 @@ async function check(name, fn) { try { await fn(); passes++; console.log(`PASS $
   UI.setLanguage('fr');await UI.relocalizeNotifications();const after=UI.notificationMock.scheduled.get(id);
   assert.equal(after.content.title,'TRT 1 · Votre programme commence');assert.equal(after.trigger.date.getTime(),before.trigger.date.getTime());assert.equal(after.content.data.channelId,'lang-channel');
  });
+ await check('Altı dil: ayar başlıkları ve ses tanıma dili doğru',async()=>{
+  const cases=[['tr','Ayarlar','Konuşmaya başla','tr-TR'],['en','Settings','Start speaking','en-GB'],['de','Einstellungen','Sprechen starten','de-DE'],['fr','Réglages','Commencer à parler','fr-FR'],['es','Ajustes','Empezar a hablar','es-ES'],['it','Impostazioni','Inizia a parlare','it-IT']];
+  for(const [language,title,speak,locale]of cases){
+   await UI.storeMock.setItem('kotak.appearance',JSON.stringify({language,theme:'oled'}));
+   render(wrap(h(UI.AppearanceProvider,null,h(UI.SettingsView,{settings:{layout:'Modern',saveHistory:true},onChange(){},onBack(){},onInfo(){},onClearHistory(){}}))));
+   await waitFor(()=>assert.ok(screen.getByText(title)));cleanup();
+   render(wrap(h(UI.AppearanceProvider,null,h(UI.VoiceSearch,{entries:[],onPlay(){},onClose(){}}))));
+   await waitFor(()=>assert.ok(screen.getByText(speak)));fireEvent.click(screen.getByText(speak));
+   await waitFor(()=>assert.equal(UI.speechMock.options.lang,locale));cleanup();
+  }
+ });
  await UI.storeMock.setItem('kotak.teamSetup.test@example.invalid','done');
  await check('Hesap kapısı: girişsiz kullanıcı oynatıcıya erişemez',async()=>{
   const client={restore:async()=>null};
