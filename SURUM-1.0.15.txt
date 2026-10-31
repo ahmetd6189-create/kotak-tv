@@ -1,0 +1,26 @@
+KOTAK TV 1.0.15 (22) — 29 Ekim 2026
+
+KURULUM
+1. ZIP'i yeni D:\KotakTV-1.0.15 klasorune cikartin.
+2. Eski D:\KotakTV-1.0.14 klasorunden credentials.json dosyasini VE credentials klasorunu yeni klasore kopyalayin. Bunlar gizlidir, paylasmayin.
+3. APK-OLUSTUR.cmd dosyasini calistirin. Node, Java 17 ve Android SDK kurulu olmali.
+4. Basarili bitince proje klasorunde KotakTV-1.0.15.apk olusur. Eski uygulamayi silmeden telefona yukleyin.
+Expo kredisi gerekmez. Bulut derlemesi baslatilmadi.
+
+DEGISIKLIKLER
+- Tam ekranda varsayilan Ekrani doldur; oran bozulmadan kenarlar kirpilir. Ayarlardan Orani koru secilebilir.
+- Ust geri tusu ana sayfaya doner; ana sekme/filtre/ayar ekrani arka plana geciste kaydedilir ve yeniden acilista geri yuklenir.
+- Gizli arama paneli tum katalogu arka planda taramaz. Ayarlar ve takip/ebeveyn ekranlarinda otomatik EPG taramasi duraklar.
+- EPG: tek baslik, ayni yayinin yakin/ortusen kayitlarini birlestirme, gecmis pasif, gelecekte hatirlatma, saglayici veriyorsa konu/tur/konuk ayrintilari.
+- Ilk dil secimi ve ayarlardan dil degistirme. Ana arayuz etiketleri TR/EN/DE/FR/ES/IT. Bazi ayrintili yardim/hata metinleri halen Turkce; tam yerellestirme tamamlanmis degil.
+- OLED/Gece Mavisi; Klasik/Modern secimi; Modern ana ekran film/dizi seritlerini korur.
+- Alti ulkenin ust ligleri icin paketlenmis takim listesi, arama ve en fazla uc takip. Liste 29.10.2026 ESPN verisi; lig degisiklikleri sonraki veri guncellemesi gerektirir.
+- Giris ve IPTV listesi sonrasinda bir defalik takim secimi. Ayarlar > Takiplerim ile yeniden duzenleme.
+- Uygulama ici takim logosu/renkleri veya Kotak renkleri. Telefon ana ekranindaki uygulama simgesi degismiyor; native launcher entegrasyonu bu surumde yok.
+- Cocuk profilinden PIN ile cikis paneli kapatir. Kaydet dugmesi kategori listesinin ustunde; yetkili ebeveyn korumayi kaldirabilir.
+- Uygulanmamis Subwoofer/On Yukleme tanitimlari yerine gercek ses/altyazi ve oynatici ayarlarina yonlendirme. Yeni DSP veya yayin on yukleme motoru eklenmedi.
+
+DOGRULAMA SINIRLARI
+TypeScript, otomatik veri/arayuz testleri ve Android JavaScript paketi kontrol edilir.
+Bu ortamda Android emulatoru/fiziksel telefon yoktur. Gercek ses, VLC kirpma, arka plan isletim sistemi davranisi ve fiziksel cihaz hizi test edilmis sayilmaz.
+Isletim sistemi uygulamayi sonlandirirsa aktif decoder devam edemez; kayitli ekran ve izleme konumuyla geri donulur. Cocuk korumasi acikken guvenlik geregi yeniden PIN gerekir.

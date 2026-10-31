@@ -1,0 +1,95 @@
+{
+  "expo": {
+    "name": "Kotak TV",
+    "slug": "kotak-tv",
+    "version": "1.0.16",
+    "orientation": "default",
+    "userInterfaceStyle": "dark",
+    "newArchEnabled": true,
+    "splash": {
+      "resizeMode": "contain",
+      "backgroundColor": "#000000"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.kotaktv.app",
+      "infoPlist": {
+        "UIBackgroundModes": [
+          "audio"
+        ],
+        "NSAppTransportSecurity": {
+          "NSAllowsArbitraryLoads": true
+        },
+        "NSLocalNetworkUsageDescription": "Kotak TV, aynı Wi-Fi ağındaki TV cihazlarını bulmak için yerel ağa erişir."
+      }
+    },
+    "android": {
+      "package": "com.kotaktv.app",
+      "permissions": [
+        "android.permission.INTERNET",
+        "android.permission.ACCESS_NETWORK_STATE",
+        "android.permission.WAKE_LOCK",
+        "android.permission.POST_NOTIFICATIONS",
+        "android.permission.SCHEDULE_EXACT_ALARM"
+      ],
+      "versionCode": 23
+    },
+    "plugins": [
+      [
+        "expo-video",
+        {
+          "supportsBackgroundPlayback": true,
+          "supportsPictureInPicture": true
+        }
+      ],
+      "./plugins/withCleartext.js",
+      "./plugins/withCacheSize.js",
+      [
+        "expo-audio",
+        {
+          "microphonePermission": false,
+          "recordAudioAndroid": false
+        }
+      ],
+      [
+        "expo-speech-recognition",
+        {
+          "microphonePermission": "Kotak TV sesli arama için mikrofonu kullanır.",
+          "speechRecognitionPermission": "Söylediğiniz kanal, film veya diziyi bulmak için konuşma tanıma kullanılır."
+        }
+      ],
+      [
+        "expo-notifications",
+        {
+          "defaultChannel": "epg"
+        }
+      ],
+      "expo-asset",
+      [
+        "react-native-google-cast",
+        {
+          "receiverAppId": "CC1AD845",
+          "androidPlayServicesCastFrameworkVersion": "22.3.1",
+          "iosStartDiscoveryAfterFirstTapOnCastButton": true
+        }
+      ],
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "minSdkVersion": 26
+          }
+        }
+      ],
+      "./plugins/withVlcPackaging",
+      "./plugins/withTeamIcons"
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "f8ce60f3-ea52-4636-8261-29edf0f14630"
+      }
+    },
+    "owner": "kotak618900",
+    "scheme": "kotaktv"
+  }
+}

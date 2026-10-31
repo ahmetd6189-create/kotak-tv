@@ -1,0 +1,1645 @@
+{
+  "source": "ESPN public team directory",
+  "retrievedAt": "2026-10-29",
+  "teams": [
+    {
+      "id": "tur.1-9078",
+      "name": "Alanyaspor",
+      "fullName": "Alanyaspor",
+      "country": "Türkiye",
+      "league": "Süper Lig",
+      "leagueId": "tur.1",
+      "color": "#000000",
+      "alternateColor": "#000000",
+      "logo": "https://a.espncdn.com/i/teamlogos/soccer/500/9078.png",
+      "aliases": [
+        "Alanyaspor"
+      ]
+    },
+    {
+      "id": "tur.1-132335",
+      "name": "Amed SFK",
+      "fullName": "Amed SFK",
+      "country": "Türkiye",
+      "league": "Süper Lig",
+      "leagueId": "tur.1",
+      "color": "#000000",
+      "alternateColor": "#C60000",
+      "logo": "https://a.espncdn.com/i/teamlogos/soccer/500/132335.png",
+      "aliases": [
+        "Amed SFK"
+      ]
+    },
+    {
+      "id": "tur.1-1895",
+      "name": "Beşiktaş",
+      "fullName": "Besiktas",
+      "country": "Türkiye",
+      "league": "Süper Lig",
+      "leagueId": "tur.1",
+      "color": "#ffffff",
+      "alternateColor": "#1a1a1a",
+      "logo": "https://a.espncdn.com/i/teamlogos/soccer/500/1895.png",
+      "aliases": [
+        "Besiktas"
+      ]
+    },
+    {
+      "id": "tur.1-7656",
+      "name": "Çaykur Rizespor",
+      "fullName": "Caykur Rizespor",
+      "country": "Türkiye",
+      "league": "Süper Lig",
+      "leagueId": "tur.1",
+      "color": "#000000",
+      "alternateColor": "#000000",
+      "logo": "https://a.espncdn.com/i/teamlogos/soccer/500/7656.png",
+      "aliases": [
+        "Caykur Rizespor"
+      ]
+    },
+    {
+      "id": "tur.1-19267",
+      "name": "Erzurumspor FK",
+      "fullName": "Erzurum BB",
+      "country": "Türkiye",
+      "league": "Süper Lig",
+      "leagueId": "tur.1",
+      "color": "#000000",
+      "alternateColor": "#C60000",
+      "logo": "https://a.espncdn.com/i/teamlogos/soccer/500/19267.png",
+      "aliases": [
+        "Erzurum BB",
+        "Erzurum"
+      ]
+    },
+    {
+      "id": "tur.1-20729",
+      "name": "Eyüpspor",
+      "fullName": "Eyupspor",
+      "country": "Türkiye",
+      "league": "Süper Lig",
+      "leagueId": "tur.1",
+      "color": "#000000",
+      "alternateColor": "#C60000",
+      "logo": "https://a.espncdn.com/i/teamlogos/soccer/500/20729.png",
+      "aliases": [
+        "Eyupspor"
+      ]
+    },
+    {
+      "id": "tur.1-436",
+      "name": "Fenerbahçe",
+      "fullName": "Fenerbahce",
+      "country": "Türkiye",
+      "league": "Süper Lig",
+      "leagueId": "tur.1",
+      "color": "#ffff00",
+      "alternateColor": "#ffffff",
+      "logo": "https://a.espncdn.com/i/teamlogos/soccer/500/436.png",
+      "aliases": [
+        "Fenerbahce"
+      ]
+    },
+    {
+      "id": "tur.1-432",
+      "name": "Galatasaray",
+      "fullName": "Galatasaray",
+      "country": "Türkiye",
+      "league": "Süper Lig",
+      "leagueId": "tur.1",
+      "color": "#aa0031",
+      "alternateColor": "#ffffff",
+      "logo": "https://a.espncdn.com/i/teamlogos/soccer/500/432.png",
+      "aliases": [
+        "Galatasaray"
+      ]
+    },
+    {
+      "id": "tur.1-20070",
+      "name": "Gaziantep FK",
+      "fullName": "Gaziantep FK",
+      "country": "Türkiye",
+      "league": "Süper Lig",
+      "leagueId": "tur.1",
+      "color": "#000000",
+      "alternateColor": "#C60000",
+      "logo": "https://a.espncdn.com/i/teamlogos/soccer/500/20070.png",
+      "aliases": [
+        "Gaziantep",
+        "Gaziantep FK"
+      ]
+    },
+    {
+      "id": "tur.1-996",
+      "name": "Gençlerbirliği",
+      "fullName": "Genclerbirligi",
+      "country": "Türkiye",
+      "league": "Süper Lig",
+      "leagueId": "tur.1",
+      "color": "#000000",
+      "alternateColor": "#e91b23",
+      "logo": "https://a.espncdn.com/i/teamlogos/soccer/500/996.png",
+      "aliases": [
+        "Genclerbirligi",
+        "Genclerbirli"
+      ]
+    },
+    {
+      "id": "tur.1-789",
+      "name": "Göztepe",
+      "fullName": "Goztepe",
+      "country": "Türkiye",
+      "league": "Süper Lig",
+      "leagueId": "tur.1",
+      "color": "#000000",
+      "alternateColor": "#000000",
+      "logo": "https://a.espncdn.com/i/teamlogos/soccer/500/789.png",
+      "aliases": [
+        "Goztepe"
+      ]
+    },
+    {
+      "id": "tur.1-7914",
+      "name": "İstanbul Başakşehir",
+      "fullName": "Istanbul Basaksehir",
+      "country": "Türkiye",
+      "league": "Süper Lig",
+      "leagueId": "tur.1",
+      "color": "#ff6600",
+      "alternateColor": "#091453",
+      "logo": "https://a.espncdn.com/i/teamlogos/soccer/500/7914.png",
+      "aliases": [
+        "Istanbul Basaksehir",
+        "Istanbul BB"
+      ]
+    },
+    {
+      "id": "tur.1-6870",
+      "name": "Kasımpaşa",
+      "fullName": "Kasimpasa",
+      "country": "Türkiye",
+      "league": "Süper Lig",
+      "leagueId": "tur.1",
+      "color": "#000000",
+      "alternateColor": "#000000",
+      "logo": "https://a.espncdn.com/i/teamlogos/soccer/500/6870.png",
+      "aliases": [
+        "Kasimpasa"
+      ]
+    },
+    {
+      "id": "tur.1-995",
+      "name": "Kocaelispor",
+      "fullName": "Kocaelispor",
+      "country": "Türkiye",
+      "league": "Süper Lig",
+      "leagueId": "tur.1",
+      "color": "#000000",
+      "alternateColor": "#000000",
+      "logo": "https://a.espncdn.com/i/teamlogos/soccer/500/995.png",
+      "aliases": [
+        "Kocaelispor"
+      ]
+    },
+    {
+      "id": "tur.1-7648",
+      "name": "Konyaspor",
+      "fullName": "Konyaspor",
+      "country": "Türkiye",
+      "league": "Süper Lig",
+      "leagueId": "tur.1",
+      "color": "#288A00",
+      "alternateColor": "#000000",
+      "logo": "https://a.espncdn.com/i/teamlogos/soccer/500/7648.png",
+      "aliases": [
+        "Konyaspor"
+      ]
+    },
+    {
+      "id": "tur.1-11429",
+      "name": "Samsunspor",
+      "fullName": "Samsunspor",
+      "country": "Türkiye",
+      "league": "Süper Lig",
+      "leagueId": "tur.1",
+      "color": "#000000",
+      "alternateColor": "#C60000",
+      "logo": "https://a.espncdn.com/i/teamlogos/soccer/500/11429.png",
+      "aliases": [
+        "Samsunspor"
+      ]
+    },
+    {
+      "id": "tur.1-997",
+      "name": "Trabzonspor",
+      "fullName": "Trabzonspor",
+      "country": "Türkiye",
+      "league": "Süper Lig",
+      "leagueId": "tur.1",
+      "color": "#5699eb",
+      "alternateColor": "#8E003B",
+      "logo": "https://a.espncdn.com/i/teamlogos/soccer/500/997.png",
+      "aliases": [
+        "Trabzonspor"
+      ]
+    },
+    {
+      "id": "tur.1-132334",
+      "name": "Çorum FK",
+      "fullName": "Çorum FK",
+      "country": "Türkiye",
+      "league": "Süper Lig",
+      "leagueId": "tur.1",
+      "color": "#000000",
+      "alternateColor": "#C60000",
+      "logo": "https://a.espncdn.com/i/teamlogos/soccer/500/132334.png",
+      "aliases": [
+        "Çorum FK"
+      ]
+    },
+    {
+      "id": "eng.1-349",
+      "name": "Bournemouth",
+      "fullName": "AFC Bournemouth",
+      "country": "İngiltere",
+      "league": "Premier League",
+      "leagueId": "eng.1",
+      "color": "#f42727",
+      "alternateColor": "#B57EDC",
+      "logo": "https://a.espncdn.com/i/teamlogos/soccer/500/349.png",
+      "aliases": [
+        "AFC Bournemouth",
+        "Bournemouth"
+      ]
+    },
+    {
+      "id": "eng.1-359",
+      "name": "Arsenal",
+      "fullName": "Arsenal",
+      "country": "İngiltere",
+      "league": "Premier League",
+      "leagueId": "eng.1",
+      "color": "#e20520",
+      "alternateColor": "#003399",
+      "logo": "https://a.espncdn.com/i/teamlogos/soccer/500/359.png",
+      "aliases": [
+        "Arsenal"
+      ]
+    },
+    {
+      "id": "eng.1-362",
+      "name": "Aston Villa",
+      "fullName": "Aston Villa",
+      "country": "İngiltere",
+      "league": "Premier League",
+      "leagueId": "eng.1",
+      "color": "#660e36",
+      "alternateColor": "#000000",
+      "logo": "https://a.espncdn.com/i/teamlogos/soccer/500/362.png",
+      "aliases": [
+        "Aston Villa"
+      ]
+    },
+    {
+      "id": "eng.1-337",
+      "name": "Brentford",
+      "fullName": "Brentford",
+      "country": "İngiltere",
+      "league": "Premier League",
+      "leagueId": "eng.1",
+      "color": "#f42727",
+      "alternateColor": "#0f1c3f",
+      "logo": "https://a.espncdn.com/i/teamlogos/soccer/500/337.png",
+      "aliases": [
+        "Brentford"
+      ]
+    },
+    {
+      "id": "eng.1-331",
+      "name": "Brighton",
+      "fullName": "Brighton & Hove Albion",
+      "country": "İngiltere",
+      "league": "Premier League",
+      "leagueId": "eng.1",
+      "color": "#0606fa",
+      "alternateColor": "#005F60",
+      "logo": "https://a.espncdn.com/i/teamlogos/soccer/500/331.png",
+      "aliases": [
+        "Brighton",
+        "Brighton & Hove Albion"
+      ]
+    },
+    {
+      "id": "eng.1-363",
+      "name": "Chelsea",
+      "fullName": "Chelsea",
+      "country": "İngiltere",
+      "league": "Premier League",
+      "leagueId": "eng.1",
+      "color": "#144992",
+      "alternateColor": "#FFFFFF",
+      "logo": "https://a.espncdn.com/i/teamlogos/soccer/500/363.png",
+      "aliases": [
+        "Chelsea"
+      ]
+    },
+    {
+      "id": "eng.1-388",
+      "name": "Coventry",
+      "fullName": "Coventry City",
+      "country": "İngiltere",
+      "league": "Premier League",
+      "leagueId": "eng.1",
+      "color": "#87cced",
+      "alternateColor": "#ffffff",
+      "logo": "https://a.espncdn.com/i/teamlogos/soccer/500/388.png",
+      "aliases": [
+        "Coventry City",
+        "Coventry"
+      ]
+    },
+    {
+      "id": "eng.1-384",
+      "name": "C Palace",
+      "fullName": "Crystal Palace",
+      "country": "İngiltere",
+      "league": "Premier League",
+      "leagueId": "eng.1",
+      "color": "#0202fb",
+      "alternateColor": "#000000",
+      "logo": "https://a.espncdn.com/i/teamlogos/soccer/500/384.png",
+      "aliases": [
+        "C Palace",
+        "Crystal Palace"
+      ]
+    },
+    {
+      "id": "eng.1-368",
+      "name": "Everton",
+      "fullName": "Everton",
+      "country": "İngiltere",
+      "league": "Premier League",
+      "leagueId": "eng.1",
+      "color": "#0606fa",
+      "alternateColor": "#ffffff",
+      "logo": "https://a.espncdn.com/i/teamlogos/soccer/500/368.png",
+      "aliases": [
+        "Everton"
+      ]
+    },
+    {
+      "id": "eng.1-370",
+      "name": "Fulham",
+      "fullName": "Fulham",
+      "country": "İngiltere",
+      "league": "Premier League",
+      "leagueId": "eng.1",
+      "color": "#ffffff",
+      "alternateColor": "#CC0000",
+      "logo": "https://a.espncdn.com/i/teamlogos/soccer/500/370.png",
+      "aliases": [
+        "Fulham"
+      ]
+    },
+    {
+      "id": "eng.1-306",
+      "name": "Hull",
+      "fullName": "Hull City",
+      "country": "İngiltere",
+      "league": "Premier League",
+      "leagueId": "eng.1",
+      "color": "#f28800",
+      "alternateColor": "#ffffff",
+      "logo": "https://a.espncdn.com/i/teamlogos/soccer/500/306.png",
+      "aliases": [
+        "Hull",
+        "Hull City"
+      ]
+    },
+    {
+      "id": "eng.1-373",
+      "name": "Ipswich",
+      "fullName": "Ipswich Town",
+      "country": "İngiltere",
+      "league": "Premier League",
+      "leagueId": "eng.1",
+      "color": "#0000fa",
+      "alternateColor": "#F5F2DC",
+      "logo": "https://a.espncdn.com/i/teamlogos/soccer/500/373.png",
+      "aliases": [
+        "Ipswich Town",
+        "Ipswich"
+      ]
+    },
+    {
+      "id": "eng.1-357",
+      "name": "Leeds",
+      "fullName": "Leeds United",
+      "country": "İngiltere",
+      "league": "Premier League",
+      "leagueId": "eng.1",
+      "color": "#ffffff",
+      "alternateColor": "#FFCD00",
+      "logo": "https://a.espncdn.com/i/teamlogos/soccer/500/357.png",
+      "aliases": [
+        "Leeds United",
+        "Leeds"
+      ]
+    },
+    {
+      "id": "eng.1-364",
+      "name": "Liverpool",
+      "fullName": "Liverpool",
+      "country": "İngiltere",
+      "league": "Premier League",
+      "leagueId": "eng.1",
+      "color": "#d11317",
+      "alternateColor": "#FFFFFF",
+      "logo": "https://a.espncdn.com/i/teamlogos/soccer/500/364.png",
+      "aliases": [
+        "Liverpool"
+      ]
+    },
+    {
+      "id": "eng.1-382",
+      "name": "Man City",
+      "fullName": "Manchester City",
+      "country": "İngiltere",
+      "league": "Premier League",
+      "leagueId": "eng.1",
+      "color": "#99c5ea",
+      "alternateColor": "#000000",
+      "logo": "https://a.espncdn.com/i/teamlogos/soccer/500/382.png",
+      "aliases": [
+        "Manchester City",
+        "Man City"
+      ]
+    },
+    {
+      "id": "eng.1-360",
+      "name": "Man Utd",
+      "fullName": "Manchester United",
+      "country": "İngiltere",
+      "league": "Premier League",
+      "leagueId": "eng.1",
+      "color": "#da020e",
+      "alternateColor": "#4169E1",
+      "logo": "https://a.espncdn.com/i/teamlogos/soccer/500/360.png",
+      "aliases": [
+        "Manchester United",
+        "Man Utd"
+      ]
+    },
+    {
+      "id": "eng.1-361",
+      "name": "Newcastle",
+      "fullName": "Newcastle United",
+      "country": "İngiltere",
+      "league": "Premier League",
+      "leagueId": "eng.1",
+      "color": "#000000",
+      "alternateColor": "#0B1B3D",
+      "logo": "https://a.espncdn.com/i/teamlogos/soccer/500/361.png",
+      "aliases": [
+        "Newcastle",
+        "Newcastle United"
+      ]
+    },
+    {
+      "id": "eng.1-393",
+      "name": "Nottm Forest",
+      "fullName": "Nottingham Forest",
+      "country": "İngiltere",
+      "league": "Premier League",
+      "leagueId": "eng.1",
+      "color": "#c8102e",
+      "alternateColor": "#1B3624",
+      "logo": "https://a.espncdn.com/i/teamlogos/soccer/500/393.png",
+      "aliases": [
+        "Nottingham Forest",
+        "Nottm Forest"
+      ]
+    },
+    {
+      "id": "eng.1-366",
+      "name": "Sunderland",
+      "fullName": "Sunderland",
+      "country": "İngiltere",
+      "league": "Premier League",
+      "leagueId": "eng.1",
+      "color": "#EB172B",
+      "alternateColor": "#FFB6C1",
+      "logo": "https://a.espncdn.com/i/teamlogos/soccer/500/366.png",
+      "aliases": [
+        "Sunderland"
+      ]
+    },
+    {
+      "id": "eng.1-367",
+      "name": "Spurs",
+      "fullName": "Tottenham Hotspur",
+      "country": "İngiltere",
+      "league": "Premier League",
+      "leagueId": "eng.1",
+      "color": "#ffffff",
+      "alternateColor": "#0B1426",
+      "logo": "https://a.espncdn.com/i/teamlogos/soccer/500/367.png",
+      "aliases": [
+        "Tottenham Hotspur",
+        "Spurs"
+      ]
+    },
+    {
+      "id": "esp.1-96",
+      "name": "Alavés",
+      "fullName": "Alavés",
+      "country": "İspanya",
+      "league": "LaLiga",
+      "leagueId": "esp.1",
+      "color": "#0000ff",
+      "alternateColor": "#FFC0CB",
+      "logo": "https://a.espncdn.com/i/teamlogos/soccer/500/96.png",
+      "aliases": [
+        "Alavés"
+      ]
+    },
+    {
+      "id": "esp.1-93",
+      "name": "Athletic",
+      "fullName": "Athletic Club",
+      "country": "İspanya",
+      "league": "LaLiga",
+      "leagueId": "esp.1",
+      "color": "#C8142F",
+      "alternateColor": "#000000",
+      "logo": "https://a.espncdn.com/i/teamlogos/soccer/500/93.png",
+      "aliases": [
+        "Athletic",
+        "Athletic Club"
+      ]
+    },
+    {
+      "id": "esp.1-1068",
+      "name": "Atlético",
+      "fullName": "Atlético Madrid",
+      "country": "İspanya",
+      "league": "LaLiga",
+      "leagueId": "esp.1",
+      "color": "#ca3624",
+      "alternateColor": "#000000",
+      "logo": "https://a.espncdn.com/i/teamlogos/soccer/500/1068.png",
+      "aliases": [
+        "Atlético",
+        "Atlético Madrid"
+      ]
+    },
+    {
+      "id": "esp.1-83",
+      "name": "Barcelona",
+      "fullName": "Barcelona",
+      "country": "İspanya",
+      "league": "LaLiga",
+      "leagueId": "esp.1",
+      "color": "#990000",
+      "alternateColor": "#FCE38A",
+      "logo": "https://a.espncdn.com/i/teamlogos/soccer/500/83.png",
+      "aliases": [
+        "Barcelona"
+      ]
+    },
+    {
+      "id": "esp.1-85",
+      "name": "Celta Vigo",
+      "fullName": "Celta Vigo",
+      "country": "İspanya",
+      "league": "LaLiga",
+      "leagueId": "esp.1",
+      "color": "#6cace4",
+      "alternateColor": "#004996",
+      "logo": "https://a.espncdn.com/i/teamlogos/soccer/500/85.png",
+      "aliases": [
+        "Celta Vigo"
+      ]
+    },
+    {
+      "id": "esp.1-90",
+      "name": "Deportivo",
+      "fullName": "Deportivo",
+      "country": "İspanya",
+      "league": "LaLiga",
+      "leagueId": "esp.1",
+      "color": "#3366CC",
+      "alternateColor": "#000000",
+      "logo": "https://a.espncdn.com/i/teamlogos/soccer/500/90.png",
+      "aliases": [
+        "Deportivo"
+      ]
+    },
+    {
+      "id": "esp.1-3751",
+      "name": "Elche",
+      "fullName": "Elche",
+      "country": "İspanya",
+      "league": "LaLiga",
+      "leagueId": "esp.1",
+      "color": "#288A00",
+      "alternateColor": "#4B2B67",
+      "logo": "https://a.espncdn.com/i/teamlogos/soccer/500/3751.png",
+      "aliases": [
+        "Elche"
+      ]
+    },
+    {
+      "id": "esp.1-88",
+      "name": "Espanyol",
+      "fullName": "Espanyol",
+      "country": "İspanya",
+      "league": "LaLiga",
+      "leagueId": "esp.1",
+      "color": "#3366CC",
+      "alternateColor": "#C8142F",
+      "logo": "https://a.espncdn.com/i/teamlogos/soccer/500/88.png",
+      "aliases": [
+        "Espanyol"
+      ]
+    },
+    {
+      "id": "esp.1-2922",
+      "name": "Getafe",
+      "fullName": "Getafe",
+      "country": "İspanya",
+      "league": "LaLiga",
+      "leagueId": "esp.1",
+      "color": "#0000ff",
+      "alternateColor": "#7F1734",
+      "logo": "https://a.espncdn.com/i/teamlogos/soccer/500/2922.png",
+      "aliases": [
+        "Getafe"
+      ]
+    },
+    {
+      "id": "esp.1-1538",
+      "name": "Levante",
+      "fullName": "Levante",
+      "country": "İspanya",
+      "league": "LaLiga",
+      "leagueId": "esp.1",
+      "color": "#C8142F",
+      "alternateColor": "#000000",
+      "logo": "https://a.espncdn.com/i/teamlogos/soccer/500/1538.png",
+      "aliases": [
+        "Levante"
+      ]
+    },
+    {
+      "id": "esp.1-99",
+      "name": "Málaga",
+      "fullName": "Málaga",
+      "country": "İspanya",
+      "league": "LaLiga",
+      "leagueId": "esp.1",
+      "color": "#b9e8f0",
+      "alternateColor": "#D19CA4",
+      "logo": "https://a.espncdn.com/i/teamlogos/soccer/500/99.png",
+      "aliases": [
+        "Málaga"
+      ]
+    },
+    {
+      "id": "esp.1-97",
+      "name": "Osasuna",
+      "fullName": "Osasuna",
+      "country": "İspanya",
+      "league": "LaLiga",
+      "leagueId": "esp.1",
+      "color": "#cd0000",
+      "alternateColor": "#ffffff",
+      "logo": "https://a.espncdn.com/i/teamlogos/soccer/500/97.png",
+      "aliases": [
+        "Osasuna"
+      ]
+    },
+    {
+      "id": "esp.1-87",
+      "name": "Racing",
+      "fullName": "Racing Santander",
+      "country": "İspanya",
+      "league": "LaLiga",
+      "leagueId": "esp.1",
+      "color": "#ffffff",
+      "alternateColor": "#3B6C1A",
+      "logo": "https://a.espncdn.com/i/teamlogos/soccer/500/87.png",
+      "aliases": [
+        "Racing",
+        "Racing Santander"
+      ]
+    },
+    {
+      "id": "esp.1-101",
+      "name": "Rayo",
+      "fullName": "Rayo Vallecano",
+      "country": "İspanya",
+      "league": "LaLiga",
+      "leagueId": "esp.1",
+      "color": "#ffffff",
+      "alternateColor": "#cd0000",
+      "logo": "https://a.espncdn.com/i/teamlogos/soccer/500/101.png",
+      "aliases": [
+        "Rayo",
+        "Rayo Vallecano"
+      ]
+    },
+    {
+      "id": "esp.1-244",
+      "name": "Betis",
+      "fullName": "Real Betis",
+      "country": "İspanya",
+      "league": "LaLiga",
+      "leagueId": "esp.1",
+      "color": "#288A00",
+      "alternateColor": "#0A422D",
+      "logo": "https://a.espncdn.com/i/teamlogos/soccer/500/244.png",
+      "aliases": [
+        "Betis",
+        "Real Betis"
+      ]
+    },
+    {
+      "id": "esp.1-86",
+      "name": "Real Madrid",
+      "fullName": "Real Madrid",
+      "country": "İspanya",
+      "league": "LaLiga",
+      "leagueId": "esp.1",
+      "color": "#ffffff",
+      "alternateColor": "#1B4D3E",
+      "logo": "https://a.espncdn.com/i/teamlogos/soccer/500/86.png",
+      "aliases": [
+        "Real Madrid"
+      ]
+    },
+    {
+      "id": "esp.1-89",
+      "name": "Real Sociedad",
+      "fullName": "Real Sociedad",
+      "country": "İspanya",
+      "league": "LaLiga",
+      "leagueId": "esp.1",
+      "color": "#3366CC",
+      "alternateColor": "#000000",
+      "logo": "https://a.espncdn.com/i/teamlogos/soccer/500/89.png",
+      "aliases": [
+        "Real Sociedad"
+      ]
+    },
+    {
+      "id": "esp.1-243",
+      "name": "Sevilla",
+      "fullName": "Sevilla",
+      "country": "İspanya",
+      "league": "LaLiga",
+      "leagueId": "esp.1",
+      "color": "#ffffff",
+      "alternateColor": "#d81022",
+      "logo": "https://a.espncdn.com/i/teamlogos/soccer/500/243.png",
+      "aliases": [
+        "Sevilla"
+      ]
+    },
+    {
+      "id": "esp.1-94",
+      "name": "Valencia",
+      "fullName": "Valencia",
+      "country": "İspanya",
+      "league": "LaLiga",
+      "leagueId": "esp.1",
+      "color": "#ffffff",
+      "alternateColor": "#FF6F00",
+      "logo": "https://a.espncdn.com/i/teamlogos/soccer/500/94.png",
+      "aliases": [
+        "Valencia"
+      ]
+    },
+    {
+      "id": "esp.1-102",
+      "name": "Villarreal",
+      "fullName": "Villarreal",
+      "country": "İspanya",
+      "league": "LaLiga",
+      "leagueId": "esp.1",
+      "color": "#ffff00",
+      "alternateColor": "#6cace4",
+      "logo": "https://a.espncdn.com/i/teamlogos/soccer/500/102.png",
+      "aliases": [
+        "Villarreal"
+      ]
+    },
+    {
+      "id": "ger.1-598",
+      "name": "Union Berlin",
+      "fullName": "1. FC Union Berlin",
+      "country": "Almanya",
+      "league": "Bundesliga",
+      "leagueId": "ger.1",
+      "color": "#DA0308",
+      "alternateColor": "#d4d4d4",
+      "logo": "https://a.espncdn.com/i/teamlogos/soccer/500/598.png",
+      "aliases": [
+        "1. FC Union Berlin",
+        "Union Berlin"
+      ]
+    },
+    {
+      "id": "ger.1-131",
+      "name": "Leverkusen",
+      "fullName": "Bayer Leverkusen",
+      "country": "Almanya",
+      "league": "Bundesliga",
+      "leagueId": "ger.1",
+      "color": "#DA0308",
+      "alternateColor": "#f9fbfc",
+      "logo": "https://a.espncdn.com/i/teamlogos/soccer/500/131.png",
+      "aliases": [
+        "Bayer Leverkusen",
+        "Leverkusen"
+      ]
+    },
+    {
+      "id": "ger.1-132",
+      "name": "Bayern",
+      "fullName": "Bayern Munich",
+      "country": "Almanya",
+      "league": "Bundesliga",
+      "leagueId": "ger.1",
+      "color": "#dc052d",
+      "alternateColor": "#1a1a1a",
+      "logo": "https://a.espncdn.com/i/teamlogos/soccer/500/132.png",
+      "aliases": [
+        "Bayern Munich",
+        "Bayern"
+      ]
+    },
+    {
+      "id": "ger.1-124",
+      "name": "Dortmund",
+      "fullName": "Borussia Dortmund",
+      "country": "Almanya",
+      "league": "Bundesliga",
+      "leagueId": "ger.1",
+      "color": "#ffee00",
+      "alternateColor": "#272726",
+      "logo": "https://a.espncdn.com/i/teamlogos/soccer/500/124.png",
+      "aliases": [
+        "Borussia Dortmund",
+        "Dortmund"
+      ]
+    },
+    {
+      "id": "ger.1-268",
+      "name": "Gladbach",
+      "fullName": "Borussia Mönchengladbach",
+      "country": "Almanya",
+      "league": "Bundesliga",
+      "leagueId": "ger.1",
+      "color": "#ffffff",
+      "alternateColor": "#03915c",
+      "logo": "https://a.espncdn.com/i/teamlogos/soccer/500/268.png",
+      "aliases": [
+        "Borussia Mönchengladbach",
+        "Gladbach"
+      ]
+    },
+    {
+      "id": "ger.1-125",
+      "name": "Frankfurt",
+      "fullName": "Eintracht Frankfurt",
+      "country": "Almanya",
+      "league": "Bundesliga",
+      "leagueId": "ger.1",
+      "color": "#ffffff",
+      "alternateColor": "#272726",
+      "logo": "https://a.espncdn.com/i/teamlogos/soccer/500/125.png",
+      "aliases": [
+        "Eintracht Frankfurt",
+        "Frankfurt"
+      ]
+    },
+    {
+      "id": "ger.1-3841",
+      "name": "Augsburg",
+      "fullName": "FC Augsburg",
+      "country": "Almanya",
+      "league": "Bundesliga",
+      "leagueId": "ger.1",
+      "color": "#ffffff",
+      "alternateColor": "#03915c",
+      "logo": "https://a.espncdn.com/i/teamlogos/soccer/500/3841.png",
+      "aliases": [
+        "Augsburg",
+        "FC Augsburg"
+      ]
+    },
+    {
+      "id": "ger.1-122",
+      "name": "Cologne",
+      "fullName": "FC Cologne",
+      "country": "Almanya",
+      "league": "Bundesliga",
+      "leagueId": "ger.1",
+      "color": "#ffffff",
+      "alternateColor": "#DA0308",
+      "logo": "https://a.espncdn.com/i/teamlogos/soccer/500/122.png",
+      "aliases": [
+        "Cologne",
+        "FC Cologne"
+      ]
+    },
+    {
+      "id": "ger.1-127",
+      "name": "Hamburg",
+      "fullName": "Hamburg SV",
+      "country": "Almanya",
+      "league": "Bundesliga",
+      "leagueId": "ger.1",
+      "color": "#1a26af",
+      "alternateColor": "#1a1a1a",
+      "logo": "https://a.espncdn.com/i/teamlogos/soccer/500/127.png",
+      "aliases": [
+        "Hamburg SV",
+        "Hamburg"
+      ]
+    },
+    {
+      "id": "ger.1-2950",
+      "name": "Mainz",
+      "fullName": "Mainz",
+      "country": "Almanya",
+      "league": "Bundesliga",
+      "leagueId": "ger.1",
+      "color": "#DA0308",
+      "alternateColor": "#000055",
+      "logo": "https://a.espncdn.com/i/teamlogos/soccer/500/2950.png",
+      "aliases": [
+        "Mainz"
+      ]
+    },
+    {
+      "id": "ger.1-11420",
+      "name": "RB Leipzig",
+      "fullName": "RB Leipzig",
+      "country": "Almanya",
+      "league": "Bundesliga",
+      "leagueId": "ger.1",
+      "color": "#ffffff",
+      "alternateColor": "#740c14",
+      "logo": "https://a.espncdn.com/i/teamlogos/soccer/500/11420.png",
+      "aliases": [
+        "RB Leipzig"
+      ]
+    },
+    {
+      "id": "ger.1-126",
+      "name": "Freiburg",
+      "fullName": "SC Freiburg",
+      "country": "Almanya",
+      "league": "Bundesliga",
+      "leagueId": "ger.1",
+      "color": "#DA0308",
+      "alternateColor": "#ffffff",
+      "logo": "https://a.espncdn.com/i/teamlogos/soccer/500/126.png",
+      "aliases": [
+        "SC Freiburg",
+        "Freiburg"
+      ]
+    },
+    {
+      "id": "ger.1-3307",
+      "name": "Paderborn",
+      "fullName": "SC Paderborn 07",
+      "country": "Almanya",
+      "league": "Bundesliga",
+      "leagueId": "ger.1",
+      "color": "#0000dd",
+      "alternateColor": "#ffffff",
+      "logo": "https://a.espncdn.com/i/teamlogos/soccer/500/3307.png",
+      "aliases": [
+        "Paderborn",
+        "SC Paderborn 07"
+      ]
+    },
+    {
+      "id": "ger.1-10388",
+      "name": "Elversberg",
+      "fullName": "SV Elversberg",
+      "country": "Almanya",
+      "league": "Bundesliga",
+      "leagueId": "ger.1",
+      "color": "#000000",
+      "alternateColor": "#FFFFFF",
+      "logo": "https://a.espncdn.com/i/teamlogos/soccer/500/10388.png",
+      "aliases": [
+        "SV Elversberg",
+        "Elversberg"
+      ]
+    },
+    {
+      "id": "ger.1-133",
+      "name": "Schalke",
+      "fullName": "Schalke 04",
+      "country": "Almanya",
+      "league": "Bundesliga",
+      "leagueId": "ger.1",
+      "color": "#0000dd",
+      "alternateColor": "#ffffff",
+      "logo": "https://a.espncdn.com/i/teamlogos/soccer/500/133.png",
+      "aliases": [
+        "Schalke 04",
+        "Schalke"
+      ]
+    },
+    {
+      "id": "ger.1-7911",
+      "name": "Hoffenheim",
+      "fullName": "TSG Hoffenheim",
+      "country": "Almanya",
+      "league": "Bundesliga",
+      "leagueId": "ger.1",
+      "color": "#003399",
+      "alternateColor": "#000055",
+      "logo": "https://a.espncdn.com/i/teamlogos/soccer/500/7911.png",
+      "aliases": [
+        "Hoffenheim",
+        "TSG Hoffenheim"
+      ]
+    },
+    {
+      "id": "ger.1-134",
+      "name": "Stuttgart",
+      "fullName": "VfB Stuttgart",
+      "country": "Almanya",
+      "league": "Bundesliga",
+      "leagueId": "ger.1",
+      "color": "#ffffff",
+      "alternateColor": "#DA0308",
+      "logo": "https://a.espncdn.com/i/teamlogos/soccer/500/134.png",
+      "aliases": [
+        "VfB Stuttgart",
+        "Stuttgart"
+      ]
+    },
+    {
+      "id": "ger.1-137",
+      "name": "Bremen",
+      "fullName": "Werder Bremen",
+      "country": "Almanya",
+      "league": "Bundesliga",
+      "leagueId": "ger.1",
+      "color": "#03915c",
+      "alternateColor": "#ffffff",
+      "logo": "https://a.espncdn.com/i/teamlogos/soccer/500/137.png",
+      "aliases": [
+        "Bremen",
+        "Werder Bremen"
+      ]
+    },
+    {
+      "id": "fra.1-172",
+      "name": "Auxerre",
+      "fullName": "AJ Auxerre",
+      "country": "Fransa",
+      "league": "Ligue 1",
+      "leagueId": "fra.1",
+      "color": "#ffffff",
+      "alternateColor": "#1a1a1a",
+      "logo": "https://a.espncdn.com/i/teamlogos/soccer/500/172.png",
+      "aliases": [
+        "AJ Auxerre",
+        "Auxerre"
+      ]
+    },
+    {
+      "id": "fra.1-174",
+      "name": "Monaco",
+      "fullName": "AS Monaco",
+      "country": "Fransa",
+      "league": "Ligue 1",
+      "leagueId": "fra.1",
+      "color": "#E91514",
+      "alternateColor": "#004c37",
+      "logo": "https://a.espncdn.com/i/teamlogos/soccer/500/174.png",
+      "aliases": [
+        "AS Monaco",
+        "Monaco"
+      ]
+    },
+    {
+      "id": "fra.1-7868",
+      "name": "Angers",
+      "fullName": "Angers",
+      "country": "Fransa",
+      "league": "Ligue 1",
+      "leagueId": "fra.1",
+      "color": "#1a1a1a",
+      "alternateColor": "#ffffff",
+      "logo": "https://a.espncdn.com/i/teamlogos/soccer/500/7868.png",
+      "aliases": [
+        "Angers"
+      ]
+    },
+    {
+      "id": "fra.1-6997",
+      "name": "Brest",
+      "fullName": "Brest",
+      "country": "Fransa",
+      "league": "Ligue 1",
+      "leagueId": "fra.1",
+      "color": "#ef2f24",
+      "alternateColor": "#ffffff",
+      "logo": "https://a.espncdn.com/i/teamlogos/soccer/500/6997.png",
+      "aliases": [
+        "Brest"
+      ]
+    },
+    {
+      "id": "fra.1-3236",
+      "name": "Le Havre AC",
+      "fullName": "Le Havre AC",
+      "country": "Fransa",
+      "league": "Ligue 1",
+      "leagueId": "fra.1",
+      "color": "#011F68",
+      "alternateColor": "#ededed",
+      "logo": "https://a.espncdn.com/i/teamlogos/soccer/500/3236.png",
+      "aliases": [
+        "Le Havre AC"
+      ]
+    },
+    {
+      "id": "fra.1-2697",
+      "name": "Le Mans",
+      "fullName": "Le Mans",
+      "country": "Fransa",
+      "league": "Ligue 1",
+      "leagueId": "fra.1",
+      "color": "#d62b11",
+      "alternateColor": "#d62b11",
+      "logo": "https://a.espncdn.com/i/teamlogos/soccer/500/2697.png",
+      "aliases": [
+        "Le Mans"
+      ]
+    },
+    {
+      "id": "fra.1-175",
+      "name": "Lens",
+      "fullName": "Lens",
+      "country": "Fransa",
+      "league": "Ligue 1",
+      "leagueId": "fra.1",
+      "color": "#E91514",
+      "alternateColor": "#004c37",
+      "logo": "https://a.espncdn.com/i/teamlogos/soccer/500/175.png",
+      "aliases": [
+        "Lens"
+      ]
+    },
+    {
+      "id": "fra.1-166",
+      "name": "Lille",
+      "fullName": "Lille",
+      "country": "Fransa",
+      "league": "Ligue 1",
+      "leagueId": "fra.1",
+      "color": "#c2051b",
+      "alternateColor": "#e2d3d7",
+      "logo": "https://a.espncdn.com/i/teamlogos/soccer/500/166.png",
+      "aliases": [
+        "Lille"
+      ]
+    },
+    {
+      "id": "fra.1-273",
+      "name": "Lorient",
+      "fullName": "Lorient",
+      "country": "Fransa",
+      "league": "Ligue 1",
+      "leagueId": "fra.1",
+      "color": "#f46100",
+      "alternateColor": "#1a1a1a",
+      "logo": "https://a.espncdn.com/i/teamlogos/soccer/500/273.png",
+      "aliases": [
+        "Lorient"
+      ]
+    },
+    {
+      "id": "fra.1-167",
+      "name": "Lyon",
+      "fullName": "Lyon",
+      "country": "Fransa",
+      "league": "Ligue 1",
+      "leagueId": "fra.1",
+      "color": "#ffffff",
+      "alternateColor": "#1a1a1a",
+      "logo": "https://a.espncdn.com/i/teamlogos/soccer/500/167.png",
+      "aliases": [
+        "Lyon"
+      ]
+    },
+    {
+      "id": "fra.1-176",
+      "name": "Marseille",
+      "fullName": "Marseille",
+      "country": "Fransa",
+      "league": "Ligue 1",
+      "leagueId": "fra.1",
+      "color": "#ffffff",
+      "alternateColor": "#011F68",
+      "logo": "https://a.espncdn.com/i/teamlogos/soccer/500/176.png",
+      "aliases": [
+        "Marseille"
+      ]
+    },
+    {
+      "id": "fra.1-2502",
+      "name": "Nice",
+      "fullName": "Nice",
+      "country": "Fransa",
+      "league": "Ligue 1",
+      "leagueId": "fra.1",
+      "color": "#ef2f24",
+      "alternateColor": "#e2d3d7",
+      "logo": "https://a.espncdn.com/i/teamlogos/soccer/500/2502.png",
+      "aliases": [
+        "Nice"
+      ]
+    },
+    {
+      "id": "fra.1-6851",
+      "name": "Paris FC",
+      "fullName": "Paris FC",
+      "country": "Fransa",
+      "league": "Ligue 1",
+      "leagueId": "fra.1",
+      "color": "#000000",
+      "alternateColor": "#000000",
+      "logo": "https://a.espncdn.com/i/teamlogos/soccer/500/6851.png",
+      "aliases": [
+        "Paris FC"
+      ]
+    },
+    {
+      "id": "fra.1-160",
+      "name": "PSG",
+      "fullName": "Paris Saint-Germain",
+      "country": "Fransa",
+      "league": "Ligue 1",
+      "leagueId": "fra.1",
+      "color": "#011F68",
+      "alternateColor": "#ffffff",
+      "logo": "https://a.espncdn.com/i/teamlogos/soccer/500/160.png",
+      "aliases": [
+        "PSG",
+        "Paris Saint-Germain"
+      ]
+    },
+    {
+      "id": "fra.1-169",
+      "name": "Rennes",
+      "fullName": "Stade Rennais",
+      "country": "Fransa",
+      "league": "Ligue 1",
+      "leagueId": "fra.1",
+      "color": "#ef2f24",
+      "alternateColor": "#ffffff",
+      "logo": "https://a.espncdn.com/i/teamlogos/soccer/500/169.png",
+      "aliases": [
+        "Stade Rennais",
+        "Rennes"
+      ]
+    },
+    {
+      "id": "fra.1-180",
+      "name": "Strasbourg",
+      "fullName": "Strasbourg",
+      "country": "Fransa",
+      "league": "Ligue 1",
+      "leagueId": "fra.1",
+      "color": "#0000bf",
+      "alternateColor": "#ffffff",
+      "logo": "https://a.espncdn.com/i/teamlogos/soccer/500/180.png",
+      "aliases": [
+        "Strasbourg"
+      ]
+    },
+    {
+      "id": "fra.1-179",
+      "name": "Toulouse",
+      "fullName": "Toulouse",
+      "country": "Fransa",
+      "league": "Ligue 1",
+      "leagueId": "fra.1",
+      "color": "#560080",
+      "alternateColor": "#ffff00",
+      "logo": "https://a.espncdn.com/i/teamlogos/soccer/500/179.png",
+      "aliases": [
+        "Toulouse"
+      ]
+    },
+    {
+      "id": "fra.1-170",
+      "name": "Troyes",
+      "fullName": "Troyes",
+      "country": "Fransa",
+      "league": "Ligue 1",
+      "leagueId": "fra.1",
+      "color": "#0000bf",
+      "alternateColor": "#fafafc",
+      "logo": "https://a.espncdn.com/i/teamlogos/soccer/500/170.png",
+      "aliases": [
+        "Troyes"
+      ]
+    },
+    {
+      "id": "ita.1-103",
+      "name": "Milan",
+      "fullName": "AC Milan",
+      "country": "İtalya",
+      "league": "Serie A",
+      "leagueId": "ita.1",
+      "color": "#e4002b",
+      "alternateColor": "#ffffff",
+      "logo": "https://a.espncdn.com/i/teamlogos/soccer/500/103.png",
+      "aliases": [
+        "Milan",
+        "AC Milan"
+      ]
+    },
+    {
+      "id": "ita.1-104",
+      "name": "AS Roma",
+      "fullName": "AS Roma",
+      "country": "İtalya",
+      "league": "Serie A",
+      "leagueId": "ita.1",
+      "color": "#990a2c",
+      "alternateColor": "#F5F3E5",
+      "logo": "https://a.espncdn.com/i/teamlogos/soccer/500/104.png",
+      "aliases": [
+        "AS Roma"
+      ]
+    },
+    {
+      "id": "ita.1-105",
+      "name": "Atalanta",
+      "fullName": "Atalanta",
+      "country": "İtalya",
+      "league": "Serie A",
+      "leagueId": "ita.1",
+      "color": "#1157bf",
+      "alternateColor": "#ffffff",
+      "logo": "https://a.espncdn.com/i/teamlogos/soccer/500/105.png",
+      "aliases": [
+        "Atalanta"
+      ]
+    },
+    {
+      "id": "ita.1-107",
+      "name": "Bologna",
+      "fullName": "Bologna",
+      "country": "İtalya",
+      "league": "Serie A",
+      "leagueId": "ita.1",
+      "color": "#04043d",
+      "alternateColor": "#ffffff",
+      "logo": "https://a.espncdn.com/i/teamlogos/soccer/500/107.png",
+      "aliases": [
+        "Bologna"
+      ]
+    },
+    {
+      "id": "ita.1-2925",
+      "name": "Cagliari",
+      "fullName": "Cagliari",
+      "country": "İtalya",
+      "league": "Serie A",
+      "leagueId": "ita.1",
+      "color": "#282846",
+      "alternateColor": "#ffffff",
+      "logo": "https://a.espncdn.com/i/teamlogos/soccer/500/2925.png",
+      "aliases": [
+        "Cagliari"
+      ]
+    },
+    {
+      "id": "ita.1-2572",
+      "name": "Como",
+      "fullName": "Como",
+      "country": "İtalya",
+      "league": "Serie A",
+      "leagueId": "ita.1",
+      "color": "#4169E1",
+      "alternateColor": "#FFFFFF",
+      "logo": "https://a.espncdn.com/i/teamlogos/soccer/500/2572.png",
+      "aliases": [
+        "Como"
+      ]
+    },
+    {
+      "id": "ita.1-109",
+      "name": "Fiorentina",
+      "fullName": "Fiorentina",
+      "country": "İtalya",
+      "league": "Serie A",
+      "leagueId": "ita.1",
+      "color": "#4c1d84",
+      "alternateColor": "#ffffff",
+      "logo": "https://a.espncdn.com/i/teamlogos/soccer/500/109.png",
+      "aliases": [
+        "Fiorentina"
+      ]
+    },
+    {
+      "id": "ita.1-4057",
+      "name": "Frosinone",
+      "fullName": "Frosinone",
+      "country": "İtalya",
+      "league": "Serie A",
+      "leagueId": "ita.1",
+      "color": "#FACF08",
+      "alternateColor": "#ffffff",
+      "logo": "https://a.espncdn.com/i/teamlogos/soccer/500/4057.png",
+      "aliases": [
+        "Frosinone"
+      ]
+    },
+    {
+      "id": "ita.1-3263",
+      "name": "Genoa",
+      "fullName": "Genoa",
+      "country": "İtalya",
+      "league": "Serie A",
+      "leagueId": "ita.1",
+      "color": "#08305d",
+      "alternateColor": "#ffffff",
+      "logo": "https://a.espncdn.com/i/teamlogos/soccer/500/3263.png",
+      "aliases": [
+        "Genoa"
+      ]
+    },
+    {
+      "id": "ita.1-110",
+      "name": "Inter Milan",
+      "fullName": "Internazionale",
+      "country": "İtalya",
+      "league": "Serie A",
+      "leagueId": "ita.1",
+      "color": "#00239c",
+      "alternateColor": "#ffffff",
+      "logo": "https://a.espncdn.com/i/teamlogos/soccer/500/110.png",
+      "aliases": [
+        "Inter Milan",
+        "Internazionale"
+      ]
+    },
+    {
+      "id": "ita.1-111",
+      "name": "Juventus",
+      "fullName": "Juventus",
+      "country": "İtalya",
+      "league": "Serie A",
+      "leagueId": "ita.1",
+      "color": "#000000",
+      "alternateColor": "#E8A2B0",
+      "logo": "https://a.espncdn.com/i/teamlogos/soccer/500/111.png",
+      "aliases": [
+        "Juventus"
+      ]
+    },
+    {
+      "id": "ita.1-112",
+      "name": "Lazio",
+      "fullName": "Lazio",
+      "country": "İtalya",
+      "league": "Serie A",
+      "leagueId": "ita.1",
+      "color": "#74bde7",
+      "alternateColor": "#FFFFFF",
+      "logo": "https://a.espncdn.com/i/teamlogos/soccer/500/112.png",
+      "aliases": [
+        "Lazio"
+      ]
+    },
+    {
+      "id": "ita.1-113",
+      "name": "Lecce",
+      "fullName": "Lecce",
+      "country": "İtalya",
+      "league": "Serie A",
+      "leagueId": "ita.1",
+      "color": "#FCED0B",
+      "alternateColor": "#08305d",
+      "logo": "https://a.espncdn.com/i/teamlogos/soccer/500/113.png",
+      "aliases": [
+        "Lecce"
+      ]
+    },
+    {
+      "id": "ita.1-4007",
+      "name": "Monza",
+      "fullName": "Monza",
+      "country": "İtalya",
+      "league": "Serie A",
+      "leagueId": "ita.1",
+      "color": "#C8142F",
+      "alternateColor": "#ffffff",
+      "logo": "https://a.espncdn.com/i/teamlogos/soccer/500/4007.png",
+      "aliases": [
+        "Monza"
+      ]
+    },
+    {
+      "id": "ita.1-114",
+      "name": "Napoli",
+      "fullName": "Napoli",
+      "country": "İtalya",
+      "league": "Serie A",
+      "leagueId": "ita.1",
+      "color": "#0677d2",
+      "alternateColor": "#ffffff",
+      "logo": "https://a.espncdn.com/i/teamlogos/soccer/500/114.png",
+      "aliases": [
+        "Napoli"
+      ]
+    },
+    {
+      "id": "ita.1-115",
+      "name": "Parma",
+      "fullName": "Parma",
+      "country": "İtalya",
+      "league": "Serie A",
+      "leagueId": "ita.1",
+      "color": "#19161D",
+      "alternateColor": "#ffdd30",
+      "logo": "https://a.espncdn.com/i/teamlogos/soccer/500/115.png",
+      "aliases": [
+        "Parma"
+      ]
+    },
+    {
+      "id": "ita.1-3997",
+      "name": "Sassuolo",
+      "fullName": "Sassuolo",
+      "country": "İtalya",
+      "league": "Serie A",
+      "leagueId": "ita.1",
+      "color": "#0fa653",
+      "alternateColor": "#ADAEB0",
+      "logo": "https://a.espncdn.com/i/teamlogos/soccer/500/3997.png",
+      "aliases": [
+        "Sassuolo"
+      ]
+    },
+    {
+      "id": "ita.1-239",
+      "name": "Torino",
+      "fullName": "Torino",
+      "country": "İtalya",
+      "league": "Serie A",
+      "leagueId": "ita.1",
+      "color": "#9f0000",
+      "alternateColor": "#ffffff",
+      "logo": "https://a.espncdn.com/i/teamlogos/soccer/500/239.png",
+      "aliases": [
+        "Torino"
+      ]
+    },
+    {
+      "id": "ita.1-118",
+      "name": "Udinese",
+      "fullName": "Udinese",
+      "country": "İtalya",
+      "league": "Serie A",
+      "leagueId": "ita.1",
+      "color": "#19161D",
+      "alternateColor": "#0F1C3F",
+      "logo": "https://a.espncdn.com/i/teamlogos/soccer/500/118.png",
+      "aliases": [
+        "Udinese"
+      ]
+    },
+    {
+      "id": "ita.1-17530",
+      "name": "Venezia",
+      "fullName": "Venezia",
+      "country": "İtalya",
+      "league": "Serie A",
+      "leagueId": "ita.1",
+      "color": "#000000",
+      "alternateColor": "#ffffff",
+      "logo": "https://a.espncdn.com/i/teamlogos/soccer/500/17530.png",
+      "aliases": [
+        "Venezia"
+      ]
+    }
+  ]
+}

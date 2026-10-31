@@ -1,0 +1,30 @@
+export const colors = {
+  bg: '#000000',
+  card: '#18181b',
+  card2: '#1c1c1e',
+  card3: '#202024',
+  border: 'rgba(255,255,255,0.08)',
+  blue: '#007AFF',
+  zinc200: '#e4e4e7',
+  zinc300: '#d4d4d8',
+  zinc400: '#a1a1aa',
+  zinc500: '#71717a',
+  zinc600: '#52525b',
+  zinc800: '#27272a',
+  zinc900: '#18181b',
+  zinc950: '#09090b',
+  emerald: '#34d399',
+  amber: '#fbbf24',
+  red: '#f87171',
+  purple: '#c084fc',
+  yellow: '#fde047',
+  white: '#ffffff',
+};
+
+export const radii = {
+  sm: 8,
+  md: 12,
+  lg: 16,
+  xl: 20,
+  pill: 999,
+};

@@ -1,0 +1,25 @@
+Kotak TV 1.0.10 - Hesap ve 24 saat demo
+
+Supabase: wfojcndrxribmamniaui (ücretsiz proje)
+- Giriş/kayıt/doğrulama ekranı, şifreler saklanmaz.
+- Refresh token cihazın SecureStore alanında saklanır.
+- Demo kullanıcı düğmeye bastığında sunucuda başlar.
+- Aynı hesap tekrar kurulumda yeni demo alamaz. Yeni hesap açmayı tamamen engellemez.
+- Süre bittiğinde oynatıcı kaldırılır. Ağ hatası erişim hakkı oluşturmaz.
+- Daha Fazla > Kotak TV PRO > Süre bildirimlerini aç: 3/2/1 saat kala yerel bildirim.
+- Telefon saatinden bağımsız sunucu süresi + oturum içi monoton sayaç.
+- Her uygulama açılışında/öne dönüşünde çevrimiçi doğrulama gerekir.
+- Satın alma hazır değil; süresi biten hesap henüz ödeme yapamaz.
+
+TEST SINIRI
+TypeScript, hesap istemcisi ve DOM arayüz testleri yerelde çalıştırıldı.
+Fiziksel telefon, e-posta teslimatı ve mağaza satın alma henüz doğrulanmadı.
+Supabase varsayılan e-posta hizmeti yalnız proje ekibindeki adreslere gönderimle
+sınırlı olabilir. Genel kullanıcı kaydı için SMTP yapılandırması gerekir.
+E-posta şablonunda {{ .Token }} kullanılırsa kod uygulamaya girilebilir.
+Mevcut bağlantı şablonuyla da e-posta doğrulandıktan sonra uygulamaya dönülüp giriş yapılır.
+
+KURULUM
+GUNCELLE-UX.cmd dosyasını çalıştır. Derleme tamamlanınca APK indir.
+Yeni uygulamada Hesap oluştur > e-postayı doğrula > Giriş yap >
+24 saatlik denemeyi başlat sırasını izle.

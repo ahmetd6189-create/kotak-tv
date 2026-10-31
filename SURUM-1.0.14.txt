@@ -1,0 +1,27 @@
+Kotak TV 1.0.14
+
+Değişiklikler
+- Oynatıcı başlığı ve denetimleri 3,5 saniyede gizlenir; görüntüye dokununca geri gelir.
+- Canlı, film ve dizi oynatıcısından Yayını paylaş kaldırıldı.
+- YouTube fragmanı uygulama içi WebView ile gösterilir; kapatınca ayrıntı sayfası korunur.
+- Android sistem oynatıcısı öncelikli: arka plan ses hizmeti ve PiP desteklenir. Kaynak hatasında VLC uyumluluk oynatıcısına otomatik geçilir.
+- Tam ekran sistem oynatıcısında da uygulama içinde yatay yönlendirme kullanır.
+- Son izleme konumu arka plana geçerken hemen kaydedilir.
+- Önceden sunucuda doğrulanmış, süresi dolmamış erişim, 5 dakikalık yeniden doğrulama penceresindeki geçici ağ/429/5xx hatasında ekranı sıfırlamaz. İlk giriş hatası, 401/403 veya bitmiş süre erişim vermez.
+- Film/dizi katalog metaverisi ayrı, parçalara ayrılmış önbellekte tutulur. Akış adresi ve parolalar bu önbelleğe yazılmaz.
+- Bugün maç bul komutu, bul/göster kelimelerini takım adı sanmaz. Bant, tekrar, özet ve ertesi günkü maçlar bugünkü listeden çıkarılır.
+- Seçili EPG kategorileri içinde spor kanalları önce yüklenir. Boş timestamp değerlerinde sağlayıcının tarih alanına dönülür.
+- Günlük maç araması mevcut sonuçları gösterirken eksik kanal verisini en fazla 10 saniye bekler; programlar uydurulmaz.
+
+Doğrulama sınırları
+TypeScript, otomatik çekirdek/önbellek/hesap ve DOM arayüz testleri çalıştırıldı.
+DOM testleri gerçek Android oynatma, ses, PiP veya YouTube gömme testi değildir.
+Bu ortamda Android emülatörü/telefon ve kullanıcının gerçek sağlayıcı yayınıyla test yapılamadı.
+YouTube sahibi gömmeyi kapattığında fragman açılamaz.
+VLC uyumluluk motorunun Android arka plan oynatması kısıtlıdır; sistem motorunda desteklenir.
+Android işlemi sonlandırırsa tüm ekranların ve yayının kesintisiz devamı garanti değildir; kayıtlı VOD konumu yeniden oynatmada kullanılır.
+Ebeveyn koruması açıkken arka plana geçişte çocuk profiline kilitleme davranışı korunur.
+
+Kurulum
+Expo derlemesi Finished olduktan sonra APK indir. Aynı imzayla mevcut uygulamanın üzerine yükle; verileri temizleme veya uygulamayı kaldırma.
+Hakkında ekranından 1.0.14 sürümünü kontrol et.

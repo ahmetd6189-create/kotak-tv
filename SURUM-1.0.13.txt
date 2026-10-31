@@ -1,0 +1,21 @@
+Kotak TV 1.0.13
+
+- Boş katalog aramasında her kayda uygulanan Türkçe metin dönüşümü kaldırıldı.
+- Dizi kategorileri her satır için tüm kataloğu taramak yerine bir kez gruplandırılır.
+- Ada göre sıralama tek bir Intl.Collator kullanır.
+- Yatay VLC ekranında başlık ve kontroller video üzerine alınır; video yüksekliğini daraltmaz.
+- Canlı oynatıcıda Yayını paylaş ve oynatıcı seçimi kaldırıldı.
+- Android VLC hatasında sistem oynatıcısına otomatik geçilir; her yeni içerikte seçim sıfırlanır.
+- EPG sağlayıcının gönderdiği önceki 24 saat ve sonraki 7 günü korur.
+- Ana ekran kategorilerindeki kanallar uygulama açıkken üçlü gruplarla EPG senkronizasyonuna alınır.
+  Görünen kanal satırları da akışlarını ister. Video sırasında toplu senkronizasyon durur.
+  Telefon uygulamayı kapatırsa sürekli çalışan bir servis yoktur.
+- Hatırlatma penceresinde geçmişe düşen süreler seçilemez; başlangıç süresi program saatine göre ayarlanır.
+  Cihazda bildirimin teslim edildiği bu ortamda doğrulanmadı. Tekrar hata olursa hata metni gerekir.
+- Sağlayıcı oyuncu fotoğrafları ve fragman adresi veriyorsa detayda gösterilir.
+  Fotoğraf yoksa baş harfleri kalır. Fragman dış bağlantıyla açılır. Özet/tür sağlayıcıdan alınır.
+
+Testler cihaz üstünde yapılan performans ölçümü değildir.
+Gerçek Android tam ekran, telefon bildirim teslimi ve sağlayıcı EPG kapsamı telefonda doğrulanmalıdır.
+Her içerikte fotoğraf/fragman veya hiç donmama garantisi verilmez.
+Mevcut uygulamayı silmeden APK üzerine kurulmalıdır.

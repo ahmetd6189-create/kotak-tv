@@ -1,0 +1,22 @@
+Kotak TV 1.0.12 — performans düzeltmeleri
+
+- Hesap kapısının tüm uygulamayı her saniye yeniden çizdirmesi kaldırıldı.
+  Sunucu süresiyle hesaplanan son kullanma anında erişim yine kapanır.
+- Asistan indeksi 200 kayıtlık parçalarla hazırlanır ve aynı katalog için tekrar kullanılır.
+  Yerel arama cevabı için VOD indirmesinin tamamlanması beklenmez.
+- EPG aramasının bekleme bütçesi 4 saniye; arşiv/tekrar/özet maç sonucu olarak sunulmaz.
+- Aşağı çekerek yenileme aynı anda tekrar başlatılamaz. Listeler ortak 8 saniyelik
+  istek bütçesiyle yenilenir; mevcut içerikler korunur. Sağlayıcı yavaşsa hata gösterilir.
+- Film adresi doğrulama bekleme sınırı 7 saniyeden 1,5 saniyeye düşürüldü.
+  Başarılı doğrulama önbelleğe alınır; MKV/MP4 düzeltmesi ve alternatif kaynaklar korunur.
+- Yeni Eklenen Filmler: en yeni 50 film içinde sağlayıcı puanı azalan.
+  Son Güncellenen Diziler: en yeni 60 içerik içinde sağlayıcı puanı azalan.
+  Puanı olmayan içeriklerin puanı uydurulmaz.
+
+Sınırlar:
+Bu değişiklikler sağlayıcının yayın başlatma süresini veya internet hızını garanti etmez.
+Asistan yerel katalog/EPG komut motorudur; genel amaçlı bir LLM değildir.
+EPG sağlayıcının gönderdiği verilerle sınırlıdır; internetteki gelecek hafta fikstürü
+otomatik aktarılmaz. Arşiv yayınlarını ayırmak, eksik canlı maç verisi üretmez.
+Telefon üstünde hız, ses ve gerçek sağlayıcı ile uçtan uca test bu ortamda yapılmadı.
+Mevcut uygulamayı silmeden yeni APK'yı üzerine kurun.

@@ -1,0 +1,32 @@
+KOTAK TV 1.0.16 (23) — 30 Ekim 2026
+
+KURULUM
+1. ZIP'i yeni D:\KotakTV-1.0.16 klasorune cikartin.
+2. Onceki projeden credentials.json ve credentials klasorunu yeni klasore kopyalayin. Gizlidir; paylasmayin.
+3. APK-OLUSTUR.cmd dosyasini calistirin. Npm kurulumu VLC native duzeltmesini otomatik uygular.
+4. Basarili derlemenin sonucu KotakTV-1.0.16.apk. Telefonda eski uygulamayi SILMEDEN guncelleyin.
+
+BU SURUMDE
+- Android'de 114 takimin logolariyla gercek launcher icon altyapisi. Takiplerim > takim sec > Telefon simgesini bu takim yap. Uygulamadan cikinca uygulanir; telefonun launcher onbellegi nedeniyle gecikebilir. Kotak simgesine donus dugmesi var. iOS launcher simgesi bu surumun kapsaminda degil.
+- Takim simgeleri pakette; derlemede logolari internetten indirmek gerekmez. Varsayilan Android simgesi Kotak K simgesi.
+- VLC 1.0.98 Android paketinde playInBackground eksikligi ve surface yeniden olusunca decoder'in sifirlanmasi icin surume sabitlenmis native yama. Yama npm postinstall ile uygulanir; beklenmeyen kutuphane surumunde sessizce atlanmaz, hata verir.
+- Ebeveyn korumasinda baska uygulamaya gecis artik rota/modallari silmez. Donuste PIN kapisi acilir; dogru PIN ayni ekrana doner. Vazgecilirse cocuk profiline gecilir.
+- Cocuk kategorisi arama ve bos kategori secimini engelleme. Modern/Klasik seciminden bagimsiz olarak cocuk profilinde film/dizi gizlendigini aciklayan ayar mesaji.
+- Takim takip kaydi tum film/dizi katalogunu gereksiz yere kaydetmez. Hatirlatma taramalari EPG guncellemelerinde birlestirilir.
+- TR/EN/DE/FR/ES/IT ayar, takim, ebeveyn ve EPG metinleri genisletildi. Acik takim renklerinde secili dugme yazisina kontrast uygulanir.
+- 1.0.15'in tam ekran doldurma, geri tusu, EPG ayrintilari, 3 takim siniri, tema ve ilk dil secimi korunur.
+
+DURUST SINIRLAR / TAMAMLANMAYANLAR
+- Bu kaynak kod paketi native APK olarak burada derlenip telefonda calistirilmadi. Android proje uretimi, kaynak yama kontrolleri ve JS paketleme basarili olsa da bunlar fiziksel cihaz testi degildir.
+- Gercek yayinlarla ses, tam ekran kirpma, pil yonetimi, launcher degisimi ve menu hizi cihazda dogrulanmali. Android sureci sonlandirirsa arka planda kesintisiz oynatma garanti edilemez.
+- Tam yerellestirme bitmedi: bazi ayrintili yardim/asistan/hata metinleri Turkce kalabilir.
+- Cift ses cikisi/sanal subwoofer DSP ve sonraki kanali ayri decoder'da onceden oynatma motoru eklenmedi. Kullanilmayan tanitim kartlari yerine gercek ses-altyazi/oynatici ayarlari var.
+- EPG tur/konuk bilgisi ancak saglayici bu veriyi veriyorsa gosterilir. Eksik veri uydurulmaz.
+
+CIHAZDA KONTROL
+1. Ayarlar/Hakkinda surum 1.0.16 olmali.
+2. Dizi > ust geri tusu > ana sayfa. Dizi > baska uygulama > geri donus. Koruma aciksa PIN ile onceki Dizi ekrani.
+3. Film oynat > ileri sar > baska uygulamaya gec > don: konum, ses ve devam davranisi.
+4. Yatay tam ekran: Ayarlar > Video olcekleme > Ekrani doldur. Bu secim kenarlari kirpar, goruntuyu esnetmez.
+5. EPG: gecmis pasif; gelecek yayina dokununca ayrintilar, Hatirlat dugmesi.
+6. Takiplerim: ulke/ligden 3 takim; dorduncu takip engellenmeli. Logo/renk ve telefon simgesi secenekleri ayri.

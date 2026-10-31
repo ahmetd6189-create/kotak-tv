@@ -1,0 +1,18 @@
+Object.assign(exports,require('./device-services.cjs'));
+const React=require('react');
+exports.StatusBar=()=>null;
+exports.getInitialURL=async()=>null;
+exports.addEventListener=()=>({remove(){}});
+exports.addNotificationResponseReceivedListener=()=>({remove(){}});
+exports.getLastNotificationResponseAsync=async()=>null;
+exports.clearLastNotificationResponseAsync=async()=>{};
+exports.CastButton=()=>null;exports.useRemoteMediaClient=()=>null;exports.MediaStreamType={LIVE:'live',BUFFERED:'buffered'};
+exports.isPictureInPictureSupported=()=>false;
+exports.useEvent=(_player,_event,initial)=>initial;
+exports.VideoView=React.forwardRef(()=>null);exports.VideoAirPlayButton=()=>null;
+exports.systemMock={source:null};
+exports.useVideoPlayer=()=>React.useRef({status:'readyToPlay',playing:false,currentTime:0,duration:100,availableAudioTracks:[],availableSubtitleTracks:[],addListener:()=>({remove(){}}),replaceAsync:async source=>{exports.systemMock.source=source},play(){},pause(){},seekBy(){}}).current;
+exports.useKeepAwake=()=>{};
+exports.unlockAsync=async()=>{};exports.lockAsync=async()=>{};exports.OrientationLock={LANDSCAPE:1};
+exports.vlcMock={props:null,renders:0};
+exports.VLCPlayer=React.forwardRef((props,ref)=>{exports.vlcMock.props=props;exports.vlcMock.renders++;React.useImperativeHandle(ref,()=>({seek(value){exports.vlcMock.seek=value;}}));return null;});

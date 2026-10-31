@@ -1,0 +1,36 @@
+KOTAK TV 1.0.11 — Hesap kurtarma
+
+EKLENENLER
+- Şifremi unuttum: e-posta kodu iste → kodu doğrula → yeni şifre ve tekrarı → giriş.
+- Kurtarma oturumu normal oturumdan ayrıdır; şifre/kod/kurtarma anahtarı diske yazılmaz.
+- Kurtarma yetkisi uygulama içinde en fazla 10 dakika tutulur; sunucu token süresi de geçerlidir.
+- Doğrulama kodunu yeniden gönderme, 60 saniye bekleme ve 5 hatalı denemeden sonra 60 saniye yerel bekleme.
+- Yerel bekleme tek başına güvenlik duvarı değildir. Sunucudaki Supabase Auth limitleri ayrıca uygulanır.
+- Şifre tekrarı, göster/gizle, doğru hata mesajları; destek adresi defsearchtv@gmail.com.
+- Şifre değişimi sonrası global logout isteği; başarısız olursa kullanıcıya bildirilir. Mevcut access JWT'leri anında geçersiz hale gelmez.
+- 24 saatlik deneme aynı kullanıcı kimliğiyle korunur; yeni hesap açmayı veya cihaz sıfırlamayı kesin engelleme iddiası yoktur.
+
+SUNUCU TAMAMLAMA
+1. Authentication > Emails > SMTP Settings: smtp.gmail.com / 465 / defsearchtv@gmail.com.
+   Password alanına bu Google hesabından üretilmiş Uygulama Şifresi girilmeli. Normal Gmail şifresi çalışmaz.
+   24 Ekim kaydında Gmail 534 / 5.7.9 Application-specific password required hatası doğrulandı.
+2. Authentication > Emails > Reset password: konu "Kotak TV — Şifre sıfırlama kodun".
+   Body alanının tamamı supabase/templates/recovery.html içeriği olmalı.
+3. Confirm sign up şablonu: supabase/templates/confirmation.html.
+4. Authentication > Sign In / Providers > Email: e-posta onayı açık; önerilen OTP uzunluğu 8, süresi 600 saniye; minimum şifre 8.
+   Bu paket sunucu ayarlarını kendiliğinden değiştirmez. Dashboard'da kaydedilip doğrulanmalıdır.
+5. Authentication > Rate Limits: sunucu OTP doğrulama ve e-posta limitleri kontrol edilmeli.
+   IP limiti, hesap başına kalıcı 5 deneme kilidi değildir; böyle bir kilit bu sürümde sunucuya eklenmedi.
+6. Leaked password protection denetimde kapalı bulundu. Ücretli plan gerektiren ayar kendiliğinden etkinleştirilmedi.
+
+TELEFON TESTİ
+Mevcut uygulamayı silmeden yeni APK'yı kur.
+- Şifremi unuttum > hesabının e-postası > gelen kod > yeni şifre iki kez > giriş.
+- Yanlış kodda yeni şifre formu açılmamalı; beş hatadan sonra bekleme görünmeli.
+- Kullanılmış / süresi dolmuş kodla tekrar işlem yapılamamalı (sunucuyla gerçek test).
+- Yeni kayıt > doğrulama kodu > giriş > demo düğmesi. Demo kayıt sırasında başlamaz.
+- Çıkış/giriş sonrası önceki denemenin bitişi değişmemeli.
+
+SMTP düzeltmesi ve gerçek cihazdaki e-posta teslimi tamamlanmadan giriş sistemine "canlıda eksiksiz test edildi" denilemez.
+Kod testleri ağ yanıtlarını kontrollü taklit eder; gerçek Gmail teslimatı ve Android cihaz testinin yerini tutmaz.
+Bu sürüm ödeme entegrasyonu veya CAPTCHA eklemez. Ödeme henüz kapalıdır.

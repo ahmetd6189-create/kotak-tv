@@ -1,0 +1,24 @@
+{
+  "extends": "expo/tsconfig.base",
+  "compilerOptions": {
+    "strict": true,
+    "jsx": "react-jsx",
+    "allowImportingTsExtensions": true
+  },
+  "include": [
+    "App.tsx",
+    "index.ts",
+    "src/native/**/*.ts",
+    "src/native/**/*.tsx",
+    "src/components/**/*.tsx",
+    "src/theme.ts",
+    "src/types/**/*.ts",
+    "src/ui/**/*.tsx"
+  ],
+  "exclude": [
+    "node_modules",
+    "src/legacy-web",
+    "src/services",
+    "src/data"
+  ]
+}

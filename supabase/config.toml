@@ -1,0 +1,6 @@
+project_id = "kotak-tv"
+
+# This endpoint validates every user token with Supabase Auth in its own handler.
+# Required for compatibility with new asymmetric signing keys; it is NOT a public access endpoint.
+[functions.kotak-access]
+verify_jwt = false
