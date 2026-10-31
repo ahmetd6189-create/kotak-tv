@@ -1,7 +1,7 @@
 import {AccountForm,type AuthClient} from './AccountForm';
 import React,{useEffect,useRef,useState} from 'react';
 import {ActivityIndicator,AppState,Linking,Pressable,ScrollView,StyleSheet,Text,TextInput,View} from './Native';
-import * as Notifications from 'expo-notifications';
+import * as Notifications from '../native/localized-notifications';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {account} from '../native/account';
 import {accountMessage,AccountError,type Access} from '../native/account-core';
@@ -55,4 +55,3 @@ export function AccountGate({children,client=account}:{children:(props:AccountPr
  </ScrollView></SafeAreaView>;
 }
 const s=StyleSheet.create({root:{flex:1,backgroundColor:'#000'},content:{flexGrow:1,justifyContent:'center',padding:28,gap:16,maxWidth:520,width:'100%',alignSelf:'center'},brand:{color:'#007AFF',fontSize:22,fontWeight:'800',letterSpacing:4},title:{color:'#fff',fontSize:28,fontWeight:'700'},copy:{color:'#aaa',fontSize:15,lineHeight:23},error:{color:'#ff7777',fontSize:15,lineHeight:22},input:{color:'#fff',backgroundColor:'#18181b',borderRadius:14,padding:16,fontSize:16},button:{backgroundColor:'#007AFF',padding:16,borderRadius:14,alignItems:'center'},secondary:{backgroundColor:'#202024'},buttonText:{color:'#fff',fontSize:16,fontWeight:'600'}});
-

@@ -95,4 +95,3 @@ const styles = StyleSheet.create({
   name: { color: colors.white, fontWeight: "500", fontSize: 14, marginTop: 5 },
   meta: { color: colors.zinc400, fontSize: 12, marginTop: 2 },
 });
-

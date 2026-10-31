@@ -74,4 +74,3 @@ const styles = StyleSheet.create({
   demo: { marginTop: 20, flexDirection: 'row', alignItems: 'center', gap: 6, backgroundColor: colors.card2, paddingHorizontal: 12, paddingVertical: 8, borderRadius: 999 },
   demoText: { color: colors.zinc300, fontSize: 12, fontWeight: '600' },
 });
-

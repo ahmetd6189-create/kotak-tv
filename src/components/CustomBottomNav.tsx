@@ -28,7 +28,7 @@ export const CustomBottomNav: React.FC<CustomBottomNavProps> = ({ currentTab, on
           return (
             <Pressable accessibilityRole="tab" accessibilityLabel={item.label} accessibilityState={{selected:active}} key={item.tab} onPress={() => onTabChange(item.tab)} style={[styles.item, active && styles.itemActive]}>
               <item.Icon size={21} color={color} />
-              <Text style={[styles.label, { color }]}>{item.label}</Text>
+              <Text verbatim style={[styles.label, { color }]}>{item.label}</Text>
             </Pressable>
           );
         })}
@@ -54,4 +54,3 @@ const styles = StyleSheet.create({
   itemActive: { backgroundColor: '#373739' },
   label: { fontSize: 8, fontWeight: '800', marginTop: 3, letterSpacing: 1 },
 });
-

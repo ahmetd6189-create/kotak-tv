@@ -1,5 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import * as Notifications from 'expo-notifications';
+import * as Notifications from './localized-notifications';
 import {Platform} from 'react-native';
 import {createCacheStore} from './cache-store';
 import {newFollowItems,followedMatches,type FollowRule} from './follow-core';

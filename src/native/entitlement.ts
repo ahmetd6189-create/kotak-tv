@@ -1,4 +1,4 @@
-import * as Notifications from 'expo-notifications';
+import * as Notifications from './localized-notifications';
 import {Platform} from 'react-native';
 export type Entitlement={id:string;kind:'trial'|'subscription';expiresAt:number;verifiedAt:number};
 /** Accept only a result returned by the authenticated billing/trial backend. Never infer payment from device time. */

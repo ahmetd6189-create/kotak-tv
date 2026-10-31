@@ -10,7 +10,7 @@ import {
   Text,
   TextInput,
   View,
-} from "react-native";
+} from "../ui/Native";
 import { ArrowRightCircle, Check, ChevronDown, X } from "lucide-react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { httpUrl, type PlaylistConfig } from "./iptv";

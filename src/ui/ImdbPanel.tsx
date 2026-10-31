@@ -38,4 +38,3 @@ export function ImdbPanel({entries,cache,onUpdate,onClose}:{entries:Entry[];cach
   {!!notice&&<Text style={d.secondary}>{notice}</Text>}
  </Sheet>;
 }
-

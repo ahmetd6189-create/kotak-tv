@@ -266,11 +266,11 @@
     "it": "Riempi schermo"
   },
   "Oranı koru": {
-    "en": "Fit screen",
-    "de": "Bild einpassen",
-    "fr": "Ajuster à l’écran",
-    "es": "Ajustar pantalla",
-    "it": "Adatta allo schermo"
+    "en": "Keep aspect ratio",
+    "de": "Seitenverhältnis beibehalten",
+    "fr": "Conserver les proportions",
+    "es": "Mantener proporciones",
+    "it": "Mantieni proporzioni"
   },
   "GENEL": {
     "en": "GENERAL",
@@ -297,7 +297,7 @@
     "en": "PLAYLISTS",
     "de": "WIEDERGABELISTEN",
     "fr": "LISTES DE LECTURE",
-    "es": "LISTAS",
+    "es": "LISTAS DE REPRODUCCIÓN",
     "it": "PLAYLIST"
   },
   "DAHA FAZLA": {
@@ -929,5 +929,754 @@
     "fr": "Italie",
     "es": "Italia",
     "it": "Italia"
+  },
+  "{0} saniye": {
+    "en": "{0} seconds",
+    "de": "{0} Sekunden",
+    "fr": "{0} secondes",
+    "es": "{0} segundos",
+    "it": "{0} secondi"
+  },
+  "{0} dk önce": {
+    "en": "{0} min before",
+    "de": "{0} Min. vorher",
+    "fr": "{0} min avant",
+    "es": "{0} min antes",
+    "it": "{0} min prima"
+  },
+  "{0} dk": {
+    "en": "{0} min",
+    "de": "{0} Min.",
+    "fr": "{0} min",
+    "es": "{0} min",
+    "it": "{0} min"
+  },
+  "{0} saat": {
+    "en": "{0} hours",
+    "de": "{0} Stunden",
+    "fr": "{0} heures",
+    "es": "{0} horas",
+    "it": "{0} ore"
+  },
+  "{0} · Yayın Akışı": {
+    "en": "{0} · Programme guide",
+    "de": "{0} · Programmübersicht",
+    "fr": "{0} · Programme TV",
+    "es": "{0} · Guía de programación",
+    "it": "{0} · Guida programmi"
+  },
+  "Tür: {0}": {
+    "en": "Genre: {0}",
+    "de": "Genre: {0}",
+    "fr": "Genre : {0}",
+    "es": "Género: {0}",
+    "it": "Genere: {0}"
+  },
+  "Konuklar: {0}": {
+    "en": "Guests: {0}",
+    "de": "Gäste: {0}",
+    "fr": "Invités : {0}",
+    "es": "Invitados: {0}",
+    "it": "Ospiti: {0}"
+  },
+  "Canlı Yayını İzle": {
+    "en": "Watch live",
+    "de": "Live ansehen",
+    "fr": "Regarder en direct",
+    "es": "Ver en directo",
+    "it": "Guarda in diretta"
+  },
+  "Ebeveyn PIN": {
+    "en": "Parental PIN",
+    "de": "Eltern-PIN",
+    "fr": "Code PIN parental",
+    "es": "PIN parental",
+    "it": "PIN genitore"
+  },
+  "Çok fazla deneme. Beş dakika sonra tekrar deneyin.": {
+    "en": "Too many attempts. Try again in five minutes.",
+    "de": "Zu viele Versuche. In fünf Minuten erneut versuchen.",
+    "fr": "Trop de tentatives. Réessayez dans cinq minutes.",
+    "es": "Demasiados intentos. Reintenta en cinco minutos.",
+    "it": "Troppi tentativi. Riprova tra cinque minuti."
+  },
+  "Aynı 4–6 haneli PIN’i iki alana da girin.": {
+    "en": "Enter the same 4–6 digit PIN in both fields.",
+    "de": "Gib in beide Felder dieselbe 4–6-stellige PIN ein.",
+    "fr": "Entrez le même PIN de 4 à 6 chiffres dans les deux champs.",
+    "es": "Introduce el mismo PIN de 4 a 6 dígitos en ambos campos.",
+    "it": "Inserisci lo stesso PIN di 4–6 cifre in entrambi i campi."
+  },
+  "Profil kaydedilemedi.": {
+    "en": "Profile could not be saved.",
+    "de": "Profil konnte nicht gespeichert werden.",
+    "fr": "Impossible d’enregistrer le profil.",
+    "es": "No se pudo guardar el perfil.",
+    "it": "Impossibile salvare il profilo."
+  },
+  "Çocuk profili yalnızca aşağıda seçtiğiniz canlı kanal kategorilerini gösterir. Film ve dizi kataloğu gizlenir. Yeniden açılışta çocuk profili etkin olur.": {
+    "en": "Child mode shows only the live channel categories selected below. Films and series are hidden. Child mode is enabled when the app restarts.",
+    "de": "Das Kinderprofil zeigt nur die unten gewählten Live-Senderkategorien. Filme und Serien sind verborgen. Beim Neustart ist das Kinderprofil aktiv.",
+    "fr": "Le profil enfant affiche uniquement les catégories de chaînes choisies ci-dessous. Films et séries masqués. Le profil enfant est actif au redémarrage.",
+    "es": "El perfil infantil muestra solo las categorías de canales elegidas. Películas y series ocultas. El perfil infantil se activa al reiniciar.",
+    "it": "Il profilo bambino mostra solo le categorie di canali scelte. Film e serie nascosti. Il profilo bambino si attiva al riavvio."
+  },
+  "Dinliyorum…": {
+    "en": "Listening…",
+    "de": "Ich höre zu…",
+    "fr": "J’écoute…",
+    "es": "Escuchando…",
+    "it": "In ascolto…"
+  },
+  "Ne açmamı istersin?": {
+    "en": "What would you like to watch?",
+    "de": "Was möchtest du ansehen?",
+    "fr": "Que souhaitez-vous regarder ?",
+    "es": "¿Qué quieres ver?",
+    "it": "Cosa vuoi guardare?"
+  },
+  "Dinlemeyi durdur": {
+    "en": "Stop listening",
+    "de": "Zuhören beenden",
+    "fr": "Arrêter l’écoute",
+    "es": "Dejar de escuchar",
+    "it": "Interrompi ascolto"
+  },
+  "Konuşmaya başla": {
+    "en": "Start speaking",
+    "de": "Sprechen starten",
+    "fr": "Commencer à parler",
+    "es": "Empezar a hablar",
+    "it": "Inizia a parlare"
+  },
+  "Kotak TV Asistanı": {
+    "en": "Kotak TV Assistant",
+    "de": "Kotak-TV-Assistent",
+    "fr": "Assistant Kotak TV",
+    "es": "Asistente Kotak TV",
+    "it": "Assistente Kotak TV"
+  },
+  "Sesli arama metni": {
+    "en": "Voice search text",
+    "de": "Sprachsuchtext",
+    "fr": "Texte de recherche vocale",
+    "es": "Texto de búsqueda por voz",
+    "it": "Testo ricerca vocale"
+  },
+  "İstersen yazarak ara": {
+    "en": "Or type to search",
+    "de": "Oder Suche eingeben",
+    "fr": "Ou saisissez votre recherche",
+    "es": "O escribe para buscar",
+    "it": "Oppure scrivi per cercare"
+  },
+  "Ara ve aç": {
+    "en": "Search and open",
+    "de": "Suchen und öffnen",
+    "fr": "Rechercher et ouvrir",
+    "es": "Buscar y abrir",
+    "it": "Cerca e apri"
+  },
+  "Katalog ve yayın akışı aranıyor…": {
+    "en": "Searching catalogue and programme guide…",
+    "de": "Katalog und Programm werden durchsucht…",
+    "fr": "Recherche du catalogue et programme…",
+    "es": "Buscando catálogo y programación…",
+    "it": "Ricerca catalogo e guida…"
+  },
+  "Arama tamamlanamadı.": {
+    "en": "Search could not be completed.",
+    "de": "Suche konnte nicht abgeschlossen werden.",
+    "fr": "La recherche n’a pas pu aboutir.",
+    "es": "No se pudo completar la búsqueda.",
+    "it": "Impossibile completare la ricerca."
+  },
+  "Oynat": {
+    "en": "Play",
+    "de": "Abspielen",
+    "fr": "Lire",
+    "es": "Reproducir",
+    "it": "Riproduci"
+  },
+  "Duraklat": {
+    "en": "Pause",
+    "de": "Pause",
+    "fr": "Pause",
+    "es": "Pausar",
+    "it": "Pausa"
+  },
+  "Tam ekran": {
+    "en": "Fullscreen",
+    "de": "Vollbild",
+    "fr": "Plein écran",
+    "es": "Pantalla completa",
+    "it": "Schermo intero"
+  },
+  "Sesi kapat": {
+    "en": "Mute",
+    "de": "Stummschalten",
+    "fr": "Couper le son",
+    "es": "Silenciar",
+    "it": "Disattiva audio"
+  },
+  "Sesi aç": {
+    "en": "Unmute",
+    "de": "Ton einschalten",
+    "fr": "Activer le son",
+    "es": "Activar sonido",
+    "it": "Attiva audio"
+  },
+  "Tekrar dene": {
+    "en": "Try again",
+    "de": "Erneut versuchen",
+    "fr": "Réessayer",
+    "es": "Reintentar",
+    "it": "Riprova"
+  },
+  "Altyazı": {
+    "en": "Subtitles",
+    "de": "Untertitel",
+    "fr": "Sous-titres",
+    "es": "Subtítulos",
+    "it": "Sottotitoli"
+  },
+  "Ses": {
+    "en": "Audio",
+    "de": "Audio",
+    "fr": "Audio",
+    "es": "Audio",
+    "it": "Audio"
+  },
+  "Kapalı": {
+    "en": "Off",
+    "de": "Aus",
+    "fr": "Désactivé",
+    "es": "Desactivado",
+    "it": "Disattivato"
+  },
+  "Açık": {
+    "en": "On",
+    "de": "Ein",
+    "fr": "Activé",
+    "es": "Activado",
+    "it": "Attivato"
+  },
+  "Otomatik": {
+    "en": "Automatic",
+    "de": "Automatisch",
+    "fr": "Automatique",
+    "es": "Automático",
+    "it": "Automatico"
+  },
+  "Varsayılan": {
+    "en": "Default",
+    "de": "Standard",
+    "fr": "Par défaut",
+    "es": "Predeterminado",
+    "it": "Predefinito"
+  },
+  "{0}. Sezon": {
+    "en": "Season {0}",
+    "de": "Staffel {0}",
+    "fr": "Saison {0}",
+    "es": "Temporada {0}",
+    "it": "Stagione {0}"
+  },
+  "Kütüphaneniz": {
+    "en": "Your library",
+    "de": "Deine Bibliothek",
+    "fr": "Votre bibliothèque",
+    "es": "Tu biblioteca",
+    "it": "La tua libreria"
+  },
+  "Geçerli bir e-posta adresi gir.": {
+    "en": "Enter a valid email address.",
+    "de": "Gib eine gültige E-Mail-Adresse ein.",
+    "fr": "Entrez une adresse e-mail valide.",
+    "es": "Introduce un correo válido.",
+    "it": "Inserisci un’email valida."
+  },
+  "En az 8 karakterli şifre belirle.": {
+    "en": "Choose a password with at least 8 characters.",
+    "de": "Wähle ein Passwort mit mindestens 8 Zeichen.",
+    "fr": "Choisissez un mot de passe d’au moins 8 caractères.",
+    "es": "Elige una contraseña de al menos 8 caracteres.",
+    "it": "Scegli una password di almeno 8 caratteri."
+  },
+  "Şifreler eşleşmiyor.": {
+    "en": "Passwords do not match.",
+    "de": "Passwörter stimmen nicht überein.",
+    "fr": "Les mots de passe ne correspondent pas.",
+    "es": "Las contraseñas no coinciden.",
+    "it": "Le password non corrispondono."
+  },
+  "Şifreni gir.": {
+    "en": "Enter your password.",
+    "de": "Gib dein Passwort ein.",
+    "fr": "Entrez votre mot de passe.",
+    "es": "Introduce tu contraseña.",
+    "it": "Inserisci la password."
+  },
+  "E-postandaki doğrulama kodunu eksiksiz gir.": {
+    "en": "Enter the full verification code from your email.",
+    "de": "Gib den vollständigen Code aus der E-Mail ein.",
+    "fr": "Entrez le code complet reçu par e-mail.",
+    "es": "Introduce el código completo del correo.",
+    "it": "Inserisci il codice completo dell’email."
+  },
+  "Şifren güncellendi. Yeni şifrenle giriş yap.": {
+    "en": "Password updated. Sign in with your new password.",
+    "de": "Passwort aktualisiert. Mit neuem Passwort anmelden.",
+    "fr": "Mot de passe modifié. Connectez-vous avec le nouveau.",
+    "es": "Contraseña actualizada. Accede con la nueva.",
+    "it": "Password aggiornata. Accedi con la nuova."
+  },
+  "Hoş geldin": {
+    "en": "Welcome",
+    "de": "Willkommen",
+    "fr": "Bienvenue",
+    "es": "Bienvenido",
+    "it": "Benvenuto"
+  },
+  "Hesap oluştur": {
+    "en": "Create account",
+    "de": "Konto erstellen",
+    "fr": "Créer un compte",
+    "es": "Crear cuenta",
+    "it": "Crea account"
+  },
+  "E-postanı doğrula": {
+    "en": "Verify your email",
+    "de": "E-Mail bestätigen",
+    "fr": "Vérifier votre e-mail",
+    "es": "Verificar correo",
+    "it": "Verifica email"
+  },
+  "Sıfırlama kodunu gir": {
+    "en": "Enter reset code",
+    "de": "Rücksetzcode eingeben",
+    "fr": "Entrer le code de réinitialisation",
+    "es": "Introducir código de recuperación",
+    "it": "Inserisci codice di recupero"
+  },
+  "Yeni şifreni belirle": {
+    "en": "Set new password",
+    "de": "Neues Passwort festlegen",
+    "fr": "Définir un nouveau mot de passe",
+    "es": "Establecer nueva contraseña",
+    "it": "Imposta nuova password"
+  },
+  "Çok fazla deneme.": {
+    "en": "Too many attempts.",
+    "de": "Zu viele Versuche.",
+    "fr": "Trop de tentatives.",
+    "es": "Demasiados intentos.",
+    "it": "Troppi tentativi."
+  },
+  "İşlem yapılıyor": {
+    "en": "Processing",
+    "de": "Wird verarbeitet",
+    "fr": "Traitement en cours",
+    "es": "Procesando",
+    "it": "Elaborazione"
+  },
+  "Doğrulama kodu": {
+    "en": "Verification code",
+    "de": "Bestätigungscode",
+    "fr": "Code de vérification",
+    "es": "Código de verificación",
+    "it": "Codice di verifica"
+  },
+  "E-postadaki doğrulama kodu": {
+    "en": "Email verification code",
+    "de": "E-Mail-Bestätigungscode",
+    "fr": "Code de vérification e-mail",
+    "es": "Código de verificación del correo",
+    "it": "Codice verifica email"
+  },
+  "Hesap şifresi": {
+    "en": "Account password",
+    "de": "Kontopasswort",
+    "fr": "Mot de passe du compte",
+    "es": "Contraseña de la cuenta",
+    "it": "Password account"
+  },
+  "Şifre (en az 8 karakter)": {
+    "en": "Password (at least 8 characters)",
+    "de": "Passwort (mindestens 8 Zeichen)",
+    "fr": "Mot de passe (8 caractères minimum)",
+    "es": "Contraseña (mínimo 8 caracteres)",
+    "it": "Password (minimo 8 caratteri)"
+  },
+  "Şifre tekrarı": {
+    "en": "Confirm password",
+    "de": "Passwort bestätigen",
+    "fr": "Confirmer le mot de passe",
+    "es": "Confirmar contraseña",
+    "it": "Conferma password"
+  },
+  "Şifreyi tekrar gir": {
+    "en": "Enter password again",
+    "de": "Passwort erneut eingeben",
+    "fr": "Saisir à nouveau le mot de passe",
+    "es": "Repetir contraseña",
+    "it": "Ripeti password"
+  },
+  "Şifreyi gizle": {
+    "en": "Hide password",
+    "de": "Passwort verbergen",
+    "fr": "Masquer le mot de passe",
+    "es": "Ocultar contraseña",
+    "it": "Nascondi password"
+  },
+  "Şifreyi göster": {
+    "en": "Show password",
+    "de": "Passwort anzeigen",
+    "fr": "Afficher le mot de passe",
+    "es": "Mostrar contraseña",
+    "it": "Mostra password"
+  },
+  "Kodu doğrula": {
+    "en": "Verify code",
+    "de": "Code bestätigen",
+    "fr": "Vérifier le code",
+    "es": "Verificar código",
+    "it": "Verifica codice"
+  },
+  "Tekrar gönder ({0} sn)": {
+    "en": "Resend ({0} s)",
+    "de": "Erneut senden ({0} Sek.)",
+    "fr": "Renvoyer ({0} s)",
+    "es": "Reenviar ({0} s)",
+    "it": "Invia di nuovo ({0} s)"
+  },
+  "Sıfırlama kodu gönder": {
+    "en": "Send reset code",
+    "de": "Rücksetzcode senden",
+    "fr": "Envoyer le code de réinitialisation",
+    "es": "Enviar código de recuperación",
+    "it": "Invia codice di recupero"
+  },
+  "Yeni şifreyi kaydet": {
+    "en": "Save new password",
+    "de": "Neues Passwort speichern",
+    "fr": "Enregistrer le nouveau mot de passe",
+    "es": "Guardar nueva contraseña",
+    "it": "Salva nuova password"
+  },
+  "Kodu yeniden gönder": {
+    "en": "Resend code",
+    "de": "Code erneut senden",
+    "fr": "Renvoyer le code",
+    "es": "Reenviar código",
+    "it": "Invia di nuovo il codice"
+  },
+  "E-postamı doğrula": {
+    "en": "Verify my email",
+    "de": "Meine E-Mail bestätigen",
+    "fr": "Vérifier mon e-mail",
+    "es": "Verificar mi correo",
+    "it": "Verifica la mia email"
+  },
+  "Yeni hesap oluştur": {
+    "en": "Create new account",
+    "de": "Neues Konto erstellen",
+    "fr": "Créer un compte",
+    "es": "Crear cuenta nueva",
+    "it": "Crea nuovo account"
+  },
+  "Giriş ekranına dön": {
+    "en": "Back to sign in",
+    "de": "Zurück zur Anmeldung",
+    "fr": "Retour à la connexion",
+    "es": "Volver al acceso",
+    "it": "Torna all’accesso"
+  },
+  "24 saatlik denemeyi başlat": {
+    "en": "Start 24-hour trial",
+    "de": "24-Stunden-Test starten",
+    "fr": "Démarrer l’essai de 24 heures",
+    "es": "Iniciar prueba de 24 horas",
+    "it": "Avvia prova di 24 ore"
+  },
+  "Kullanım süren doldu": {
+    "en": "Your access has expired",
+    "de": "Dein Zugang ist abgelaufen",
+    "fr": "Votre accès a expiré",
+    "es": "Tu acceso ha vencido",
+    "it": "Il tuo accesso è scaduto"
+  },
+  "Hesaptan çıkış yap": {
+    "en": "Sign out",
+    "de": "Abmelden",
+    "fr": "Se déconnecter",
+    "es": "Cerrar sesión",
+    "it": "Esci dall’account"
+  },
+  "Fragmanı kapat": {
+    "en": "Close trailer",
+    "de": "Trailer schließen",
+    "fr": "Fermer la bande-annonce",
+    "es": "Cerrar tráiler",
+    "it": "Chiudi trailer"
+  },
+  "Uygulama içi fragman": {
+    "en": "In-app trailer",
+    "de": "Trailer in der App",
+    "fr": "Bande-annonce intégrée",
+    "es": "Tráiler integrado",
+    "it": "Trailer nell’app"
+  },
+  "Yeniden bağlanılıyor · {0}. deneme": {
+    "en": "Reconnecting · attempt {0}",
+    "de": "Verbindung · Versuch {0}",
+    "fr": "Reconnexion · tentative {0}",
+    "es": "Reconectando · intento {0}",
+    "it": "Riconnessione · tentativo {0}"
+  },
+  "Oynatıcı denetimlerini göster veya gizle": {
+    "en": "Show or hide player controls",
+    "de": "Player-Steuerung ein-/ausblenden",
+    "fr": "Afficher ou masquer les commandes",
+    "es": "Mostrar u ocultar controles",
+    "it": "Mostra o nascondi controlli"
+  },
+  "Kaynak yanıt vermiyor. Otomatik yeniden deneniyor…": {
+    "en": "Source not responding. Retrying automatically…",
+    "de": "Quelle antwortet nicht. Automatischer Neuversuch…",
+    "fr": "Source sans réponse. Nouvelle tentative automatique…",
+    "es": "La fuente no responde. Reintentando automáticamente…",
+    "it": "La sorgente non risponde. Nuovo tentativo automatico…"
+  },
+  "Yayın bağlanıyor…": {
+    "en": "Connecting to stream…",
+    "de": "Verbindung zum Stream…",
+    "fr": "Connexion au flux…",
+    "es": "Conectando al flujo…",
+    "it": "Connessione al flusso…"
+  },
+  "Şimdi yeniden bağlan": {
+    "en": "Reconnect now",
+    "de": "Jetzt neu verbinden",
+    "fr": "Reconnecter maintenant",
+    "es": "Reconectar ahora",
+    "it": "Riconnetti ora"
+  },
+  "Bu kanalın sesini seç": {
+    "en": "Select this channel’s audio",
+    "de": "Audio dieses Senders wählen",
+    "fr": "Choisir l’audio de cette chaîne",
+    "es": "Elegir audio del canal",
+    "it": "Seleziona audio del canale"
+  },
+  "Resim içinde resim": {
+    "en": "Picture in picture",
+    "de": "Bild im Bild",
+    "fr": "Image dans l’image",
+    "es": "Imagen en imagen",
+    "it": "Picture in picture"
+  },
+  "Ses Parçaları": {
+    "en": "Audio tracks",
+    "de": "Tonspuren",
+    "fr": "Pistes audio",
+    "es": "Pistas de audio",
+    "it": "Tracce audio"
+  },
+  "Ses parçaları": {
+    "en": "Audio tracks",
+    "de": "Tonspuren",
+    "fr": "Pistes audio",
+    "es": "Pistas de audio",
+    "it": "Tracce audio"
+  },
+  "Altyazı Kapalı": {
+    "en": "Subtitles off",
+    "de": "Untertitel aus",
+    "fr": "Sous-titres désactivés",
+    "es": "Subtítulos desactivados",
+    "it": "Sottotitoli disattivati"
+  },
+  "Altyazı kapalı": {
+    "en": "Subtitles off",
+    "de": "Untertitel aus",
+    "fr": "Sous-titres désactivés",
+    "es": "Subtítulos desactivados",
+    "it": "Sottotitoli disattivati"
+  },
+  "Oynatıcıyı kapat": {
+    "en": "Close player",
+    "de": "Player schließen",
+    "fr": "Fermer le lecteur",
+    "es": "Cerrar reproductor",
+    "it": "Chiudi lettore"
+  },
+  "Çoklu Ekran": {
+    "en": "Multi-screen",
+    "de": "Mehrfachansicht",
+    "fr": "Multi-écran",
+    "es": "Multipantalla",
+    "it": "Multischermo"
+  },
+  "Büyüt": {
+    "en": "Expand",
+    "de": "Vergrößern",
+    "fr": "Agrandir",
+    "es": "Ampliar",
+    "it": "Ingrandisci"
+  },
+  "Küçült": {
+    "en": "Minimise",
+    "de": "Verkleinern",
+    "fr": "Réduire",
+    "es": "Reducir",
+    "it": "Riduci"
+  },
+  "Kullanıcı adı ve şifreyi girin.": {
+    "en": "Enter username and password.",
+    "de": "Benutzername und Passwort eingeben.",
+    "fr": "Entrez utilisateur et mot de passe.",
+    "es": "Introduce usuario y contraseña.",
+    "it": "Inserisci nome utente e password."
+  },
+  "Xtream Codes Hesabı Ekle": {
+    "en": "Add Xtream Codes account",
+    "de": "Xtream-Codes-Konto hinzufügen",
+    "fr": "Ajouter un compte Xtream Codes",
+    "es": "Añadir cuenta Xtream Codes",
+    "it": "Aggiungi account Xtream Codes"
+  },
+  "Ad (isteğe bağlı)": {
+    "en": "Name (optional)",
+    "de": "Name (optional)",
+    "fr": "Nom (facultatif)",
+    "es": "Nombre (opcional)",
+    "it": "Nome (facoltativo)"
+  },
+  "Kullanıcı Adı": {
+    "en": "Username",
+    "de": "Benutzername",
+    "fr": "Nom d’utilisateur",
+    "es": "Usuario",
+    "it": "Nome utente"
+  },
+  "EPG bağlantısı (isteğe bağlı)": {
+    "en": "EPG link (optional)",
+    "de": "EPG-Link (optional)",
+    "fr": "Lien EPG (facultatif)",
+    "es": "Enlace EPG (opcional)",
+    "it": "Link EPG (facoltativo)"
+  },
+  "Liste alınıyor…": {
+    "en": "Loading playlist…",
+    "de": "Liste wird geladen…",
+    "fr": "Chargement de la liste…",
+    "es": "Cargando lista…",
+    "it": "Caricamento playlist…"
+  },
+  "Xtream Codes hesabına geç": {
+    "en": "Switch to Xtream Codes",
+    "de": "Zu Xtream Codes wechseln",
+    "fr": "Passer à Xtream Codes",
+    "es": "Cambiar a Xtream Codes",
+    "it": "Passa a Xtream Codes"
+  },
+  "M3U bağlantısına geç": {
+    "en": "Switch to M3U link",
+    "de": "Zu M3U-Link wechseln",
+    "fr": "Passer au lien M3U",
+    "es": "Cambiar a enlace M3U",
+    "it": "Passa al link M3U"
+  },
+  "Yayın yeniden bağlanıyor…": {
+    "en": "Reconnecting stream…",
+    "de": "Stream wird neu verbunden…",
+    "fr": "Reconnexion au flux…",
+    "es": "Reconectando flujo…",
+    "it": "Riconnessione al flusso…"
+  },
+  "Ses ve altyazı seçenekleri": {
+    "en": "Audio and subtitle options",
+    "de": "Audio- und Untertiteloptionen",
+    "fr": "Options audio et sous-titres",
+    "es": "Opciones de audio y subtítulos",
+    "it": "Opzioni audio e sottotitoli"
+  },
+  "Program hatırlatıcıları": {
+    "en": "Programme reminders",
+    "de": "Programmerinnerungen",
+    "fr": "Rappels de programme",
+    "es": "Recordatorios de programas",
+    "it": "Promemoria programmi"
+  },
+  "{0} · Programın başlıyor": {
+    "en": "{0} · Your programme is starting",
+    "de": "{0} · Deine Sendung beginnt",
+    "fr": "{0} · Votre programme commence",
+    "es": "{0} · Tu programa empieza",
+    "it": "{0} · Il tuo programma inizia"
+  },
+  "{0} · {1} dakika sonra": {
+    "en": "{0} · In {1} minutes",
+    "de": "{0} · In {1} Minuten",
+    "fr": "{0} · Dans {1} minutes",
+    "es": "{0} · En {1} minutos",
+    "it": "{0} · Tra {1} minuti"
+  },
+  "Deneme sürenin bitmesine {0} saat kaldı.": {
+    "en": "Your trial ends in {0} hours.",
+    "de": "Deine Testphase endet in {0} Stunden.",
+    "fr": "Votre essai se termine dans {0} heures.",
+    "es": "Tu prueba termina en {0} horas.",
+    "it": "La prova termina tra {0} ore."
+  },
+  "Abonelik sürenin bitmesine {0} saat kaldı.": {
+    "en": "Your subscription ends in {0} hours.",
+    "de": "Dein Abonnement endet in {0} Stunden.",
+    "fr": "Votre abonnement se termine dans {0} heures.",
+    "es": "Tu suscripción termina en {0} horas.",
+    "it": "L’abbonamento termina tra {0} ore."
+  },
+  "Kotak Pro süre bildirimleri": {
+    "en": "Kotak Pro expiry reminders",
+    "de": "Kotak-Pro-Ablauferinnerungen",
+    "fr": "Rappels d’expiration Kotak Pro",
+    "es": "Avisos de vencimiento Kotak Pro",
+    "it": "Avvisi scadenza Kotak Pro"
+  },
+  "Takip ettiğin içerikler": {
+    "en": "Content you follow",
+    "de": "Abonnierte Inhalte",
+    "fr": "Contenus suivis",
+    "es": "Contenido que sigues",
+    "it": "Contenuti seguiti"
+  },
+  "Yeni filmler eklendi": {
+    "en": "New films added",
+    "de": "Neue Filme hinzugefügt",
+    "fr": "Nouveaux films ajoutés",
+    "es": "Nuevas películas añadidas",
+    "it": "Nuovi film aggiunti"
+  },
+  "{0} · Yeni bölüm": {
+    "en": "{0} · New episode",
+    "de": "{0} · Neue Folge",
+    "fr": "{0} · Nouvel épisode",
+    "es": "{0} · Nuevo episodio",
+    "it": "{0} · Nuovo episodio"
+  },
+  "{0} yeni içerik · {1}": {
+    "en": "{0} new items · {1}",
+    "de": "{0} neue Inhalte · {1}",
+    "fr": "{0} nouveaux contenus · {1}",
+    "es": "{0} contenidos nuevos · {1}",
+    "it": "{0} nuovi contenuti · {1}"
+  },
+  "{0} maçını kaçırma": {
+    "en": "Don’t miss the {0} match",
+    "de": "Verpasse das Spiel von {0} nicht",
+    "fr": "Ne manquez pas le match de {0}",
+    "es": "No te pierdas el partido de {0}",
+    "it": "Non perdere la partita di {0}"
   }
 }

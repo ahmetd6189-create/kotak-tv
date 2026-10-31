@@ -14,7 +14,7 @@ import {
   View,
   useWindowDimensions,
   StatusBar,
-} from "react-native";
+} from "../ui/Native";
 import { useEvent } from "expo";
 import { setAudioModeAsync } from "expo-audio";
 import {
@@ -591,4 +591,3 @@ const s = StyleSheet.create({
     borderBottomColor: "#ffffff0a",
   },
 });
-

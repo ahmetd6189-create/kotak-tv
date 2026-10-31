@@ -115,4 +115,3 @@ const styles = StyleSheet.create({
   badgeText: { color: colors.zinc300, fontSize: 9, fontWeight: "800" },
   num: { color: colors.blue, fontWeight: "800", fontSize: 21 },
 });
-

@@ -18,4 +18,3 @@ export function EpgSettings({configs,onSave,onClose}:{configs:PlaylistConfig[];o
   {!!error&&<Text style={{color:c.red}}>{error}</Text>}
  </Sheet>;
 }
-

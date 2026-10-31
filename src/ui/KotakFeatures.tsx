@@ -1,3 +1,4 @@
+import {localeFor} from '../native/i18n';
 import * as Notifications from 'expo-notifications';
 import {scheduleExpiryNotices,type Entitlement} from '../native/entitlement';
 import React, { useMemo, useState } from 'react';
@@ -34,7 +35,7 @@ export function FeaturesPanel({active,entries,cacheTime,onOpen,onPlay,onClose}: 
    {recap&&<><Text style={s.copy}>Kaçırdığın yayınların 1 dakikalık özetleri burada yer alacak.</Text><View style={s.box}><Text style={d.name}>Henüz özet yok</Text><Text style={s.copy}>Özet servisi ve işlenecek yayın kaydı bağlandığında kullanılabilir.</Text></View></>}
    {translation&&<><Text style={s.copy}>Türkçe • Canlı çeviri</Text><View style={s.box}><Text style={d.name}>Altyazı bekleniyor…</Text><Text style={s.copy}>Canlı sesi işleyen çeviri servisi henüz bağlı değil. Yayının kendi altyazıları oynatıcıdaki Ses ve Altyazı menüsünden seçilebilir.</Text></View></>}
    {share&&<Text style={s.copy}>Oynatıcıdaki Yayını paylaş düğmesi bağlantıyı telefonunun paylaşım menüsüne iletir. Oda, eş zamanlı oynatma veya paylaşım sunucusu kullanılmaz.</Text>}
-   {offline&&<><Text style={s.copy}>Kanal adları, kategoriler ve sağlayıcının gönderdiği 24 saatlik EPG cihazda saklanır.</Text><View style={s.box}><Text style={d.name}>{cacheTime?'Önbellek hazır':'Henüz önbellek yok'}</Text><Text style={s.copy}>{cacheTime?`Son kayıt: ${new Date(cacheTime).toLocaleString('tr-TR')}`:'Bir IPTV listesi yüklediğinde önbellek oluşturulur.'}</Text><Text style={d.secondary}>İnternet olmadan canlı video oynatılamaz. EPG yalnızca sağlayıcının gönderdiği programları içerir.</Text></View></>}
+   {offline&&<><Text style={s.copy}>Kanal adları, kategoriler ve sağlayıcının gönderdiği 24 saatlik EPG cihazda saklanır.</Text><View style={s.box}><Text style={d.name}>{cacheTime?'Önbellek hazır':'Henüz önbellek yok'}</Text><Text style={s.copy}>{cacheTime?`Son kayıt: ${new Date(cacheTime).toLocaleString(localeFor())}`:'Bir IPTV listesi yüklediğinde önbellek oluşturulur.'}</Text><Text style={d.secondary}>İnternet olmadan canlı video oynatılamaz. EPG yalnızca sağlayıcının gönderdiği programları içerir.</Text></View></>}
   </>}
  </Sheet>;
 }
@@ -48,7 +49,7 @@ export function ProPanel({onClose,accountEmail,onSignOut,entitlement,onEnableNot
   {['Kendi listelerinle canlı TV, film ve dizi','Çoklu ekran ve resim içinde resim','Telefon ve Android TV deneyimi'].map(text=><View key={text} style={s.row}><Check size={20} color={c.blue}/><Text style={[d.name,{flex:1}]}>{text}</Text></View>)}
   {[{id:'month',title:'Aylık',price:'₺249',sub:'Aylık Kotak Pro'},{id:'year',title:'Yıllık',price:'₺999',sub:'Yıllık Kotak Pro · Popüler'}].map(p=><Pressable accessibilityRole="radio" accessibilityState={{checked:plan===p.id}} key={p.id} onPress={()=>setPlan(p.id)} style={[s.plan,plan===p.id&&{borderColor:c.blue}]}><View style={{flex:1}}><Text style={d.h2}>{p.title} {p.price}</Text><Text style={[d.secondary,{marginTop:6}]}>{p.sub}</Text></View>{plan===p.id&&<Check size={24} color={c.blue}/>}</Pressable>)}
   {!!accountEmail&&<Text style={s.copy}>{accountEmail}</Text>}
-  {!!entitlement&&<Text style={s.copy}>Kullanım bitişi: {new Date(entitlement.expiresAt).toLocaleString('tr-TR')}</Text>}
+  {!!entitlement&&<Text style={s.copy}>Kullanım bitişi: {new Date(entitlement.expiresAt).toLocaleString(localeFor())}</Text>}
   {!!entitlement&&<Pill label="Süre bildirimlerini aç" onPress={()=>{void (async()=>{try{if(onEnableNotices){setNotificationMessage(await onEnableNotices());return;}const p=await Notifications.requestPermissionsAsync();if(!p.granted){setNotificationMessage('Bildirim izni verilmedi. Telefon ayarlarından açabilirsin.');return;}await scheduleExpiryNotices(entitlement);setNotificationMessage('Süre bildirimleri açıldı.');}catch{setNotificationMessage('Bildirimler planlanamadı. Tekrar dene.');}})();}}/>}
   {!!notificationMessage&&<Text style={s.copy}>{notificationMessage}</Text>}
   {!!onSignOut&&<Pill label="Hesaptan çıkış yap" onPress={onSignOut}/>}
@@ -65,4 +66,3 @@ export function AboutPanel({onClose}:{onClose:()=>void}) {
  </Sheet>;
 }
 const s=StyleSheet.create({orb:{height:88,width:88,borderRadius:44,backgroundColor:'#007aff22',alignSelf:'center',alignItems:'center',justifyContent:'center',marginVertical:24},row:{flexDirection:'row',alignItems:'center',gap:14,paddingVertical:17,borderBottomWidth:1,borderBottomColor:'#ffffff12'},input:{padding:16,backgroundColor:'#29292c',color:c.white,fontSize:16,borderRadius:16},copy:{color:c.zinc400,fontSize:15,lineHeight:23,marginVertical:14},box:{backgroundColor:'#242426',borderRadius:24,padding:20,marginVertical:14,gap:8},metric:{fontSize:48,color:c.blue,fontWeight:'800'},track:{height:5,borderRadius:5,backgroundColor:'#444449',marginVertical:12},plan:{borderWidth:2,borderColor:'#ffffff15',borderRadius:20,backgroundColor:'#29292c',padding:20,marginVertical:8,flexDirection:'row',alignItems:'center',gap:12}});
-

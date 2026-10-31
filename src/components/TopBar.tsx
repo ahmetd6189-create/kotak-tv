@@ -23,4 +23,3 @@ export function TopBar({currentTab,onTabChange,onSearchClick,onOptionsClick,onBa
  </View>;
 }
 const s=StyleSheet.create({wrap:{backgroundColor:c.bg},row:{flexDirection:'row',alignItems:'center',gap:5,paddingHorizontal:12,paddingBottom:14},circle:{width:36,height:36,borderRadius:24,backgroundColor:'#202022',borderWidth:1,borderColor:'#ffffff12',alignItems:'center',justifyContent:'center'},tabs:{flex:1,flexDirection:'row',alignItems:'center',justifyContent:'space-evenly',minWidth:0},tab:{paddingVertical:12,paddingHorizontal:2},text:{fontSize:11,fontWeight:'700',color:c.zinc500}});
-

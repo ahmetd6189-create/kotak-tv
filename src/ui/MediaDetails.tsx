@@ -1,3 +1,4 @@
+import {localeFor} from '../native/i18n';
 import React,{useState} from 'react';
 import {TrailerPlayer} from './TrailerPlayer';
 import {ActivityIndicator,Image,Modal,Pressable,ScrollView,StyleSheet,Text,View,useWindowDimensions} from './Native';
@@ -11,7 +12,7 @@ import {PosterRail} from './CatalogView';
 import {CustomBottomNav} from '../components/CustomBottomNav';
 import type {BottomNavTab} from '../types/iptv';
 export function releaseLabel(info?:Pick<ImdbInfo,'released'|'year'>){
- if(info?.released){const date=new Date(info.released);if(Number.isFinite(date.getTime()))return new Intl.DateTimeFormat('tr-TR',{year:'numeric',month:'long',timeZone:'UTC'}).format(date);}
+ if(info?.released){const date=new Date(info.released);if(Number.isFinite(date.getTime()))return new Intl.DateTimeFormat(localeFor(),{year:'numeric',month:'long',timeZone:'UTC'}).format(date);}
  return info?.year||'Yayın tarihi bilinmiyor';
 }
 export function MediaDetails({item,info,provider,loading,onPlay,onClose,onFollow,similar=[],onSelect,onNavigate}:{item:Entry;info?:ImdbInfo;provider?:ProviderInfo;loading?:boolean;onPlay:()=>void;onClose:()=>void;onFollow?:()=>void;similar?:Entry[];onSelect?:(e:Entry)=>void;onNavigate?:(tab:BottomNavTab)=>void}){
@@ -38,4 +39,3 @@ export function MediaDetails({item,info,provider,loading,onPlay,onClose,onFollow
  {trailerOpen&&provider?.trailer&&<TrailerPlayer url={provider.trailer} onClose={()=>setTrailerOpen(false)}/>}
  </View></Modal>;
 }
-

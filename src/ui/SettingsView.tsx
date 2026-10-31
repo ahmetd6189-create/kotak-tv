@@ -151,4 +151,3 @@ const s = StyleSheet.create({
   },
   active: { backgroundColor: "#1a1f2c", borderWidth: 2, borderColor: c.blue },
 });
-

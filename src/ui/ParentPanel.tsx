@@ -48,4 +48,3 @@ export function ParentPanel({ protection, child, groups, onChange, onClose }: { 
  </Sheet>;
 }
 const s=StyleSheet.create({input:{backgroundColor:'#2c2c2e',borderRadius:14,color:c.white,padding:16,fontSize:20,marginBottom:12},row:{flexDirection:'row',alignItems:'center',paddingVertical:16,borderBottomColor:'#ffffff18',borderBottomWidth:1}});
-

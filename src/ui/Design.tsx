@@ -1,3 +1,4 @@
+import {localeFor} from '../native/i18n';
 import {useAppearance,accentFor,accentText} from './Appearance';
 import React, { useState } from "react";
 import {
@@ -248,7 +249,7 @@ export function currentProgram(
   );
 }
 export function clock(value: number): string {
-  return new Date(value).toLocaleTimeString("tr-TR", {
+  return new Date(value).toLocaleTimeString(localeFor(), {
     hour: "2-digit",
     minute: "2-digit",
     timeZone: "Europe/Istanbul",
@@ -644,7 +645,7 @@ export function SearchPanel({
                         <Text style={d.name} numberOfLines={1}>
                           {item.name}
                         </Text>
-                        <Text style={d.micro}>{item.group}</Text>
+                        <Text verbatim style={d.micro}>{item.group}</Text>
                       </View>
                       <Play color={c.blue} size={16} />
                     </>
@@ -1096,4 +1097,3 @@ export const d = StyleSheet.create({
     borderColor: "#ffffff0d",
   },
 });
-
